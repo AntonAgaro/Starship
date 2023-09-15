@@ -26,7 +26,7 @@ export const ErrorBoundary = ({ children }: ErrorBoundaryProps) => {
     return (
       <Space direction="vertical" className="error-container">
         <Alert
-          message={error?.message}
+          message={error.message}
           description="This is an error message"
           type="error"
           showIcon
