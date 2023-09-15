@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import './App.css'
+import { ErrorBoundary } from './Components/ErrorBoundary/errorBoundary'
 
 function App() {
   useEffect(() => {
@@ -12,7 +13,11 @@ function App() {
 
     fetchServerData()
   }, [])
-  return <div className="App">Вот тут будет жить ваше приложение :)</div>
+  return (
+    <ErrorBoundary>
+      <div className="App">Вот тут будет жить ваше приложение :)</div>
+    </ErrorBoundary>
+  )
 }
 
 export default App
