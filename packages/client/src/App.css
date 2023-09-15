@@ -1,0 +1,6 @@
+@import './Pages/SignIn/signIn.less';
+@import './Modules/SignInForm/signInForm.less';
+
+body {
+  margin: 0;
+}
