@@ -1,7 +1,8 @@
-import { Card, Layout } from 'antd'
+import { Layout } from 'antd'
 import { Content, Footer } from 'antd/es/layout/layout'
 import { FC } from 'react'
 import { SignInForm } from '../../Modules/SignInForm'
+import './signIn.less'
 
 export const SignIn: FC = () => {
   return (

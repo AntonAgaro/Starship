@@ -1,5 +1,5 @@
 import { Button, Card, Form, Input } from 'antd'
-import Link from 'antd/es/typography/Link'
+import './signInForm.less'
 import { FC } from 'react'
 
 const onFinish = (values: any) => {

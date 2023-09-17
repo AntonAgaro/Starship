@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import './App.css'
 import withThemeProvider from './Providers/withThemeProvider'
-import { Button } from 'antd'
 import withBasicProviders from './Providers/withProviders'
 import { SignIn } from './Pages/SignIn'
 
