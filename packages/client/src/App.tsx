@@ -1,5 +1,8 @@
 import { useEffect } from 'react'
 import './App.css'
+import withThemeProvider from './Providers/withThemeProvider'
+import withBasicProviders from './Providers/withProviders'
+import { SignIn } from './Pages/SignIn'
 
 function App() {
   useEffect(() => {
@@ -12,7 +15,7 @@ function App() {
 
     fetchServerData()
   }, [])
-  return <div className="App">Вот тут будет жить ваше приложение :)</div>
+  return <SignIn />
 }
 
-export default App
+export default withBasicProviders(withThemeProvider)(App)
