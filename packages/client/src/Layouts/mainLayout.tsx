@@ -1,11 +1,11 @@
 import React, { FC, useState } from 'react'
 import { Layout, Menu } from 'antd'
 import type { MenuProps } from 'antd'
-import { Content, Footer, Header } from 'antd/es/layout/layout'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { RouteUrls } from '../Routes/Router'
 import './mainLayouts.less'
 const MainLayout: FC = () => {
+  const { Content, Footer, Header } = Layout
   const urls = Object.values(RouteUrls).filter(item => {
     return isNaN(Number(item))
   })
