@@ -1,10 +1,10 @@
-import './notFound.less'
+import styles from './notFound.module.less'
 
 const NotFound = () => {
   return (
-    <section className="container">
-      <span className="codeMessage">404</span>
-      <span className="message">Not Found</span>
+    <section className={styles.container}>
+      <span className={styles.codeMessage}>404</span>
+      <span className={styles.message}>Not Found</span>
     </section>
   )
 }
