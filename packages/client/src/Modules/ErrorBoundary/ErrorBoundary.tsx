@@ -1,42 +1,43 @@
+import React, { Component, ReactNode } from 'react'
 import { Alert, Space } from 'antd'
-import React, { useState, useEffect, ReactNode } from 'react'
 import './ErrorBoundary.less'
 
 interface ErrorBoundaryProps {
   children: ReactNode
 }
 
-const ErrorBoundary = ({ children }: ErrorBoundaryProps) => {
-  const [error, setError] = useState<Error | null>(null)
+interface ErrorBoundaryState {
+  error: Error | null
+}
 
-  useEffect(() => {
-    const handleError = (error: ErrorEvent) => {
-      setError(error.error)
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
+    super(props)
+    this.state = {
+      error: null,
     }
-
-    setError(null)
-
-    window.addEventListener('error', handleError)
-
-    return () => {
-      window.removeEventListener('error', handleError)
-    }
-  }, [])
-
-  if (error) {
-    return (
-      <Space direction="vertical" className="error-container">
-        <Alert
-          message={error?.message}
-          description="This is an error message"
-          type="error"
-          showIcon
-        />
-      </Space>
-    )
   }
 
-  return <>{children}</>
+  componentDidCatch(error: Error) {
+    this.setState({ error })
+  }
+
+  render() {
+    if (this.state.error) {
+      return (
+        <Space direction="vertical" className="error-container">
+          <Alert
+            message={this.state.error.message}
+            description="This is an error message"
+            type="error"
+            showIcon
+          />
+        </Space>
+      )
+    }
+
+    return this.props.children
+  }
 }
 
 export default ErrorBoundary
