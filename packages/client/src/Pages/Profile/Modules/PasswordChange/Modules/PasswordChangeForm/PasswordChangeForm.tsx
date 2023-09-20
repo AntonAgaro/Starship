@@ -29,7 +29,7 @@ const PasswordChangeForm = () => {
             message: 'Это поле не может быть пустым.',
           },
         ]}>
-        <Input.Password placeholder="Введите пароль" />
+        <Input.Password />
       </Form.Item>
       <Form.Item
         name="newPassword"
@@ -52,7 +52,7 @@ const PasswordChangeForm = () => {
             },
           }),
         ]}>
-        <Input.Password placeholder="Введите пароль" />
+        <Input.Password />
       </Form.Item>
       <Form.Item
         name="confirm"
@@ -73,7 +73,7 @@ const PasswordChangeForm = () => {
             },
           }),
         ]}>
-        <Input.Password placeholder="Повторите пароль" />
+        <Input.Password />
       </Form.Item>
       <Form.Item>
         <Button size="large" type="primary" htmlType="submit">
