@@ -1,6 +1,6 @@
 import React, { Component, ReactNode } from 'react'
 import { Alert, Space } from 'antd'
-import './ErrorBoundary.less'
+import styles from './ErrorBoundary.module.less'
 
 interface ErrorBoundaryProps {
   children: ReactNode
@@ -25,7 +25,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   render() {
     if (this.state.error) {
       return (
-        <Space direction="vertical" className="error-container">
+        <Space direction="vertical" className={styles.container}>
           <Alert
             message={this.state.error.message}
             description="This is an error message"
