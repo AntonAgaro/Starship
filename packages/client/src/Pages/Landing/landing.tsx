@@ -4,10 +4,11 @@ import Logo from './Assets/Images/Logo.png'
 import Ship from './Assets/Images/Ship.png'
 import ShipTwo from './Assets/Images/ShipTwo.png'
 import ShipThree from './Assets/Images/ShipThree.png'
-import { Button, Image } from 'antd'
-import Title from 'antd/es/typography/Title'
+import { Button, Image, Typography } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { RouteUrls } from '../../Routes/Router'
+
+const { Title } = Typography
 
 const Landing = () => {
   const navigate = useNavigate()
