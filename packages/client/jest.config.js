@@ -6,7 +6,7 @@ export default {
   testEnvironment: 'jsdom',
   testMatch: ['<rootDir>/src/**/*.test.{ts,tsx}'],
   moduleNameMapper: {
-    '\\.(css|less)$': '<rootDir>/mocks/cssStub.js',
+    '\\.(css|less)$': 'identity-obj-proxy',
     '\\.(gif|ttf|eot|svg|png)$': '<rootDir>/mocks/cssStub.js',
   },
   globals: {
