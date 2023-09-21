@@ -1,6 +1,6 @@
-import React, { FC, useState } from 'react'
-import { Layout, Menu } from 'antd'
 import type { MenuProps } from 'antd'
+import { Layout, Menu } from 'antd'
+import { FC, useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { RouteUrls } from '../Routes/Router'
 import './mainLayouts.less'
@@ -28,7 +28,7 @@ const MainLayout: FC = () => {
   })
 
   return (
-    <Layout>
+    <Layout className="main">
       <Header className="main-header">
         <Menu
           theme="dark"
@@ -38,7 +38,7 @@ const MainLayout: FC = () => {
           selectedKeys={[current]}
         />
       </Header>
-      <Content>
+      <Content className="main-content">
         <Outlet />
       </Content>
       <Footer>Footer</Footer>
