@@ -1,15 +1,42 @@
 import type { MenuProps } from 'antd'
 import { Layout, Menu } from 'antd'
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { RouteUrls } from '../Routes/Router'
 import './mainLayouts.less'
+import UserInfo from '../Components/userInfo'
+import { bus } from '../Utils/eventBus'
+import { TProfileInfo } from '../types'
+import ApiAuth from '../Api/auth'
+
 const MainLayout: FC = () => {
-  const { Content, Footer, Header } = Layout
+  const [currentProfile, setCurrentProfile] = useState<TProfileInfo | null>(
+    null
+  )
+
+  const auth = new ApiAuth()
+
+  const getProfile = async () => {
+    try {
+      const profile = await auth.getProfile()
+      setCurrentProfile(profile)
+    } catch (e) {
+      setCurrentProfile(null)
+    }
+  }
+
+  useEffect(() => {
+    getProfile()
+    bus.on('profileChanged', getProfile)
+    return () => {
+      bus.off('profileChanged', getProfile)
+    }
+  }, [])
+
   const urls = Object.values(RouteUrls).filter(item => {
     return isNaN(Number(item))
   })
-
+  const { Content, Footer, Header } = Layout
   const [current, setCurrent] = useState('mail')
   const navigate = useNavigate()
 
@@ -37,6 +64,7 @@ const MainLayout: FC = () => {
           items={menuItems}
           selectedKeys={[current]}
         />
+        {currentProfile && <UserInfo profile={currentProfile} />}
       </Header>
       <Content className="main-content">
         <Outlet />
