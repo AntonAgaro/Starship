@@ -3,7 +3,7 @@ import { PropsWithChildren } from 'react'
 
 export const withThemeProvider = ({ children }: PropsWithChildren) => {
   return (
-    <ConfigProvider theme={{ algorithm: theme.defaultAlgorithm }}>
+    <ConfigProvider theme={{ algorithm: theme.darkAlgorithm }}>
       {children}
     </ConfigProvider>
   )
