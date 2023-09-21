@@ -5,8 +5,21 @@ export class ApiAuth extends ApiBase {
   constructor() {
     super('/auth')
   }
+  async login(data: { login: string; password: string }) {
+    try {
+      const userResponse = await this.getProfile()
 
-  signin(data: { login: string; password: string }) {
+      if (userResponse.first_name) {
+        await this.logout()
+      }
+    } catch (e) {
+      console.log(e)
+    }
+
+    return this.signin(data)
+  }
+
+  private signin(data: { login: string; password: string }) {
     return this.http.post('/signin', { data })
   }
 
