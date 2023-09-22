@@ -1,6 +1,5 @@
 import React, { FC } from 'react'
-import './error.less'
-import NotFound from '../../Components/NotFound/notFound'
+import styles from './error.module.less'
 
 type TErrorCode = 404 | 500
 
@@ -10,13 +9,12 @@ type TErrorProps = {
 
 const Error: FC<TErrorProps> = ({ code }) => {
   return (
-    <div className="wrapper">
-      {code === 404 ? (
-        <NotFound />
-      ) : (
-        <div className="wrapper">Error {code} page</div>
-      )}
-    </div>
+    <section className={styles.container}>
+      <span className={styles.codeMessage}>{code === 404 ? 404 : 500}</span>
+      <span className={styles.message}>
+        {code === 404 ? 'Not Found' : 'Internal Server Error'}
+      </span>
+    </section>
   )
 }
 export default Error
