@@ -18,7 +18,7 @@ export default class Game {
   private readonly imagesPreloader: ImagesPreloader
   private player: Player
   private battleField: BattleField
-  private time = 0
+  private lastUpdateTime = 0
   constructor(settings: IGameSettings) {
     this.ctx = settings.context
     this.gameWidth = settings.width
@@ -41,11 +41,12 @@ export default class Game {
       },
       imgUrl: bgImg,
     })
+    // Загружаем изобращения и начинаем отрисовку в бесконечном цикле
     this.imagesPreloader = new ImagesPreloader({
       urls: [bgImg, playerImg, bossImg, firstEnemyImg, secondEnemyImg],
       onReadyCallbacks: [
         () => {
-          this.drawImages()
+          this.start()
         },
       ],
     })
@@ -53,29 +54,38 @@ export default class Game {
 
   start() {
     const now = Date.now()
-    const dt = (now - this.time) / 1000.0
-
-    this.time = now
+    //dt - разница между текущем временем и времененм последнего обновления
+    const dt = (now - this.lastUpdateTime) / 1000.0
+    this.updateElements(dt)
+    this.renderImages()
+    this.lastUpdateTime = now
+    // Рекурсивно вызываем перерисовку
     window.requestAnimationFrame(() => {
-      // this.ctx?.clearRect(0, 0, 1000, 666)
       this.start()
     })
   }
 
-  drawImages() {
-    window.requestAnimationFrame(() => {
-      this.ctx.drawImage(
-        this.imagesPreloader.getImg(this.battleField.getImg()),
-        this.battleField.getX(),
-        this.battleField.getY()
-      )
-      this.ctx.drawImage(
-        this.imagesPreloader.getImg(this.player.getImg()),
-        this.player.getX(),
-        this.player.getY(),
-        this.player.getWidth(),
-        this.player.getHeight()
-      )
-    })
+  // в updateElements обновляются позиции всех элементов
+  // для дальнейшей перерисовки
+  updateElements(dt: number) {
+    console.log(dt)
+  }
+
+  renderImages() {
+    //Очищаем отрисованные изображения прежде чем рисовать новые
+    this.ctx.clearRect(0, 0, this.gameWidth, this.gameHeight)
+
+    this.ctx.drawImage(
+      this.imagesPreloader.getImg(this.battleField.getImg()),
+      this.battleField.getX(),
+      this.battleField.getY()
+    )
+    this.ctx.drawImage(
+      this.imagesPreloader.getImg(this.player.getImg()),
+      this.player.getX(),
+      this.player.getY(),
+      this.player.getWidth(),
+      this.player.getHeight()
+    )
   }
 }
