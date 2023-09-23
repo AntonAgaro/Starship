@@ -25,8 +25,19 @@ export default class Player extends GameBlock {
     this.setDx(direction)
   }
 
-  move(dt: number) {
+  move(dt: number, gameWidth: number) {
     if (this.getDx()) {
+      const newX = this.getX() + this.getDx() * dt
+      if (newX < 0) {
+        this.setX(0)
+        return
+      }
+
+      if (newX + this.getWidth() > gameWidth) {
+        this.setX(gameWidth - this.getWidth())
+        return
+      }
+
       this.setX(this.getX() + this.getDx() * dt)
     }
   }

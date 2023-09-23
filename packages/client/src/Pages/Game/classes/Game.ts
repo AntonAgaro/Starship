@@ -75,7 +75,7 @@ export default class Game {
     // Каждые 3 сек создаем нового врага
     setInterval(() => {
       this.addEnemies()
-    }, 3000)
+    }, 1000)
 
     document.addEventListener(GameEventsEnum.AddPlayerBullets, () => {
       this.addPlayerBullets()
@@ -98,7 +98,7 @@ export default class Game {
   // в updateElements обновляются позиции всех элементов
   // для дальнейшей перерисовки
   updateElements(dt: number) {
-    this.player.move(dt)
+    this.player.move(dt, this.gameWidth)
     for (let i = 0; i < this.enemies.length; i++) {
       // Если враг столкнулся с игроком - уничтожаем его
       if (this.checkCollision(this.player, this.enemies[i])) {
@@ -173,7 +173,14 @@ export default class Game {
 
   addEnemies() {
     // Враг появляется в рандомной точке по x наверху карты и движется вниз
-    const randomX = Math.floor(Math.random() * this.gameWidth)
+    let randomX = Math.floor(Math.random() * this.gameWidth)
+    if (randomX < 0) {
+      randomX = 0
+    }
+    // 100 - enemy width
+    if (randomX + 100 > this.gameWidth) {
+      randomX = this.gameWidth - 100
+    }
     this.enemies.push(
       new Enemy({
         startPosition: {
