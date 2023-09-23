@@ -99,25 +99,36 @@ export default class Game {
   // для дальнейшей перерисовки
   updateElements(dt: number) {
     this.player.move(dt)
-    this.enemies.forEach(enemy => {
+    for (let i = 0; i < this.enemies.length; i++) {
       // Если враг столкнулся с игроком - уничтожаем его
-      if (this.checkCollision(this.player, enemy)) {
-        this.destroyEnemy(enemy)
+      if (this.checkCollision(this.player, this.enemies[i])) {
+        this.destroyEnemy(this.enemies[i])
         return
       }
       // Если враг дошел до низа поля, убираем его из this.enemies
-      if (enemy.getY() > this.gameHeight) {
-        this.destroyEnemy(enemy)
+      if (this.enemies[i].getY() > this.gameHeight) {
+        this.destroyEnemy(this.enemies[i])
         return
       }
-      enemy.move(dt)
-    })
+
+      // Проверяем столкновение врага с пулей
+      for (let pb = 0; pb < this.playerBullets.length; pb++) {
+        if (this.checkCollision(this.enemies[i], this.playerBullets[pb])) {
+          this.destroyEnemy(this.enemies[i])
+          this.destroyBullet(this.playerBullets[pb])
+          return
+        }
+      }
+
+      this.enemies[i].move(dt)
+    }
 
     this.playerBullets.forEach(bullet => {
       if (bullet.getY() < 0) {
         this.destroyBullet(bullet)
         return
       }
+
       bullet.move(dt)
     })
   }
@@ -194,7 +205,8 @@ export default class Game {
     this.playerBullets.push(
       new PlayerBullet({
         startPosition: {
-          x: this.player.getX(),
+          // TODO 12 подогнал, так как изображение игрока шире чем задано - исправить
+          x: this.player.getX() - 12,
           y: this.player.getY(),
           width: 50,
           height: 100,
@@ -208,7 +220,8 @@ export default class Game {
     this.playerBullets.push(
       new PlayerBullet({
         startPosition: {
-          x: this.player.getX() + this.player.getWidth(),
+          // TODO 42 подогнал, так как изображение игрока шире чем задано - исправить
+          x: this.player.getX() + this.player.getWidth() - 42,
           y: this.player.getY(),
           width: 50,
           height: 100,
