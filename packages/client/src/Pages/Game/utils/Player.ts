@@ -6,7 +6,6 @@ export default class Player extends GameBlock {
     super(settings)
 
     window.addEventListener('keydown', e => {
-      console.log(e)
       if (e.code === 'Space') {
         console.log('выстрел')
       } else if (e.code === 'ArrowRight' || e.code === 'ArrowLeft') {

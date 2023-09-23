@@ -7,6 +7,7 @@ import ImagesPreloader from './ImagesPreloader'
 import Player from './Player'
 import BattleField from './BattleField'
 import Enemy from './Enemy'
+import GameBlock from './GameBlock'
 interface IGameSettings {
   context: CanvasRenderingContext2D
   width: number
@@ -84,6 +85,11 @@ export default class Game {
   updateElements(dt: number) {
     this.player.move(dt)
     this.enemies.forEach(enemy => {
+      // Если враг столкнулся с игроком - уничтожаем его
+      if (this.checkCollision(this.player, enemy)) {
+        this.destroyEnemy(enemy)
+        return
+      }
       // Если враг дошел до низа поля, убираем его из this.enemies
       if (enemy.getY() > this.gameHeight) {
         this.destroyEnemy(enemy)
@@ -138,10 +144,24 @@ export default class Game {
         imgUrl: this.lastEnemy === 1 ? firstEnemyImg : secondEnemyImg,
       })
     )
+    // В зависимости от вида врага меняется картинка
     this.lastEnemy = this.lastEnemy === 1 ? 2 : 1
   }
 
   destroyEnemy(enemy: Enemy) {
     this.enemies = this.enemies.filter(e => e !== enemy)
+  }
+
+  /* Метод отслеживает столкновения:
+  принимает координаты верхнего/левого и нижнего/правого углов обоих объектов
+  и проверяет, есть ли какие то пересечения.
+  */
+  checkCollision(block1: GameBlock, block2: GameBlock): boolean {
+    return !(
+      block1.getX() + block1.getWidth() <= block2.getX() ||
+      block1.getX() > block2.getX() + block2.getWidth() ||
+      block1.getY() + block1.getHeight() <= block2.getY() ||
+      block1.getY() > block2.getY() + block2.getHeight()
+    )
   }
 }
