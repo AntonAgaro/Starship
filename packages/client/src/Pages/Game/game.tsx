@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import styles from './game.module.less'
-import Game from './utils/Game'
+import Game from './classes/Game'
 import Canvas from '../../Components/Canvas'
 const GamePage: FC = () => {
   let game: Game

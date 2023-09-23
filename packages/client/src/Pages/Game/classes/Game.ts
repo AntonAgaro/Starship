@@ -3,11 +3,14 @@ import playerImg from '../../../assets/images/player-ship.png'
 import bossImg from '../../../assets/images/boss-ship.png'
 import firstEnemyImg from '../../../assets/images/enemy-1.png'
 import secondEnemyImg from '../../../assets/images/enemy-2.png'
+import playerBulletImg from '../../../assets/images/player-bullet.png'
 import ImagesPreloader from './ImagesPreloader'
 import Player from './Player'
 import BattleField from './BattleField'
 import Enemy from './Enemy'
 import GameBlock from './GameBlock'
+import { GameEventsEnum } from '../enums/GameEventsEnum'
+import PlayerBullet from './PlayerBullet'
 interface IGameSettings {
   context: CanvasRenderingContext2D
   width: number
@@ -18,10 +21,11 @@ export default class Game {
   private readonly gameWidth: number
   private readonly gameHeight: number
   private readonly imagesPreloader: ImagesPreloader
-  private player: Player
+  private readonly player: Player
   private battleField: BattleField
   private lastUpdateTime = 0
   private enemies: Enemy[] = []
+  private playerBullets: PlayerBullet[] = []
   private lastEnemy = 1
   constructor(settings: IGameSettings) {
     this.ctx = settings.context
@@ -53,7 +57,14 @@ export default class Game {
     })
     // Загружаем изображения и начинаем отрисовку в бесконечном цикле
     this.imagesPreloader = new ImagesPreloader({
-      urls: [bgImg, playerImg, bossImg, firstEnemyImg, secondEnemyImg],
+      urls: [
+        bgImg,
+        playerImg,
+        bossImg,
+        firstEnemyImg,
+        secondEnemyImg,
+        playerBulletImg,
+      ],
       onReadyCallbacks: [
         () => {
           this.start()
@@ -65,6 +76,10 @@ export default class Game {
     setInterval(() => {
       this.addEnemies()
     }, 3000)
+
+    document.addEventListener(GameEventsEnum.AddPlayerBullets, () => {
+      this.addPlayerBullets()
+    })
   }
 
   start() {
@@ -97,6 +112,14 @@ export default class Game {
       }
       enemy.move(dt)
     })
+
+    this.playerBullets.forEach(bullet => {
+      if (bullet.getY() < 0) {
+        this.destroyBullet(bullet)
+        return
+      }
+      bullet.move(dt)
+    })
   }
 
   renderImages() {
@@ -125,6 +148,16 @@ export default class Game {
         enemy.getHeight()
       )
     })
+
+    this.playerBullets.forEach(bullet => {
+      this.ctx.drawImage(
+        this.imagesPreloader.getImg(bullet.getImg()),
+        bullet.getX(),
+        bullet.getY(),
+        bullet.getWidth(),
+        bullet.getHeight()
+      )
+    })
   }
 
   addEnemies() {
@@ -148,8 +181,44 @@ export default class Game {
     this.lastEnemy = this.lastEnemy === 1 ? 2 : 1
   }
 
+  // TODO сделать один метод destroyObject вместо destroyEnemy и destroyBullet
   destroyEnemy(enemy: Enemy) {
     this.enemies = this.enemies.filter(e => e !== enemy)
+  }
+
+  destroyBullet(bullet: PlayerBullet) {
+    this.playerBullets = this.playerBullets.filter(e => e !== bullet)
+  }
+
+  addPlayerBullets() {
+    this.playerBullets.push(
+      new PlayerBullet({
+        startPosition: {
+          x: this.player.getX(),
+          y: this.player.getY(),
+          width: 50,
+          height: 100,
+          dx: 0,
+          dy: -600,
+          velocity: 600,
+        },
+        imgUrl: playerBulletImg,
+      })
+    )
+    this.playerBullets.push(
+      new PlayerBullet({
+        startPosition: {
+          x: this.player.getX() + this.player.getWidth(),
+          y: this.player.getY(),
+          width: 50,
+          height: 100,
+          dx: 0,
+          dy: -600,
+          velocity: 600,
+        },
+        imgUrl: playerBulletImg,
+      })
+    )
   }
 
   /* Метод отслеживает столкновения:

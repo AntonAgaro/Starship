@@ -1,5 +1,6 @@
 import GameBlock from './GameBlock'
 import { GameBlockSettings } from '../types/GameBlockTypes'
+import { GameEventsEnum } from '../enums/GameEventsEnum'
 
 export default class Player extends GameBlock {
   constructor(settings: GameBlockSettings) {
@@ -7,7 +8,7 @@ export default class Player extends GameBlock {
 
     window.addEventListener('keydown', e => {
       if (e.code === 'Space') {
-        console.log('выстрел')
+        document.dispatchEvent(new CustomEvent(GameEventsEnum.AddPlayerBullets))
       } else if (e.code === 'ArrowRight' || e.code === 'ArrowLeft') {
         this.changeMoveDirection(e.code)
       }
