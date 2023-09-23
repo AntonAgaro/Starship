@@ -1,4 +1,5 @@
-import GameBlock, { GameBlockSettings } from './GameBlock'
+import GameBlock from './GameBlock'
+import { GameBlockSettings } from '../types/GameBlockTypes'
 
 export default class BattleField extends GameBlock {
   constructor(settings: GameBlockSettings) {

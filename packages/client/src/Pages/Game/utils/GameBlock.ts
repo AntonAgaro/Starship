@@ -1,17 +1,8 @@
-type GameBlockPosition = {
-  x: number
-  y: number
-  width: number
-  height: number
-}
+import { GameBlockPosition, GameBlockSettings } from '../types/GameBlockTypes'
 
-export interface GameBlockSettings {
-  startPosition: GameBlockPosition
-  imgUrl: string
-}
 export default abstract class GameBlock {
-  private position: GameBlockPosition
-  private imgUrl: string
+  protected position: GameBlockPosition
+  protected imgUrl: string
 
   constructor(settings: GameBlockSettings) {
     this.position = settings.startPosition
@@ -44,5 +35,29 @@ export default abstract class GameBlock {
 
   setY(newY: number) {
     this.position.y = newY
+  }
+
+  getDx() {
+    return this.position.dx
+  }
+
+  setDx(newDx: number) {
+    this.position.dx = newDx
+  }
+
+  getDy() {
+    return this.position.dy
+  }
+
+  setDy(newDy: number) {
+    this.position.dy = newDy
+  }
+
+  getVelocity() {
+    return this.position.velocity
+  }
+
+  setVelocity(newVelocity: number) {
+    this.position.velocity = newVelocity
   }
 }

@@ -29,6 +29,9 @@ export default class Game {
         y: this.gameHeight - 200,
         width: 100,
         height: 118,
+        dx: 0,
+        dy: 0,
+        velocity: 600,
       },
       imgUrl: playerImg,
     })
@@ -38,6 +41,9 @@ export default class Game {
         y: 0,
         width: this.gameWidth,
         height: this.gameHeight,
+        dx: 0,
+        dy: 0,
+        velocity: 0,
       },
       imgUrl: bgImg,
     })
@@ -68,7 +74,7 @@ export default class Game {
   // в updateElements обновляются позиции всех элементов
   // для дальнейшей перерисовки
   updateElements(dt: number) {
-    console.log(dt)
+    this.player.move(dt)
   }
 
   renderImages() {
