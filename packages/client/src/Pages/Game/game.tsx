@@ -3,13 +3,16 @@ import styles from './game.module.less'
 import Game from './utils/Game'
 import Canvas from '../../Components/Canvas'
 const GamePage: FC = () => {
+  let game: Game
   return (
     <div className={styles.gameWrapper}>
       <Canvas
         width={1000}
         height={666}
         callback={ctx => {
-          new Game({ context: ctx, width: 1000, height: 666 })
+          if (!game) {
+            game = new Game({ context: ctx, width: 1000, height: 666 })
+          }
         }}
       />
     </div>

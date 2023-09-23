@@ -6,6 +6,7 @@ import secondEnemyImg from '../../../assets/images/enemy-2.png'
 import ImagesPreloader from './ImagesPreloader'
 import Player from './Player'
 import BattleField from './BattleField'
+import Enemy from './Enemy'
 interface IGameSettings {
   context: CanvasRenderingContext2D
   width: number
@@ -19,6 +20,8 @@ export default class Game {
   private player: Player
   private battleField: BattleField
   private lastUpdateTime = 0
+  private enemies: Enemy[] = []
+  private lastEnemy = 1
   constructor(settings: IGameSettings) {
     this.ctx = settings.context
     this.gameWidth = settings.width
@@ -47,7 +50,7 @@ export default class Game {
       },
       imgUrl: bgImg,
     })
-    // Загружаем изобращения и начинаем отрисовку в бесконечном цикле
+    // Загружаем изображения и начинаем отрисовку в бесконечном цикле
     this.imagesPreloader = new ImagesPreloader({
       urls: [bgImg, playerImg, bossImg, firstEnemyImg, secondEnemyImg],
       onReadyCallbacks: [
@@ -56,6 +59,11 @@ export default class Game {
         },
       ],
     })
+
+    // Каждые 3 сек создаем нового врага
+    setInterval(() => {
+      this.addEnemies()
+    }, 3000)
   }
 
   start() {
@@ -75,6 +83,14 @@ export default class Game {
   // для дальнейшей перерисовки
   updateElements(dt: number) {
     this.player.move(dt)
+    this.enemies.forEach(enemy => {
+      // Если враг дошел до низа поля, убираем его из this.enemies
+      if (enemy.getY() > this.gameHeight) {
+        this.destroyEnemy(enemy)
+        return
+      }
+      enemy.move(dt)
+    })
   }
 
   renderImages() {
@@ -93,5 +109,39 @@ export default class Game {
       this.player.getWidth(),
       this.player.getHeight()
     )
+
+    this.enemies.forEach(enemy => {
+      this.ctx.drawImage(
+        this.imagesPreloader.getImg(enemy.getImg()),
+        enemy.getX(),
+        enemy.getY(),
+        enemy.getWidth(),
+        enemy.getHeight()
+      )
+    })
+  }
+
+  addEnemies() {
+    // Враг появляется в рандомной точке по x наверху карты и движется вниз
+    const randomX = Math.floor(Math.random() * this.gameWidth)
+    this.enemies.push(
+      new Enemy({
+        startPosition: {
+          x: randomX,
+          y: 0,
+          width: 100,
+          height: 102,
+          dx: 0,
+          dy: 150,
+          velocity: 300,
+        },
+        imgUrl: this.lastEnemy === 1 ? firstEnemyImg : secondEnemyImg,
+      })
+    )
+    this.lastEnemy = this.lastEnemy === 1 ? 2 : 1
+  }
+
+  destroyEnemy(enemy: Enemy) {
+    this.enemies = this.enemies.filter(e => e !== enemy)
   }
 }
