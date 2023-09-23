@@ -4,6 +4,7 @@ import bossImg from '../../../assets/images/boss-ship.png'
 import firstEnemyImg from '../../../assets/images/enemy-1.png'
 import secondEnemyImg from '../../../assets/images/enemy-2.png'
 import playerBulletImg from '../../../assets/images/player-bullet.png'
+import explosionImg from '../../../assets/images/explosion.png'
 import ImagesPreloader from './ImagesPreloader'
 import Player from './Player'
 import BattleField from './BattleField'
@@ -11,6 +12,7 @@ import Enemy from './Enemy'
 import GameBlock from './GameBlock'
 import { GameEventsEnum } from '../enums/GameEventsEnum'
 import PlayerBullet from './PlayerBullet'
+import Explosion from './Explosion'
 interface IGameSettings {
   context: CanvasRenderingContext2D
   width: number
@@ -26,11 +28,13 @@ export default class Game {
   private lastUpdateTime = 0
   private enemies: Enemy[] = []
   private playerBullets: PlayerBullet[] = []
+  private explosions: Explosion[] = []
   private lastEnemy = 1
   constructor(settings: IGameSettings) {
     this.ctx = settings.context
     this.gameWidth = settings.width
     this.gameHeight = settings.height
+
     this.player = new Player({
       startPosition: {
         x: this.gameWidth / 2 - 25,
@@ -43,6 +47,7 @@ export default class Game {
       },
       imgUrl: playerImg,
     })
+
     this.battleField = new BattleField({
       startPosition: {
         x: 0,
@@ -55,6 +60,7 @@ export default class Game {
       },
       imgUrl: bgImg,
     })
+
     // Загружаем изображения и начинаем отрисовку в бесконечном цикле
     this.imagesPreloader = new ImagesPreloader({
       urls: [
@@ -64,6 +70,7 @@ export default class Game {
         firstEnemyImg,
         secondEnemyImg,
         playerBulletImg,
+        explosionImg,
       ],
       onReadyCallbacks: [
         () => {
@@ -79,6 +86,13 @@ export default class Game {
 
     document.addEventListener(GameEventsEnum.AddPlayerBullets, () => {
       this.addPlayerBullets()
+    })
+
+    // Убираем взрыв
+    document.addEventListener(GameEventsEnum.AddExplosion, e => {
+      setTimeout(() => {
+        this.removeExplosion((e as CustomEvent).detail.explosion)
+      }, 500)
     })
   }
 
@@ -102,6 +116,26 @@ export default class Game {
     for (let i = 0; i < this.enemies.length; i++) {
       // Если враг столкнулся с игроком - уничтожаем его
       if (this.checkCollision(this.player, this.enemies[i])) {
+        const explosion = new Explosion({
+          startPosition: {
+            x: this.enemies[i].getX(),
+            y: this.enemies[i].getY(),
+            width: 100,
+            height: 100,
+            dx: 0,
+            dy: 0,
+            velocity: 0,
+          },
+          imgUrl: explosionImg,
+        })
+        this.explosions.push(explosion)
+        document.dispatchEvent(
+          new CustomEvent(GameEventsEnum.AddExplosion, {
+            detail: {
+              explosion,
+            },
+          })
+        )
         this.destroyEnemy(this.enemies[i])
         return
       }
@@ -114,6 +148,28 @@ export default class Game {
       // Проверяем столкновение врага с пулей
       for (let pb = 0; pb < this.playerBullets.length; pb++) {
         if (this.checkCollision(this.enemies[i], this.playerBullets[pb])) {
+          const explosion = new Explosion({
+            startPosition: {
+              x: this.enemies[i].getX(),
+              y: this.enemies[i].getY(),
+              width: 100,
+              height: 100,
+              dx: 0,
+              dy: 0,
+              velocity: 0,
+            },
+            imgUrl: explosionImg,
+          })
+          this.explosions.push(explosion)
+
+          document.dispatchEvent(
+            new CustomEvent(GameEventsEnum.AddExplosion, {
+              detail: {
+                explosion,
+              },
+            })
+          )
+
           this.destroyEnemy(this.enemies[i])
           this.destroyBullet(this.playerBullets[pb])
           return
@@ -142,33 +198,30 @@ export default class Game {
       this.battleField.getX(),
       this.battleField.getY()
     )
-    this.ctx.drawImage(
-      this.imagesPreloader.getImg(this.player.getImg()),
-      this.player.getX(),
-      this.player.getY(),
-      this.player.getWidth(),
-      this.player.getHeight()
-    )
+
+    this.renderObject(this.player)
 
     this.enemies.forEach(enemy => {
-      this.ctx.drawImage(
-        this.imagesPreloader.getImg(enemy.getImg()),
-        enemy.getX(),
-        enemy.getY(),
-        enemy.getWidth(),
-        enemy.getHeight()
-      )
+      this.renderObject(enemy)
     })
 
     this.playerBullets.forEach(bullet => {
-      this.ctx.drawImage(
-        this.imagesPreloader.getImg(bullet.getImg()),
-        bullet.getX(),
-        bullet.getY(),
-        bullet.getWidth(),
-        bullet.getHeight()
-      )
+      this.renderObject(bullet)
     })
+
+    this.explosions.forEach(explosion => {
+      this.renderObject(explosion)
+    })
+  }
+
+  renderObject(object: GameBlock) {
+    this.ctx.drawImage(
+      this.imagesPreloader.getImg(object.getImg()),
+      object.getX(),
+      object.getY(),
+      object.getWidth(),
+      object.getHeight()
+    )
   }
 
   addEnemies() {
@@ -206,6 +259,10 @@ export default class Game {
 
   destroyBullet(bullet: PlayerBullet) {
     this.playerBullets = this.playerBullets.filter(e => e !== bullet)
+  }
+
+  removeExplosion(explosion: Explosion) {
+    this.explosions = this.explosions.filter(e => e !== explosion)
   }
 
   addPlayerBullets() {
