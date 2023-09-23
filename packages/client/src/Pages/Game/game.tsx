@@ -1,15 +1,18 @@
-import React, { FC, useEffect, useRef } from 'react'
+import React, { FC } from 'react'
 import styles from './game.module.less'
-const Game: FC = () => {
-  const canvas = useRef(null)
-
-  useEffect(() => {
-    console.log(canvas.current)
-  })
+import Game from './utils/Game'
+import Canvas from '../../Components/Canvas'
+const GamePage: FC = () => {
   return (
     <div className={styles.gameWrapper}>
-      <canvas width="1000" height="666" ref={canvas}></canvas>
+      <Canvas
+        width={1000}
+        height={666}
+        callback={ctx => {
+          new Game({ context: ctx, width: 1000, height: 666 })
+        }}
+      />
     </div>
   )
 }
-export default Game
+export default GamePage

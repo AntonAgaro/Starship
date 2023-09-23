@@ -1,6 +1,6 @@
 import React, { Route, Routes } from 'react-router-dom'
 import MainLayout from '../Layouts/mainLayout'
-import Game from '../Pages/Game/game'
+import GamePage from '../Pages/Game/game'
 import Landing from '../Pages/Landing/landing'
 import LeaderBoard from '../Pages/LeaderBoard/leaderBoard'
 import SignIn from '../Pages/SignIn/signIn'
@@ -31,7 +31,7 @@ const Router = () => (
   <Routes>
     <Route element={<MainLayout />}>
       <Route path={RouteUrls.landing} element={<Landing />} />
-      <Route path={RouteUrls.game} element={<Game />} />
+      <Route path={RouteUrls.game} element={<GamePage />} />
       <Route path={RouteUrls.leaderBoard} element={<LeaderBoard />} />
 
       <Route path={RouteUrls.signIn} element={<SignIn />} />
