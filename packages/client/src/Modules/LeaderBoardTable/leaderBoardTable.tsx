@@ -78,7 +78,9 @@ const LeaderBoardTable: FC = () => {
           title="Логин"
           dataIndex="login"
           key="login"
-          sorter={(a, b) => a.login.localeCompare(b.login)}
+          sorter={(a: { login: string }, b: { login: string }) =>
+            a.login.localeCompare(b.login)
+          }
           sortDirections={['descend', 'ascend']}
           render={(_: any, record: { login: string }) => (
             <Space size="middle">
