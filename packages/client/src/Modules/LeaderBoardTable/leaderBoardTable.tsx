@@ -67,7 +67,9 @@ const LeaderBoardTable: FC = () => {
           title="№"
           dataIndex="rating"
           key="rating"
-          sorter={(a, b) => a.rating - b.rating}
+          sorter={(a: { rating: number }, b: { rating: number }) =>
+            a.rating - b.rating
+          }
           sortDirections={['descend', 'ascend']}
           defaultSortOrder="ascend"
         />
