@@ -116,26 +116,7 @@ export default class Game {
     for (let i = 0; i < this.enemies.length; i++) {
       // Если враг столкнулся с игроком - уничтожаем его
       if (this.checkCollision(this.player, this.enemies[i])) {
-        const explosion = new Explosion({
-          startPosition: {
-            x: this.enemies[i].getX(),
-            y: this.enemies[i].getY(),
-            width: 100,
-            height: 100,
-            dx: 0,
-            dy: 0,
-            velocity: 0,
-          },
-          imgUrl: explosionImg,
-        })
-        this.explosions.push(explosion)
-        document.dispatchEvent(
-          new CustomEvent(GameEventsEnum.AddExplosion, {
-            detail: {
-              explosion,
-            },
-          })
-        )
+        this.createExplosion(this.enemies[i])
         this.destroyEnemy(this.enemies[i])
         return
       }
@@ -148,28 +129,7 @@ export default class Game {
       // Проверяем столкновение врага с пулей
       for (let pb = 0; pb < this.playerBullets.length; pb++) {
         if (this.checkCollision(this.enemies[i], this.playerBullets[pb])) {
-          const explosion = new Explosion({
-            startPosition: {
-              x: this.enemies[i].getX(),
-              y: this.enemies[i].getY(),
-              width: 100,
-              height: 100,
-              dx: 0,
-              dy: 0,
-              velocity: 0,
-            },
-            imgUrl: explosionImg,
-          })
-          this.explosions.push(explosion)
-
-          document.dispatchEvent(
-            new CustomEvent(GameEventsEnum.AddExplosion, {
-              detail: {
-                explosion,
-              },
-            })
-          )
-
+          this.createExplosion(this.enemies[i])
           this.destroyEnemy(this.enemies[i])
           this.destroyBullet(this.playerBullets[pb])
           return
@@ -307,6 +267,30 @@ export default class Game {
       block1.getX() > block2.getX() + block2.getWidth() ||
       block1.getY() + block1.getHeight() <= block2.getY() ||
       block1.getY() > block2.getY() + block2.getHeight()
+    )
+  }
+
+  createExplosion(enemy: Enemy) {
+    const explosion = new Explosion({
+      startPosition: {
+        x: enemy.getX(),
+        y: enemy.getY(),
+        width: 100,
+        height: 100,
+        dx: 0,
+        dy: 0,
+        velocity: 0,
+      },
+      imgUrl: explosionImg,
+    })
+    this.explosions.push(explosion)
+
+    document.dispatchEvent(
+      new CustomEvent(GameEventsEnum.AddExplosion, {
+        detail: {
+          explosion,
+        },
+      })
     )
   }
 }
