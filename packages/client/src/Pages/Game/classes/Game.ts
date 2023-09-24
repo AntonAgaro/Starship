@@ -252,7 +252,6 @@ export default class Game {
     this.lastEnemy = this.lastEnemy === 1 ? 2 : 1
   }
 
-  // TODO сделать один метод destroyObject вместо destroyEnemy и destroyBullet
   destroyEnemy(enemy: Enemy) {
     this.enemies = this.enemies.filter(e => e !== enemy)
   }
