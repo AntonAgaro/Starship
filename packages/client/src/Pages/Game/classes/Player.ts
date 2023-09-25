@@ -27,18 +27,16 @@ export default class Player extends GameBlock {
 
   move(dt: number, gameWidth: number) {
     if (this.getDx()) {
-      const newX = this.getX() + this.getDx() * dt
-      if (newX < 0) {
-        this.setX(0)
-        return
+      let xOnNextFrame = this.getX() + this.getDx() * dt
+
+      // Не даем игроку выйти за края поля
+      if (xOnNextFrame < 0) {
+        xOnNextFrame = 0
+      } else if (xOnNextFrame + this.getWidth() > gameWidth) {
+        xOnNextFrame = gameWidth - this.getWidth()
       }
 
-      if (newX + this.getWidth() > gameWidth) {
-        this.setX(gameWidth - this.getWidth())
-        return
-      }
-
-      this.setX(this.getX() + this.getDx() * dt)
+      this.setX(xOnNextFrame)
     }
   }
 
