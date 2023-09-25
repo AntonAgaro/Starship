@@ -12,15 +12,13 @@ const GameStartModal: FC<GameStartModalProps> = ({
   width,
   height,
 }) => {
-  const startGameText = 'НАЧАТЬ ИГРУ'
-
   return (
     <div className={styles.gameStartModal} style={{ width, height }}>
       <div className={styles.controls}>
         <div>Управление кораблём: &larr; &uarr; &rarr; &darr;</div>
         <div>Выстрел: Пробел</div>
       </div>
-      <div className={styles.startGameText} onClick={() => onStart()}>
+      <div className={'НАЧАТЬ ИГРУ'} onClick={onStart}>
         НАЧАТЬ ИГРУ
       </div>
     </div>

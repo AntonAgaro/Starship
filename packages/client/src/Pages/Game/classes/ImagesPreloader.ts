@@ -45,8 +45,8 @@ export default class ImagesPreloader {
   private isReady(): boolean {
     let ready = true
 
-    for (const r in this.resources) {
-      if (!this.resources[r]) {
+    for (const resource in this.resources) {
+      if (!this.resources[resource]) {
         ready = false
       }
     }
