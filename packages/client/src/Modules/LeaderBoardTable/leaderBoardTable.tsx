@@ -1,8 +1,9 @@
 import { UserOutlined } from '@ant-design/icons'
 import { Avatar, Card, Space, Table } from 'antd'
-import Column from 'antd/es/table/Column'
 import { FC } from 'react'
 import './leaderBoardTable.less'
+
+const { Column } = Table
 
 const LeaderBoardTable: FC = () => {
   const dataSource = [
