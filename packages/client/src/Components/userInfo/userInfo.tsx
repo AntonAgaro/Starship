@@ -1,10 +1,10 @@
 import React, { FC } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { TProfileInfo } from '../types'
+import { TProfileInfo } from '../../types'
 import { Avatar, Divider, Dropdown, MenuProps, Tooltip } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
-import ApiAuth from '../Api/auth'
-import { bus } from '../Utils/eventBus'
+import ApiAuth from '../../Api/auth'
+import { bus } from '../../Utils/eventBus'
 
 type TUserInfoProps = {
   profile: TProfileInfo
@@ -38,7 +38,7 @@ const UserInfo: FC<TUserInfoProps> = (props: { profile: TProfileInfo }) => {
         try {
           await auth.logout()
           bus.emit('profileChanged')
-          navigate('/signIn')
+          bus.emit('isAuthenticated', false)
         } catch (e) {
           console.log(e)
         }

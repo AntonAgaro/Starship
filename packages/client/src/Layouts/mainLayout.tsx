@@ -1,32 +1,23 @@
 import type { MenuProps } from 'antd'
 import { Layout, Menu } from 'antd'
-import { FC, useEffect, useState } from 'react'
+import { FC, SetStateAction, useEffect, useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { RouteUrls } from '../Routes/Router'
 import './mainLayouts.less'
-import UserInfo from '../Components/userInfo'
+import UserInfo from '../Components/userInfo/userInfo'
 import { bus } from '../Utils/eventBus'
 import { TProfileInfo } from '../types'
-import ApiAuth from '../Api/auth'
 
 const MainLayout: FC = () => {
   const [currentProfile, setCurrentProfile] = useState<TProfileInfo | null>(
     null
   )
 
-  const auth = new ApiAuth()
-
-  const getProfile = async () => {
-    try {
-      const profile = await auth.getProfile()
-      setCurrentProfile(profile)
-    } catch (e) {
-      setCurrentProfile(null)
-    }
+  const getProfile = async (profile: SetStateAction<TProfileInfo | null>) => {
+    setCurrentProfile(profile)
   }
 
   useEffect(() => {
-    getProfile()
     bus.on('profileChanged', getProfile)
     return () => {
       bus.off('profileChanged', getProfile)

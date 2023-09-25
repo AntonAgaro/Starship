@@ -19,8 +19,9 @@ export const SignInForm: FC = () => {
     try {
       await auth.login(values)
       setErrorMessage('')
-      bus.emit('profileChanged')
-      navigate('/')
+      bus.emit('isAuthenticated')
+
+      setTimeout(() => navigate('/'), 800)
     } catch (e) {
       console.log(e)
       setErrorMessage('Не верный логин или пароль')
