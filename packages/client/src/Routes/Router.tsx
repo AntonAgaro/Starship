@@ -1,6 +1,6 @@
 import React, { Route, Routes } from 'react-router-dom'
 import MainLayout from '../Layouts/mainLayout'
-import Game from '../Pages/Game/game'
+import GamePage from '../Pages/Game/game'
 import Landing from '../Pages/Landing/landing'
 import LeaderBoard from '../Pages/LeaderBoard/leaderBoard'
 import SignIn from '../Pages/SignIn/signIn'
@@ -43,7 +43,7 @@ const Router = (props: { isAuthenticated?: boolean }) => (
         path={RouteUrls.game}
         element={
           <ProtectedRoute isAuthenticated={props.isAuthenticated}>
-            <Game />
+            <GamePsge />
           </ProtectedRoute>
         }
       />
@@ -55,7 +55,6 @@ const Router = (props: { isAuthenticated?: boolean }) => (
           </ProtectedRoute>
         }
       />
-
       <Route path={RouteUrls.signIn} element={<SignIn />} />
       <Route path={RouteUrls.signUp} element={<SignUp />} />
       <Route
