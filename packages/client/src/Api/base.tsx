@@ -1,17 +1,18 @@
-import { HTTPTransport } from '../Utils/http'
+import axios from 'axios'
 
 export abstract class ApiBase {
-  protected http: HTTPTransport
+  private base_url = 'https://ya-praktikum.tech/api/v2'
+  public handle = ''
+  public axios
 
-  protected constructor(handle: string) {
-    this.http = new HTTPTransport(handle)
+  constructor(handle_ = '') {
+    this.handle = this.base_url + handle_
+
+    this.axios = axios.create({
+      withCredentials: true,
+      baseURL: this.handle,
+      responseType: 'json',
+      headers: { 'Content-Type': 'application/json' },
+    })
   }
-
-  public abstract create?(data: unknown): Promise<unknown>
-
-  public abstract read?(identifier?: string): Promise<unknown>
-
-  public abstract update?(data: unknown): Promise<unknown>
-
-  public abstract delete?(identifier: string | number): Promise<unknown>
 }

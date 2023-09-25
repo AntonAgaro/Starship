@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { TProfileInfo } from '../types'
 import { ApiBase } from './base'
 
@@ -16,14 +17,15 @@ export class ApiAuth extends ApiBase {
       console.log(e)
     }
 
-    return this.signin(data)
+    return await this.signin(data)
   }
 
-  private signin(data: { login: string; password: string }) {
-    return this.http.post('/signin', { data })
+  private async signin(data: { login: string; password: string }) {
+    const result = await this.axios.post(`/signin`, data)
+    return result.data
   }
 
-  signup(data: {
+  async signup(data: {
     first_name: string
     second_name: string
     login: string
@@ -31,21 +33,19 @@ export class ApiAuth extends ApiBase {
     password: string
     phone: string
   }) {
-    return this.http.post('/signup', { data })
+    const result = await this.axios.post('/signup', data)
+    return result.data
   }
 
-  getProfile(): Promise<TProfileInfo> {
-    return this.http.get('/user')
+  async getProfile(): Promise<TProfileInfo> {
+    const result = await this.axios.get('/user')
+    return result.data
   }
 
-  logout() {
-    return this.http.post('/logout')
+  async logout() {
+    const result = await this.axios.post('/logout')
+    return result.data
   }
-
-  create = undefined
-  read = undefined
-  update = undefined
-  delete = undefined
 }
 
 export default ApiAuth
