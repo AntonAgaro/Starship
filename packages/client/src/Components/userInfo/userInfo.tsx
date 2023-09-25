@@ -12,7 +12,10 @@ type TUserInfoProps = {
 const UserInfo: FC<TUserInfoProps> = (props: { profile: TProfileInfo }) => {
   const { profile } = props
 
-  const name = profile?.display_name ? profile.display_name : profile.login
+  const name =
+    (profile?.display_name ? profile.display_name : profile.login) +
+    (' ' + profile?.first_name ?? '') +
+    (' ' + profile?.second_name ?? '')
 
   const navigate = useNavigate()
 
