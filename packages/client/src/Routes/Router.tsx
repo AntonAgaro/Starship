@@ -43,7 +43,7 @@ const Router = (props: { isAuthenticated?: boolean }) => (
         path={RouteUrls.game}
         element={
           <ProtectedRoute isAuthenticated={props.isAuthenticated}>
-            <GamePsge />
+            <GamePage />
           </ProtectedRoute>
         }
       />
