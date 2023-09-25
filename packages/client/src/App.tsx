@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import { bus } from './Utils/eventBus'
 import ApiAuth from './Api/auth'
 import { TProfileInfo } from './types'
+import LoadingLayout from './Layouts/loadingLayout'
 
 function App() {
   const auth = new ApiAuth()
@@ -42,7 +43,7 @@ function App() {
   }, [])
   if (loading === true) {
     // This shows while the user is being fetched
-    return <> Loading... </>
+    return <LoadingLayout />
   }
   return (
     <BrowserRouter>
