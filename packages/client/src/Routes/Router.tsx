@@ -10,6 +10,7 @@ import CreateTopic from '../Pages/Forum/CreateTopic/createTopic'
 import Topic from '../Pages/Forum/Topic/topic'
 import Forum from '../Pages/Forum/forum'
 import Error from '../Pages/Error/error'
+import ProtectedRoute from './PrivateRoure'
 
 export enum RouteUrls {
   landing = '/',
@@ -27,20 +28,68 @@ export enum RouteUrls {
   error500 = '/error',
 }
 
-const Router = () => (
+const Router = (props: { isAuthenticated?: boolean }) => (
   <Routes>
     <Route element={<MainLayout />}>
-      <Route path={RouteUrls.landing} element={<Landing />} />
-      <Route path={RouteUrls.game} element={<GamePage />} />
-      <Route path={RouteUrls.leaderBoard} element={<LeaderBoard />} />
-
+      <Route
+        path={RouteUrls.landing}
+        element={
+          <ProtectedRoute isAuthenticated={props.isAuthenticated}>
+            <Landing />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path={RouteUrls.game}
+        element={
+          <ProtectedRoute isAuthenticated={props.isAuthenticated}>
+            <GamePage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path={RouteUrls.leaderBoard}
+        element={
+          <ProtectedRoute isAuthenticated={props.isAuthenticated}>
+            <LeaderBoard />
+          </ProtectedRoute>
+        }
+      />
       <Route path={RouteUrls.signIn} element={<SignIn />} />
       <Route path={RouteUrls.signUp} element={<SignUp />} />
-      <Route path={RouteUrls.profile} element={<Profile />} />
+      <Route
+        path={RouteUrls.profile}
+        element={
+          <ProtectedRoute isAuthenticated={props.isAuthenticated}>
+            <Profile />
+          </ProtectedRoute>
+        }
+      />
 
-      <Route path={RouteUrls.forum} element={<Forum />} />
-      <Route path={RouteUrls.createTopic} element={<CreateTopic />} />
-      <Route path={RouteUrls.topic} element={<Topic />} />
+      <Route
+        path={RouteUrls.forum}
+        element={
+          <ProtectedRoute isAuthenticated={props.isAuthenticated}>
+            <Forum />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path={RouteUrls.createTopic}
+        element={
+          <ProtectedRoute isAuthenticated={props.isAuthenticated}>
+            <CreateTopic />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path={RouteUrls.topic}
+        element={
+          <ProtectedRoute isAuthenticated={props.isAuthenticated}>
+            <Topic />
+          </ProtectedRoute>
+        }
+      />
 
       <Route path={RouteUrls.error404} element={<Error code={404} />} />
       <Route path={RouteUrls.error500} element={<Error code={500} />} />
