@@ -10,7 +10,7 @@ type TErrorProps = {
 const Error: FC<TErrorProps> = ({ code }) => {
   return (
     <section className={styles.container}>
-      <span className={styles.codeMessage}>{code === 404 ? 404 : 500}</span>
+      <span className={styles.codeMessage}>{code}</span>
       <span className={styles.message}>
         {code === 404 ? 'Not Found' : 'Internal Server Error'}
       </span>
