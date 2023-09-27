@@ -1,21 +1,38 @@
-import { Button, Card, Form, Input } from 'antd'
+import { Alert, Button, Card, Form, Input } from 'antd'
 import './signInForm.less'
-import { FC } from 'react'
-
-const onFinish = (values: any) => {
-  console.log('Success:', values)
-}
-
-const onFinishFailed = (errorInfo: any) => {
-  console.log('Failed:', errorInfo)
-}
+import { FC, useState } from 'react'
+import ApiAuth from '../../Api/auth'
+import { useNavigate } from 'react-router-dom'
+import { bus } from '../../Utils/eventBus'
 
 type FieldType = {
-  username?: string
-  password?: string
+  login: string
+  password: string
 }
 
 export const SignInForm: FC = () => {
+  const [errorMessage, setErrorMessage] = useState('')
+  const navigate = useNavigate()
+  const onFinish = async (values: FieldType) => {
+    console.log('Success:', values)
+    const auth = new ApiAuth()
+    try {
+      await auth.login(values)
+      setErrorMessage('')
+      bus.emit('isAuthenticated')
+
+      setTimeout(() => navigate('/'), 800)
+    } catch (e) {
+      console.log(e)
+      setErrorMessage('Не верный логин или пароль')
+      return false
+    }
+  }
+
+  const onFinishFailed = (errorInfo: any) => {
+    console.log('Failed:', errorInfo)
+  }
+
   return (
     <Card title="Войти" className="sign-in-form">
       <Form
@@ -27,7 +44,7 @@ export const SignInForm: FC = () => {
         autoComplete="on">
         <Form.Item<FieldType>
           label="Логин"
-          name="username"
+          name="login"
           rules={[{ required: true, message: 'Введите свой логин!' }]}>
           <Input />
         </Form.Item>
@@ -38,9 +55,16 @@ export const SignInForm: FC = () => {
           rules={[{ required: true, message: 'Введите свой пароль!' }]}>
           <Input.Password className="input-password" />
         </Form.Item>
+        {errorMessage ? (
+          <Alert message={errorMessage} type="error" showIcon />
+        ) : (
+          ''
+        )}
 
         <Form.Item wrapperCol={{ offset: 1, span: 30 }}>
-          <Button type="link">Ещё нет аккаунта? Зарегистрируйтесь!</Button>
+          <Button type="link" onClick={() => navigate('/signup')}>
+            Ещё нет аккаунта? Зарегистрируйтесь!
+          </Button>
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 9, span: 20 }}>
