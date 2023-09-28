@@ -1,6 +1,6 @@
-import GameBlock from './GameBlock'
-import { GameBlockSettings } from '../types/GameBlockTypes'
 import { GameEventsEnum } from '../enums/GameEventsEnum'
+import { GameBlockSettings } from '../types/GameBlockTypes'
+import GameBlock from './GameBlock'
 
 export default class Player extends GameBlock {
   constructor(settings: GameBlockSettings) {
