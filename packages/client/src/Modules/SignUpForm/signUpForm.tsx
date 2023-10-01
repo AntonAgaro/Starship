@@ -3,7 +3,7 @@ import { FC, useState } from 'react'
 import './signUpForm.less'
 import { useNavigate } from 'react-router-dom'
 import ApiAuth from '../../Api/auth'
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 import { bus } from '../../Utils/eventBus'
 
 type FieldType = {
