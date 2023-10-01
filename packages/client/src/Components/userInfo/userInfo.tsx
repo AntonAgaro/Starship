@@ -4,7 +4,8 @@ import { TProfileInfo } from '../../types'
 import { Avatar, Divider, Dropdown, MenuProps, Tooltip } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import ApiAuth from '../../Api/auth'
-import { bus } from '../../Utils/eventBus'
+import { useDispatch } from 'react-redux'
+import { setCurrentProfile } from '../../Redux/userState'
 
 type TUserInfoProps = {
   profile: TProfileInfo
@@ -18,6 +19,7 @@ const UserInfo: FC<TUserInfoProps> = (props: { profile: TProfileInfo }) => {
     (' ' + profile?.second_name ?? '')
 
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const items: MenuProps['items'] = [
     {
@@ -40,8 +42,7 @@ const UserInfo: FC<TUserInfoProps> = (props: { profile: TProfileInfo }) => {
         const auth = new ApiAuth()
         try {
           await auth.logout()
-          bus.emit('profileChanged')
-          bus.emit('isAuthenticated', false)
+          dispatch(setCurrentProfile(null))
         } catch (e) {
           console.log(e)
         }

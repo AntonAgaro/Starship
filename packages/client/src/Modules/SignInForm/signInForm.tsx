@@ -3,7 +3,8 @@ import './signInForm.less'
 import { FC, useState } from 'react'
 import ApiAuth from '../../Api/auth'
 import { useNavigate } from 'react-router-dom'
-import { bus } from '../../Utils/eventBus'
+import { setCurrentProfile } from '../../Redux/userState'
+import { useDispatch } from 'react-redux'
 
 type FieldType = {
   login: string
@@ -13,13 +14,16 @@ type FieldType = {
 export const SignInForm: FC = () => {
   const [errorMessage, setErrorMessage] = useState('')
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const onFinish = async (values: FieldType) => {
     console.log('Success:', values)
     const auth = new ApiAuth()
     try {
       await auth.login(values)
       setErrorMessage('')
-      bus.emit('isAuthenticated')
+
+      const profile = await auth.getProfile()
+      dispatch(setCurrentProfile(profile))
 
       setTimeout(() => navigate('/'), 800)
     } catch (e) {
