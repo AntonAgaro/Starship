@@ -17,6 +17,7 @@ interface IGameSettings {
   context: CanvasRenderingContext2D
   width: number
   height: number
+  isPaused: boolean
 }
 export default class Game {
   private readonly ctx: CanvasRenderingContext2D
@@ -30,10 +31,12 @@ export default class Game {
   private playerBullets: PlayerBullet[] = []
   private explosions: Explosion[] = []
   private lastEnemy = 1
+  isPaused: boolean
   constructor(settings: IGameSettings) {
     this.ctx = settings.context
     this.gameWidth = settings.width
     this.gameHeight = settings.height
+    this.isPaused = settings.isPaused
 
     this.player = new Player({
       startPosition: {
@@ -99,14 +102,18 @@ export default class Game {
   start() {
     const now = Date.now()
     //dt - разница между текущем временем и времененм последнего обновления
-    const dt = (now - this.lastUpdateTime) / 1000.0
-    this.updateElements(dt)
-    this.renderImages()
+    if (!this.isPaused) {
+      const dt = (now - this.lastUpdateTime) / 1000.0
+      this.updateElements(dt)
+      this.renderImages()
+    }
     this.lastUpdateTime = now
     // Рекурсивно вызываем перерисовку
-    window.requestAnimationFrame(() => {
-      this.start()
-    })
+    if (!this.isPaused) {
+      window.requestAnimationFrame(() => {
+        this.start()
+      })
+    }
   }
 
   // в updateElements обновляются позиции всех элементов
@@ -147,6 +154,15 @@ export default class Game {
 
       bullet.move(dt)
     })
+  }
+
+  pause() {
+    this.isPaused = true
+  }
+
+  resume() {
+    this.isPaused = false
+    this.start()
   }
 
   renderImages() {

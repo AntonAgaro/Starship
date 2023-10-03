@@ -1,0 +1,66 @@
+@text-shadow-start-color: #fff;
+@text-shadow-end-color-first: #fff;
+@text-shadow-end-color-second: rgba(1, 1, 1, 0.9);
+
+.gameEndModal {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  background-color: rgba(20, 20, 20, 0.7);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: center;
+}
+
+.actionText {
+  user-select: none;
+  font-weight: 900;
+  animation: glow 2s ease-in-out infinite alternate;
+  font-size: 30px;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.resultText {
+  user-select: none;
+  font-weight: 900;
+  animation: glow 2s ease-in-out infinite alternate;
+  font-size: 40px;
+  color: rgba(255, 215, 0, 1);
+}
+
+.exit {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 50px;
+  height: 50px;
+  top: 0;
+  right: 0;
+  font-size: medium;
+  font-weight: 400;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+@keyframes glow {
+  from {
+    text-shadow: @text-shadow-start-color;
+  }
+
+  to {
+    text-shadow: 0 0 30px @text-shadow-end-color-first,
+      0 0 10px @text-shadow-end-color-second;
+  }
+}
