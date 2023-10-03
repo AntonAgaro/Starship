@@ -12,5 +12,5 @@ const slice = createSlice({
   },
 })
 
-export const { setCurrentProfile } = slice.actions
+export const { actions } = slice
 export const userState = slice.reducer

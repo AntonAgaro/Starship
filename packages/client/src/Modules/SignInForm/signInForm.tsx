@@ -3,7 +3,7 @@ import './signInForm.less'
 import { FC, useState } from 'react'
 import ApiAuth from '../../Api/auth'
 import { useNavigate } from 'react-router-dom'
-import { setCurrentProfile } from '../../Redux/user/userState'
+import actions from '../../Redux/actions'
 import { useDispatch } from 'react-redux'
 
 type FieldType = {
@@ -23,7 +23,7 @@ export const SignInForm: FC = () => {
       setErrorMessage('')
 
       const profile = await auth.getProfile()
-      dispatch(setCurrentProfile(profile))
+      dispatch(actions.userState.setCurrentProfile(profile))
 
       setTimeout(() => navigate('/'), 800)
     } catch (e) {

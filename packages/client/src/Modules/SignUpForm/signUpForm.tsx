@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import ApiAuth from '../../Api/auth'
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
-import { setCurrentProfile } from '../../Redux/user/userState'
+import actions from '../../Redux/actions'
 
 type FieldType = {
   login: string
@@ -43,7 +43,7 @@ export const SignUpForm: FC = () => {
         console.log(result)
 
         const profile = await auth.getProfile()
-        dispatch(setCurrentProfile(profile))
+        dispatch(actions.userState.setCurrentProfile(profile))
 
         setTimeout(() => navigate('/'), 800)
       } catch (e) {

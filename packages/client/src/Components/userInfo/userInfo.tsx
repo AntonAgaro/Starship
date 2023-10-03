@@ -5,7 +5,7 @@ import { Avatar, Divider, Dropdown, MenuProps, Tooltip } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import ApiAuth from '../../Api/auth'
 import { useDispatch } from 'react-redux'
-import { setCurrentProfile } from '../../Redux/user/userState'
+import actions from '../../Redux/actions'
 
 type TUserInfoProps = {
   profile: TProfileInfo
@@ -42,7 +42,7 @@ const UserInfo: FC<TUserInfoProps> = (props: { profile: TProfileInfo }) => {
         const auth = new ApiAuth()
         try {
           await auth.logout()
-          dispatch(setCurrentProfile(null))
+          dispatch(actions.userState.setCurrentProfile(null))
         } catch (e) {
           console.log(e)
         }

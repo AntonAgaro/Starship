@@ -9,7 +9,7 @@ import LoadingLayout from './Layouts/loadingLayout'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from './Redux/store'
 import { TProfileInfo } from './types'
-import { setCurrentProfile } from './Redux/user/userState'
+import actions from './Redux/actions'
 
 function App() {
   const auth = new ApiAuth()
@@ -22,16 +22,16 @@ function App() {
 
   const getProfile = async (isLogout = false) => {
     if (isLogout) {
-      dispatch(setCurrentProfile(null))
+      dispatch(actions.userState.setCurrentProfile(null))
       return
     }
     try {
       const profile = await auth.getProfile()
 
-      dispatch(setCurrentProfile(profile))
+      dispatch(actions.userState.setCurrentProfile(profile))
     } catch (e) {
       console.log(e)
-      dispatch(setCurrentProfile(null))
+      dispatch(actions.userState.setCurrentProfile(null))
     }
     setLoading(false)
   }
