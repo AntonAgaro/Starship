@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import ApiAuth from '../../Api/auth'
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
-import { setCurrentProfile } from '../../Redux/userState'
+import { setCurrentProfile } from '../../Redux/user/userState'
 
 type FieldType = {
   login: string

@@ -5,7 +5,7 @@ import { Avatar, Divider, Dropdown, MenuProps, Tooltip } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import ApiAuth from '../../Api/auth'
 import { useDispatch } from 'react-redux'
-import { setCurrentProfile } from '../../Redux/userState'
+import { setCurrentProfile } from '../../Redux/user/userState'
 
 type TUserInfoProps = {
   profile: TProfileInfo

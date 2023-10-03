@@ -9,7 +9,7 @@ import LoadingLayout from './Layouts/loadingLayout'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from './Redux/store'
 import { TProfileInfo } from './types'
-import { setCurrentProfile } from './Redux/userState'
+import { setCurrentProfile } from './Redux/user/userState'
 
 function App() {
   const auth = new ApiAuth()

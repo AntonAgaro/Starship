@@ -3,7 +3,7 @@ import './signInForm.less'
 import { FC, useState } from 'react'
 import ApiAuth from '../../Api/auth'
 import { useNavigate } from 'react-router-dom'
-import { setCurrentProfile } from '../../Redux/userState'
+import { setCurrentProfile } from '../../Redux/user/userState'
 import { useDispatch } from 'react-redux'
 
 type FieldType = {

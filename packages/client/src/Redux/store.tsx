@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { userState } from './userState'
+import { userState } from './user/userState'
 
 export const store = configureStore({
   reducer: { user: userState },
