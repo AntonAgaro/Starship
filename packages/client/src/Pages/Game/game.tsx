@@ -5,6 +5,11 @@ import Game from './classes/Game'
 import styles from './game.module.less'
 import GameEndModal from '../../Modules/GameEndModal/gameEndModal'
 import { useNavigate } from 'react-router-dom'
+import { RouteUrls } from '../../Routes/Router'
+
+export enum Buttons {
+  escape = 'Escape',
+}
 
 const GamePage: FC = () => {
   const game = useRef<Game | null>(null)
@@ -16,7 +21,7 @@ const GamePage: FC = () => {
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
+      if (event.key === Buttons.escape) {
         handleStop()
       }
     }
@@ -26,6 +31,17 @@ const GamePage: FC = () => {
       window.removeEventListener('keydown', handleKeyPress)
     }
   }, [])
+
+  const callback = (ctx: CanvasRenderingContext2D) => {
+    if (!game.current) {
+      game.current = new Game({
+        context: ctx,
+        width,
+        height,
+        isPaused: isGameStopped,
+      })
+    }
+  }
 
   const handleStart = () => {
     if (isGameOver) {
@@ -46,7 +62,7 @@ const GamePage: FC = () => {
   }
 
   const handleExit = () => {
-    navigate('/')
+    navigate(RouteUrls.landing)
   }
 
   const width = 1000,
@@ -66,16 +82,7 @@ const GamePage: FC = () => {
             width={width}
             height={height}
             isPaused={isGameStopped}
-            callback={ctx => {
-              if (!game.current) {
-                game.current = new Game({
-                  context: ctx,
-                  width,
-                  height,
-                  isPaused: isGameStopped,
-                })
-              }
-            }}
+            callback={callback}
           />
           <GameEndModal
             points={points}
@@ -93,4 +100,5 @@ const GamePage: FC = () => {
     </div>
   )
 }
+
 export default GamePage

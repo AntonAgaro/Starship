@@ -26,9 +26,9 @@ const GameEndModal: FC<GameEndModalProps> = ({
   width,
   height,
 }) => {
-  return (
-    <div className={styles.gameEndModal} style={{ width, height }}>
-      {isGameOver ? (
+  if (isGameOver) {
+    return (
+      <div className={styles.gameEndModal} style={{ width, height }}>
         <div className={styles.actions}>
           <div className={styles.resultText}>ВЫ НАБРАЛИ {points} ОЧКОВ</div>
           <div className={styles.actionText} onClick={onStart}>
@@ -38,25 +38,28 @@ const GameEndModal: FC<GameEndModalProps> = ({
             ВЫЙТИ
           </div>
         </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className={styles.gameEndModal} style={{ width, height }}>
+      {!isGameStopped ? (
+        <div className={styles.exit} onClick={onStop}>
+          <Image src={Close} preview={false} />
+        </div>
       ) : (
-        <>
-          {!isGameStopped ? (
-            <div className={styles.exit} onClick={onStop}>
-              <Image src={Close} preview={false} />
-            </div>
-          ) : (
-            <div className={styles.actions}>
-              <div className={styles.actionText} onClick={onContinue}>
-                ПРОДОЛЖИТЬ ИГРУ
-              </div>
-              <div className={styles.actionText} onClick={onExit}>
-                ВЫЙТИ
-              </div>
-            </div>
-          )}
-        </>
+        <div className={styles.actions}>
+          <div className={styles.actionText} onClick={onContinue}>
+            ПРОДОЛЖИТЬ ИГРУ
+          </div>
+          <div className={styles.actionText} onClick={onExit}>
+            ВЫЙТИ
+          </div>
+        </div>
       )}
     </div>
   )
 }
+
 export default GameEndModal
