@@ -1,10 +1,10 @@
-import React, { FC } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { FC } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { TProfileInfo } from '../../types'
-import { Avatar, Divider, Dropdown, MenuProps, Tooltip } from 'antd'
+import { Avatar, Divider, Dropdown, MenuProps } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
-import ApiAuth from '../../Api/auth'
-import { bus } from '../../Utils/eventBus'
+import { asyncLogout } from '../../Redux/user/userState'
+import { store } from '../../Redux/store'
 
 type TUserInfoProps = {
   profile: TProfileInfo
@@ -37,11 +37,8 @@ const UserInfo: FC<TUserInfoProps> = (props: { profile: TProfileInfo }) => {
       danger: true,
       label: 'Выйти',
       onClick: async () => {
-        const auth = new ApiAuth()
         try {
-          await auth.logout()
-          bus.emit('profileChanged')
-          bus.emit('isAuthenticated', false)
+          store.dispatch(asyncLogout())
         } catch (e) {
           console.log(e)
         }

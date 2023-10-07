@@ -1,25 +1,19 @@
 import { Alert, Button, Card, Form, Input } from 'antd'
 import './signInForm.less'
 import { FC, useState } from 'react'
-import ApiAuth from '../../Api/auth'
 import { useNavigate } from 'react-router-dom'
-import { bus } from '../../Utils/eventBus'
-
-type FieldType = {
-  login: string
-  password: string
-}
+import { asyncLogin } from '../../Redux/user/userState'
+import { store } from '../../Redux/store'
+import { TLoginData } from '../../Redux/user/types'
 
 export const SignInForm: FC = () => {
   const [errorMessage, setErrorMessage] = useState('')
   const navigate = useNavigate()
-  const onFinish = async (values: FieldType) => {
+  const onFinish = async (values: TLoginData) => {
     console.log('Success:', values)
-    const auth = new ApiAuth()
+
     try {
-      await auth.login(values)
-      setErrorMessage('')
-      bus.emit('isAuthenticated')
+      store.dispatch(asyncLogin(values))
 
       setTimeout(() => navigate('/'), 800)
     } catch (e) {
@@ -42,14 +36,14 @@ export const SignInForm: FC = () => {
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="on">
-        <Form.Item<FieldType>
+        <Form.Item<TLoginData>
           label="Логин"
           name="login"
           rules={[{ required: true, message: 'Введите свой логин!' }]}>
           <Input />
         </Form.Item>
 
-        <Form.Item<FieldType>
+        <Form.Item<TLoginData>
           label="Пароль"
           name="password"
           rules={[{ required: true, message: 'Введите свой пароль!' }]}>

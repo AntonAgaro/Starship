@@ -5,24 +5,14 @@ import { Outlet, useNavigate } from 'react-router-dom'
 import { RouteUrls } from '../Routes/Router'
 import './mainLayouts.less'
 import UserInfo from '../Components/userInfo/userInfo'
-import { bus } from '../Utils/eventBus'
 import { TProfileInfo } from '../types'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../Redux/store'
 
 const MainLayout: FC = () => {
-  const [currentProfile, setCurrentProfile] = useState<TProfileInfo | null>(
-    null
-  )
-
-  const getProfile = async (profile: SetStateAction<TProfileInfo | null>) => {
-    setCurrentProfile(profile)
-  }
-
-  useEffect(() => {
-    bus.on('profileChanged', getProfile)
-    return () => {
-      bus.off('profileChanged', getProfile)
-    }
-  }, [])
+  const currentProfile = useSelector(
+    (rootState: RootState) => rootState.user
+  ) as TProfileInfo
 
   const urls = Object.values(RouteUrls).filter(item => {
     return isNaN(Number(item))

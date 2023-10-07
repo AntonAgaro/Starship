@@ -1,5 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import App from './App'
+import { store } from './Redux/store'
+import { Provider } from 'react-redux'
 
 const appContentFooter = 'Footer'
 
@@ -9,6 +11,10 @@ global.fetch = jest.fn(() =>
 )
 
 test('Example test', async () => {
-  render(<App />)
+  render(
+    <Provider store={store}>
+      <App />
+    </Provider>
+  )
   expect(screen.getByText(appContentFooter)).toBeDefined()
 })
