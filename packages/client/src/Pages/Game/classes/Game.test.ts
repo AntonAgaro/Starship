@@ -6,7 +6,6 @@ import Enemy from './Enemy'
 import PlayerBullet from './PlayerBullet'
 import Explosion from './Explosion'
 
-HTMLCanvasElement.prototype.getContext = jest.fn()
 let canvas: HTMLCanvasElement
 let game: Game
 
