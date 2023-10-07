@@ -22,7 +22,13 @@ export const asyncLogin = createAsyncThunk<TUserState, TLoginData>(
     return response as TUserState
   }
 )
-
+export const asyncLogout = createAsyncThunk<TUserState>(
+  'user/logout',
+  async () => {
+    await authAPI.logout()
+    return null
+  }
+)
 export const asyncSignUp = createAsyncThunk<TUserState, TSignUpData>(
   'user/signUp',
   async (values: TSignUpData) => {
@@ -53,6 +59,12 @@ const slice = createSlice({
       })
       .addCase(
         asyncLogin.fulfilled,
+        (state, action: PayloadAction<TUserState>) => {
+          return action.payload
+        }
+      )
+      .addCase(
+        asyncLogout.fulfilled,
         (state, action: PayloadAction<TUserState>) => {
           return action.payload
         }
