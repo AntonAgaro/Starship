@@ -4,7 +4,6 @@ import bossImg from '../../../assets/images/boss-ship.png'
 import firstEnemyImg from '../../../assets/images/enemy-1.png'
 import secondEnemyImg from '../../../assets/images/enemy-2.png'
 import playerBulletImg from '../../../assets/images/player-bullet.png'
-import explosionImg from '../../../assets/images/explosion.png'
 import ImagesPreloader from './ImagesPreloader'
 import Player from './Player'
 import BattleField from './BattleField'
@@ -13,6 +12,23 @@ import GameBlock from './GameBlock'
 import { GameEventsEnum } from '../enums/GameEventsEnum'
 import PlayerBullet from './PlayerBullet'
 import Explosion from './Explosion'
+import {
+  explosionImg1,
+  explosionImg2,
+  explosionImg3,
+  explosionImg4,
+  explosionImg5,
+  explosionImg6,
+  explosionImg7,
+  explosionImg8,
+  explosionImg9,
+  explosionImg10,
+  explosionImg11,
+  explosionImg12,
+  explosionImg13,
+  explosionImg14,
+  explosionImg15,
+} from '../../../assets/images/explosions'
 interface IGameSettings {
   context: CanvasRenderingContext2D
   width: number
@@ -73,7 +89,21 @@ export default class Game {
         firstEnemyImg,
         secondEnemyImg,
         playerBulletImg,
-        explosionImg,
+        explosionImg1,
+        explosionImg2,
+        explosionImg3,
+        explosionImg4,
+        explosionImg5,
+        explosionImg6,
+        explosionImg7,
+        explosionImg8,
+        explosionImg9,
+        explosionImg10,
+        explosionImg11,
+        explosionImg12,
+        explosionImg13,
+        explosionImg14,
+        explosionImg15,
       ],
       onReadyCallbacks: [
         () => {
@@ -217,7 +247,7 @@ export default class Game {
           y: 0,
           width: 100,
           height: 102,
-          dx: 0,
+          dx: Math.random() < 0.5 ? -1 : 1,
           dy: 150,
           velocity: 300,
         },
@@ -287,26 +317,54 @@ export default class Game {
   }
 
   createExplosion(enemy: Enemy) {
-    const explosion = new Explosion({
-      startPosition: {
-        x: enemy.getX(),
-        y: enemy.getY(),
-        width: 100,
-        height: 100,
-        dx: 0,
-        dy: 0,
-        velocity: 0,
-      },
-      imgUrl: explosionImg,
-    })
-    this.explosions.push(explosion)
+    const explosionImages = [
+      explosionImg1,
+      explosionImg2,
+      explosionImg3,
+      explosionImg4,
+      explosionImg5,
+      explosionImg6,
+      explosionImg7,
+      explosionImg8,
+      explosionImg9,
+      explosionImg10,
+      explosionImg11,
+      explosionImg12,
+      explosionImg13,
+      explosionImg14,
+      explosionImg15,
+    ]
 
-    document.dispatchEvent(
-      new CustomEvent(GameEventsEnum.AddExplosion, {
-        detail: {
-          explosion,
+    let counter = 0
+    const explosionInterval = setInterval(() => {
+      const explosion = new Explosion({
+        startPosition: {
+          x: enemy.getX(),
+          y: enemy.getY(),
+          width: 100,
+          height: 100,
+          dx: 0,
+          dy: 0,
+          velocity: 0,
         },
+        imgUrl: explosionImages[counter],
       })
-    )
+
+      if (counter >= explosionImages.length) {
+        clearInterval(explosionInterval)
+        this.removeExplosion(explosion)
+        return
+      }
+
+      this.explosions.push(explosion)
+      document.dispatchEvent(
+        new CustomEvent(GameEventsEnum.AddExplosion, {
+          detail: {
+            explosion,
+          },
+        })
+      )
+      counter++
+    }, 40)
   }
 }
