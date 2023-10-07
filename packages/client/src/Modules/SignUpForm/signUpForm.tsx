@@ -2,31 +2,18 @@ import { Alert, Button, Card, Form, Input } from 'antd'
 import { FC, useState } from 'react'
 import './signUpForm.less'
 import { useNavigate } from 'react-router-dom'
-import ApiAuth from '../../Api/auth'
 import axios from 'axios'
-import { useDispatch } from 'react-redux'
-import actions from '../../Redux/actions'
-
-type FieldType = {
-  login: string
-  password: string
-  passwordRepeat?: string
-  first_name: string
-  second_name: string
-  phone: string
-  email: string
-}
+import { TSignUpData } from '../../Redux/user/types'
+import { asyncSignUp } from '../../Redux/user/userState'
+import { store } from '../../Redux/store'
 
 export const SignUpForm: FC = () => {
   const navigate = useNavigate()
 
   const [errorMessage, setErrorMessage] = useState('')
-  const dispatch = useDispatch()
 
-  const onFinish = async (values: FieldType) => {
+  const onFinish = async (values: TSignUpData) => {
     console.log('Success:', values)
-
-    const auth = new ApiAuth()
 
     let errors = 0
 
@@ -38,13 +25,7 @@ export const SignUpForm: FC = () => {
     if (errors == 0) {
       setErrorMessage('')
       try {
-        const result = await auth.signup(values)
-
-        console.log(result)
-
-        const profile = await auth.getProfile()
-        dispatch(actions.userState.setCurrentProfile(profile))
-
+        store.dispatch(asyncSignUp(values))
         setTimeout(() => navigate('/'), 800)
       } catch (e) {
         if (axios.isAxiosError(e)) {
@@ -70,49 +51,49 @@ export const SignUpForm: FC = () => {
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="on">
-        <Form.Item<FieldType>
+        <Form.Item<TSignUpData>
           label="Логин"
           name="login"
           rules={[{ required: true, message: 'Введите свой логин!' }]}>
           <Input />
         </Form.Item>
 
-        <Form.Item<FieldType>
+        <Form.Item<TSignUpData>
           label="Пароль"
           name="password"
           rules={[{ required: true, message: 'Введите свой пароль!' }]}>
           <Input.Password className="input-password" />
         </Form.Item>
 
-        <Form.Item<FieldType>
+        <Form.Item<TSignUpData>
           label="Повторите пароль"
           name="passwordRepeat"
           rules={[{ required: true, message: 'Повторите свой пароль!' }]}>
           <Input.Password className="input-password" />
         </Form.Item>
 
-        <Form.Item<FieldType>
+        <Form.Item<TSignUpData>
           label="Имя"
           name="first_name"
           rules={[{ required: true, message: 'Введите своё имя!' }]}>
           <Input />
         </Form.Item>
 
-        <Form.Item<FieldType>
+        <Form.Item<TSignUpData>
           label="Фамилия"
           name="second_name"
           rules={[{ required: true, message: 'Введите свою фамилию!' }]}>
           <Input />
         </Form.Item>
 
-        <Form.Item<FieldType>
+        <Form.Item<TSignUpData>
           label="Email"
           name="email"
           rules={[{ required: true, message: 'Введите свой email!' }]}>
           <Input />
         </Form.Item>
 
-        <Form.Item<FieldType>
+        <Form.Item<TSignUpData>
           label="Номер телефона"
           name="phone"
           rules={[{ required: true, message: 'Введите свой номер!' }]}>
