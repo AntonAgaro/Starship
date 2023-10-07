@@ -2,8 +2,7 @@ import GameBlock from './GameBlock'
 import { GameBlockSettings } from '../types/GameBlockTypes'
 
 export default class Enemy extends GameBlock {
-  private direction = Math.random() < 0.5 ? -1 : 1 // Направление движения: -1 для движения влево, 1 для движения вправо
-  private moveSpeed = 100 // Скорость движения
+  private direction = this.getDx() // Направление движения
 
   constructor(settings: GameBlockSettings) {
     super(settings)
@@ -15,7 +14,7 @@ export default class Enemy extends GameBlock {
     }
 
     // Вычисляем расстояние, на которое нужно переместиться
-    const distance = this.moveSpeed * dt * this.direction
+    const distance = this.getVelocity() * dt * this.direction
 
     // Вычисляем новую позицию после перемещения
     const newX = this.getX() + distance

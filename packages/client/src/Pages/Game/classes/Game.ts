@@ -247,7 +247,7 @@ export default class Game {
           y: 0,
           width: 100,
           height: 102,
-          dx: 0,
+          dx: Math.random() < 0.5 ? -1 : 1,
           dy: 150,
           velocity: 300,
         },
