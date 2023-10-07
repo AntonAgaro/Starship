@@ -1,19 +1,23 @@
 import Player from './Player'
-import { describe, expect, test } from '@jest/globals'
+import { describe, expect, test, beforeEach } from '@jest/globals'
 
-const player = new Player({
-  startPosition: {
-    x: 25,
-    y: 200,
-    width: 100,
-    height: 118,
-    dx: 0,
-    dy: 0,
-    velocity: 600,
-  },
-  imgUrl: 'img',
-})
-describe('Test Player class getters return correct values', () => {
+let player: Player
+describe('Test Player class', () => {
+  beforeEach(() => {
+    player = new Player({
+      startPosition: {
+        x: 25,
+        y: 200,
+        width: 100,
+        height: 118,
+        dx: 0,
+        dy: 0,
+        velocity: 600,
+      },
+      imgUrl: 'img',
+    })
+  })
+
   test('getX returns correct value', () => {
     expect(player.getX()).toBe(25)
   })
@@ -45,9 +49,7 @@ describe('Test Player class getters return correct values', () => {
   test('getVelocity returns correct value', () => {
     expect(player.getVelocity()).toBe(600)
   })
-})
 
-describe('Test Player class setters set correct values', () => {
   test('setX sets correct value', () => {
     player.setX(104)
     expect(player.getX()).toBe(104)
