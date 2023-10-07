@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react'
 import Canvas from './index'
+import '@testing-library/jest-dom/jest-globals'
 import { describe, expect } from '@jest/globals'
 
 describe('Test Canvas', () => {
@@ -13,6 +14,6 @@ describe('Test Canvas', () => {
       />
     )
     const canvasEl = document.querySelector('canvas')
-    expect(canvasEl).toBeInstanceOf(HTMLCanvasElement)
+    expect(canvasEl).toBeInTheDocument()
   })
 })
