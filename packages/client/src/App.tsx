@@ -4,35 +4,21 @@ import withBasicProviders from './Providers/withBasicProviders'
 import withThemeProvider from './Providers/withThemeProvider'
 import Router from './Routes/Router'
 import { useEffect, useState } from 'react'
-import ApiAuth from './Api/auth'
 import LoadingLayout from './Layouts/loadingLayout'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from './Redux/store'
+import { RootState, store } from './Redux/store'
 import { TProfileInfo } from './types'
-import actions from './Redux/actions'
+import { asyncGetProfile } from './Redux/user/userState'
 
 function App() {
-  const auth = new ApiAuth()
   const currentProfile = useSelector(
     (rootState: RootState) => rootState.user
   ) as TProfileInfo
-  const dispatch = useDispatch()
 
   const [loading, setLoading] = useState(true)
 
-  const getProfile = async (isLogout = false) => {
-    if (isLogout) {
-      dispatch(actions.userState.setCurrentProfile(null))
-      return
-    }
-    try {
-      const profile = await auth.getProfile()
-
-      dispatch(actions.userState.setCurrentProfile(profile))
-    } catch (e) {
-      console.log(e)
-      dispatch(actions.userState.setCurrentProfile(null))
-    }
+  const getProfile = async () => {
+    await store.dispatch(asyncGetProfile())
     setLoading(false)
   }
 
