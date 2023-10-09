@@ -2,8 +2,9 @@ import { render, screen } from '@testing-library/react'
 import App from './App'
 import { store } from './Redux/store'
 import { Provider } from 'react-redux'
+import CheckUserContainer from './Containers/CheckUserContainer/CheckUserContainer'
 
-const appContentFooter = 'Footer'
+const appContentLoading = 'Загрузка...'
 
 // @ts-ignore
 global.fetch = jest.fn(() =>
@@ -13,8 +14,10 @@ global.fetch = jest.fn(() =>
 test('Example test', async () => {
   render(
     <Provider store={store}>
-      <App />
+      <CheckUserContainer>
+        <App />
+      </CheckUserContainer>
     </Provider>
   )
-  expect(screen.getByText(appContentFooter)).toBeDefined()
+  expect(screen.getByText(appContentLoading)).toBeDefined()
 })
