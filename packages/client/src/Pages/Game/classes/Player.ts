@@ -1,19 +1,9 @@
 import { GameEventsEnum } from '../enums/GameEventsEnum'
-import {
-  GameBlockSettings,
-  ScoreCollector,
-  Shooter,
-} from '../types/GameBlockTypes'
+import { GameBlockSettings } from '../types/GameBlockTypes'
 import GameBlock from './GameBlock'
 
-export default class Player
-  extends GameBlock
-  implements Shooter, ScoreCollector
-{
-  shotDamage: number
-  score: number
-
-  constructor(settings: GameBlockSettings & Pick<Shooter, 'shotDamage'>) {
+export default class Player extends GameBlock {
+  constructor(settings: GameBlockSettings) {
     super(settings)
 
     window.addEventListener('keydown', e => {
@@ -27,29 +17,6 @@ export default class Player
     window.addEventListener('keyup', () => {
       this.stop()
     })
-
-    this.shotDamage = settings.shotDamage
-    this.score = 0
-  }
-
-  addScore(score: number) {
-    this.score = this.score + score
-  }
-
-  getScore() {
-    return this.score
-  }
-
-  takeDamage(damage: number) {
-    if (this.hitPoints) this.hitPoints = this.hitPoints - damage
-  }
-
-  setShotDamage(damage: number) {
-    this.shotDamage = damage
-  }
-
-  getShotDamage() {
-    return this.shotDamage
   }
 
   private changeMoveDirection(keyCode: string) {

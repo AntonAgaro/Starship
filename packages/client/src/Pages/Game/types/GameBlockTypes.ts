@@ -14,20 +14,4 @@ export interface GameBlockPosition {
 export interface GameBlockSettings {
   startPosition: GameBlockPosition
   imgUrl: string
-  hitPoints?: number
-  collisionDamage?: number
-  scoreForDestoying?: number
-}
-
-export interface Shooter {
-  shotDamage: number
-  takeDamage: (damage: number) => void
-  setShotDamage: (damage: number) => void
-  getShotDamage: () => number
-}
-
-export interface ScoreCollector {
-  score: number
-  addScore: (score: number) => void
-  getScore: () => number
 }
