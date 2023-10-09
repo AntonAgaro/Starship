@@ -17,7 +17,7 @@ const MainLayout: FC = () => {
   const urls = Object.values(RouteUrls).filter(item => {
     return isNaN(Number(item))
   })
-  const { Content, Footer, Header } = Layout
+  const { Content, Header } = Layout
   const [current, setCurrent] = useState('mail')
   const navigate = useNavigate()
 
@@ -50,7 +50,6 @@ const MainLayout: FC = () => {
       <Content className="main-content">
         <Outlet />
       </Content>
-      <Footer>Footer</Footer>
     </Layout>
   )
 }

@@ -3,7 +3,7 @@ import App from './App'
 import { store } from './Redux/store'
 import { Provider } from 'react-redux'
 
-const appContentFooter = 'Footer'
+const appContentLoading = 'Loading...'
 
 // @ts-ignore
 global.fetch = jest.fn(() =>
@@ -16,5 +16,5 @@ test('Example test', async () => {
       <App />
     </Provider>
   )
-  expect(screen.getByText(appContentFooter)).toBeDefined()
+  expect(screen.getByText(appContentLoading)).toBeDefined()
 })
