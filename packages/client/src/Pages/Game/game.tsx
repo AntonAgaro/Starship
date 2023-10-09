@@ -1,11 +1,17 @@
 import { FC, useEffect, useRef, useState } from 'react'
-import Canvas from '../../Components/Canvas'
-import GameStartModal from '../../Modules/GameStartModal/gameStartModal'
-import Game from './classes/Game'
-import styles from './game.module.less'
-import GameEndModal from '../../Modules/GameEndModal/gameEndModal'
 import { useNavigate } from 'react-router-dom'
+import Canvas from '../../Components/Canvas'
+import GameEndModal from '../../Modules/GameEndModal/gameEndModal'
+import GameInterface from '../../Modules/GameInterface/gameInterface'
+import GameStartModal from '../../Modules/GameStartModal/gameStartModal'
 import { RouteUrls } from '../../Routes/Router'
+import Game from './classes/Game'
+import {
+  gameStore,
+  selectPlayerHitPoints,
+  selectPlayerScore,
+} from './classes/helpers/stateManager'
+import styles from './game.module.less'
 
 export enum Buttons {
   escape = 'Escape',
@@ -17,7 +23,9 @@ const GamePage: FC = () => {
   const [isStartModalVisible, setStartModalVisible] = useState(true)
   const [isGameStopped, setIsGameStopped] = useState(false)
   const [isGameOver, setIsGameOver] = useState(false)
-  const [points, setPoints] = useState(1000)
+
+  const [playerHitPoints, setPlayerHitPoints] = useState(200)
+  const [playerScore, setPlayerScore] = useState(0)
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
@@ -40,6 +48,14 @@ const GamePage: FC = () => {
         height,
         isPaused: isGameStopped,
       })
+
+      gameStore.subscribe(() =>
+        setPlayerHitPoints(selectPlayerHitPoints(gameStore.getState()))
+      )
+
+      gameStore.subscribe(() =>
+        setPlayerScore(selectPlayerScore(gameStore.getState()))
+      )
     }
   }
 
@@ -65,6 +81,10 @@ const GamePage: FC = () => {
     navigate(RouteUrls.landing)
   }
 
+  useEffect(() => {
+    if (playerHitPoints <= 0) setIsGameOver(true)
+  }, [playerHitPoints])
+
   const width = 1000,
     height = 666
 
@@ -78,6 +98,12 @@ const GamePage: FC = () => {
         />
       ) : (
         <>
+          <GameInterface
+            width={`${width}px`}
+            height={`${height}px`}
+            hitPoints={playerHitPoints}
+            score={playerScore}
+          />
           <Canvas
             width={width}
             height={height}
@@ -85,7 +111,7 @@ const GamePage: FC = () => {
             callback={callback}
           />
           <GameEndModal
-            points={points}
+            points={playerScore}
             onStart={handleStart}
             isGameOver={isGameOver}
             isGameStopped={isGameStopped}
