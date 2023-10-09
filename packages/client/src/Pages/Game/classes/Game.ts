@@ -46,6 +46,11 @@ export default class Game {
   private enemiesBullets: EnemyBullet[] = []
   private explosions: Explosion[] = []
   private lastEnemy = 1
+  //@ts-expect-error activateEnemies() в конструкторе инициализирует эту переменную
+  private addEnemiesInterval
+  //@ts-expect-error activateEnemies() в конструкторе инициализирует эту переменную
+  private addEnemiesBulletsInterval
+
   isPaused: boolean
   constructor(settings: IGameSettings) {
     this.ctx = settings.context
@@ -107,25 +112,46 @@ export default class Game {
       ],
     })
 
-    // Каждые 3 сек создаем нового врага
-    setInterval(() => {
+    this.activateEnemies()
+
+    document.addEventListener(GameEventsEnum.AddPlayerBullets, this)
+
+    // Убираем взрыв
+    document.addEventListener(GameEventsEnum.AddExplosion, this)
+  }
+
+  activateEnemies() {
+    this.addEnemiesInterval = setInterval(() => {
       this.addEnemies()
     }, 3000)
 
-    setInterval(() => {
+    this.addEnemiesBulletsInterval = setInterval(() => {
       this.addEnemiesBullets()
     }, 2000)
+  }
 
-    document.addEventListener(GameEventsEnum.AddPlayerBullets, () => {
-      this.addPlayerBullets()
-    })
+  deactivateEnemies() {
+    clearInterval(this.addEnemiesInterval)
+    clearInterval(this.addEnemiesBulletsInterval)
+  }
 
-    // Убираем взрыв
-    document.addEventListener(GameEventsEnum.AddExplosion, e => {
-      setTimeout(() => {
-        this.removeExplosion((e as CustomEvent).detail.explosion)
-      }, 500)
-    })
+  handleEvent(event: Event) {
+    switch (event.type) {
+      case GameEventsEnum.AddExplosion:
+        setTimeout(() => {
+          this.removeExplosion((event as CustomEvent).detail.explosion)
+        }, 500)
+        break
+      case GameEventsEnum.AddPlayerBullets:
+        this.addPlayerBullets()
+        break
+    }
+  }
+
+  destroy() {
+    this.deactivateEnemies()
+    document.removeEventListener(GameEventsEnum.AddPlayerBullets, this)
+    document.removeEventListener(GameEventsEnum.AddExplosion, this)
   }
 
   start() {
@@ -242,11 +268,13 @@ export default class Game {
 
   pause() {
     this.isPaused = true
+    this.deactivateEnemies()
   }
 
   resume() {
     this.isPaused = false
     this.start()
+    this.activateEnemies()
   }
 
   renderImages() {
@@ -373,7 +401,6 @@ export default class Game {
 
   addEnemiesBullets() {
     this.enemies.forEach(enemy => {
-      console.log('shot', enemyBulletImg, enemy.getY())
       this.enemiesBullets.push(
         new EnemyBullet({
           startPosition: {

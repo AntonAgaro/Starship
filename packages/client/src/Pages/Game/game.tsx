@@ -35,8 +35,18 @@ const GamePage: FC = () => {
     }
     window.addEventListener('keydown', handleKeyPress)
 
+    const hitPointsUnsubscribe = gameStore.subscribe(() =>
+      setPlayerHitPoints(selectPlayerHitPoints(gameStore.getState()))
+    )
+
+    const scoreUnsubscribe = gameStore.subscribe(() =>
+      setPlayerScore(selectPlayerScore(gameStore.getState()))
+    )
+
     return () => {
       window.removeEventListener('keydown', handleKeyPress)
+      scoreUnsubscribe()
+      hitPointsUnsubscribe()
     }
   }, [])
 
@@ -48,14 +58,6 @@ const GamePage: FC = () => {
         height,
         isPaused: isGameStopped,
       })
-
-      gameStore.subscribe(() =>
-        setPlayerHitPoints(selectPlayerHitPoints(gameStore.getState()))
-      )
-
-      gameStore.subscribe(() =>
-        setPlayerScore(selectPlayerScore(gameStore.getState()))
-      )
     }
   }
 
@@ -78,6 +80,8 @@ const GamePage: FC = () => {
   }
 
   const handleExit = () => {
+    game.current?.destroy()
+    game.current = null
     navigate(RouteUrls.landing)
   }
 
