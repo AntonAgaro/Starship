@@ -1,12 +1,28 @@
+import {
+  DEFAULT_COLLISION_DAMAGE_VALUE,
+  DEFAULT_HIT_POINTS_VALUE,
+} from '../constants/Constants'
 import { GameBlockPosition, GameBlockSettings } from '../types/GameBlockTypes'
 
 export default abstract class GameBlock {
   protected position: GameBlockPosition
   protected imgUrl: string
+  protected hitPoints: number | null
+  protected collisionDamage: number | null
+  protected scoreForDestoying: number
 
-  constructor(settings: GameBlockSettings) {
-    this.position = settings.startPosition
-    this.imgUrl = settings.imgUrl
+  constructor({
+    startPosition,
+    imgUrl,
+    hitPoints,
+    collisionDamage,
+    scoreForDestoying,
+  }: GameBlockSettings) {
+    this.position = startPosition
+    this.imgUrl = imgUrl
+    this.hitPoints = hitPoints ?? DEFAULT_HIT_POINTS_VALUE
+    this.collisionDamage = collisionDamage ?? DEFAULT_COLLISION_DAMAGE_VALUE
+    this.scoreForDestoying = scoreForDestoying ?? 0
   }
 
   getX() {
@@ -59,5 +75,25 @@ export default abstract class GameBlock {
 
   setVelocity(newVelocity: number) {
     this.position.velocity = newVelocity
+  }
+
+  getHitPoints() {
+    return this.hitPoints
+  }
+
+  setHitPoints(hitPoints: number) {
+    this.hitPoints = hitPoints
+  }
+
+  getCollisionDamage() {
+    return this.collisionDamage
+  }
+
+  setCollisionDamage(collisionDamage: number) {
+    this.collisionDamage = collisionDamage
+  }
+
+  getScoreForDestroying() {
+    return this.scoreForDestoying
   }
 }
