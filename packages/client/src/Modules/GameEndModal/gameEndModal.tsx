@@ -50,7 +50,7 @@ const GameEndModal: FC<GameEndModalProps> = ({
       style={{ width, height }}>
       {!isGameStopped ? (
         <div className={styles.exit} onClick={onStop}>
-          <Image src={Close} preview={false} />
+          <Image id="close-game-btn" src={Close} preview={false} />
         </div>
       ) : (
         <div className={styles.actions}>

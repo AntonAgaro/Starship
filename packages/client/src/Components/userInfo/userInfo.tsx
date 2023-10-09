@@ -23,7 +23,7 @@ const UserInfo: FC<TUserInfoProps> = (props: { profile: TProfileInfo }) => {
     {
       key: '1',
       label: name,
-      icon: <UserOutlined />,
+      icon: <UserOutlined rev={undefined} />,
       onClick: () => navigate('/profile'),
     },
     {
@@ -56,7 +56,7 @@ const UserInfo: FC<TUserInfoProps> = (props: { profile: TProfileInfo }) => {
               : ''
           }
           style={{ backgroundColor: '#87d068', marginLeft: '25px' }}
-          icon={<UserOutlined />}
+          icon={<UserOutlined rev={undefined} />}
         />
       </a>
     </Dropdown>

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, MutableRefObject, FC } from 'react'
+import React, { useRef, useEffect, MutableRefObject } from 'react'
 
 interface CanvasProps {
   width: number
