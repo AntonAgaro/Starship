@@ -1,7 +1,7 @@
-import { FC } from 'react'
-import styles from './gameEndModal.module.less'
 import { Image } from 'antd'
+import { FC } from 'react'
 import Close from '../../assets/images/close.png'
+import styles from './gameEndModal.module.less'
 
 export type GameEndModalProps = {
   onStart: () => void

@@ -1,10 +1,10 @@
-import Game from './Game'
-import { describe, expect, test, beforeEach } from '@jest/globals'
-import Player from './Player'
+import { beforeEach, describe, expect, test } from '@jest/globals'
 import BattleField from './BattleField'
 import Enemy from './Enemy'
-import PlayerBullet from './PlayerBullet'
 import Explosion from './Explosion'
+import Game from './Game'
+import Player from './Player'
+import PlayerBullet from './PlayerBullet'
 
 let canvas: HTMLCanvasElement
 let game: Game
