@@ -1,25 +1,47 @@
-import { Button, Card, Form, Input } from 'antd'
-import { FC } from 'react'
+import { Alert, Button, Card, Form, Input } from 'antd'
+import axios from 'axios'
+import { FC, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { store } from '../../Redux/store'
+import { TSignUpData } from '../../Redux/user/types'
+import { asyncSignUp } from '../../Redux/user/userState'
 import './signUpForm.less'
 
-const onFinish = (values: any) => {
-  console.log('Success:', values)
-}
-
-const onFinishFailed = (errorInfo: any) => {
-  console.log('Failed:', errorInfo)
-}
-
-type FieldType = {
-  username?: string
-  password?: string
-  passwordRepeat?: string
-  firstName?: string
-  secondName?: string
-  phoneNumber?: string
-}
-
 export const SignUpForm: FC = () => {
+  const navigate = useNavigate()
+
+  const [errorMessage, setErrorMessage] = useState('')
+
+  const onFinish = async (values: TSignUpData) => {
+    console.log('Success:', values)
+
+    let errors = 0
+
+    if (values.password != values.passwordRepeat) {
+      errors++
+      setErrorMessage('Пароли не совпадают')
+    }
+
+    if (errors == 0) {
+      setErrorMessage('')
+      try {
+        store.dispatch(asyncSignUp(values))
+        setTimeout(() => navigate('/'), 800)
+      } catch (e) {
+        if (axios.isAxiosError(e)) {
+          console.log(e)
+
+          const { reason } = e.response?.data ?? {}
+          setErrorMessage(`Ошибка регистрации: ${reason}`)
+        }
+      }
+    }
+  }
+
+  const onFinishFailed = (errorInfo: any) => {
+    console.log('Failed:', errorInfo)
+  }
+
   return (
     <Card title="Зарегистрироваться" className="sign-up-form">
       <Form
@@ -29,50 +51,63 @@ export const SignUpForm: FC = () => {
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="on">
-        <Form.Item<FieldType>
+        <Form.Item<TSignUpData>
           label="Логин"
-          name="username"
+          name="login"
           rules={[{ required: true, message: 'Введите свой логин!' }]}>
           <Input />
         </Form.Item>
 
-        <Form.Item<FieldType>
+        <Form.Item<TSignUpData>
           label="Пароль"
           name="password"
           rules={[{ required: true, message: 'Введите свой пароль!' }]}>
           <Input.Password className="input-password" />
         </Form.Item>
 
-        <Form.Item<FieldType>
+        <Form.Item<TSignUpData>
           label="Повторите пароль"
           name="passwordRepeat"
           rules={[{ required: true, message: 'Повторите свой пароль!' }]}>
           <Input.Password className="input-password" />
         </Form.Item>
 
-        <Form.Item<FieldType>
+        <Form.Item<TSignUpData>
           label="Имя"
-          name="firstName"
+          name="first_name"
           rules={[{ required: true, message: 'Введите своё имя!' }]}>
           <Input />
         </Form.Item>
 
-        <Form.Item<FieldType>
+        <Form.Item<TSignUpData>
           label="Фамилия"
-          name="secondName"
+          name="second_name"
           rules={[{ required: true, message: 'Введите свою фамилию!' }]}>
           <Input />
         </Form.Item>
 
-        <Form.Item<FieldType>
-          label="Номер телефона"
-          name="phoneNumber"
-          rules={[{ required: true, message: 'Введите свой номер!' }]}>
+        <Form.Item<TSignUpData>
+          label="Email"
+          name="email"
+          rules={[{ required: true, message: 'Введите свой email!' }]}>
           <Input />
         </Form.Item>
 
+        <Form.Item<TSignUpData>
+          label="Номер телефона"
+          name="phone"
+          rules={[{ required: true, message: 'Введите свой номер!' }]}>
+          <Input />
+        </Form.Item>
+        {errorMessage ? (
+          <Alert message={errorMessage} type="error" showIcon />
+        ) : (
+          ''
+        )}
         <Form.Item wrapperCol={{ offset: 5, span: 30 }}>
-          <Button type="link">Уже есть аккаунт? Войдите!</Button>
+          <Button type="link" onClick={() => navigate('/signin')}>
+            Уже есть аккаунт? Войдите!
+          </Button>
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 9, span: 20 }}>

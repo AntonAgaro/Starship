@@ -1,0 +1,46 @@
+@text-shadow-start-color: #fff;
+@text-shadow-end-color-first: #fff;
+@text-shadow-end-color-second: rgba(1, 1, 1, 0.9);
+
+.gameStartModal {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  background-color: rgba(20, 20, 20, 0.7);
+}
+
+.startGameText {
+  user-select: none;
+  font-weight: 900;
+  animation: glow 2s ease-in-out infinite alternate;
+  font-size: 90px;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.controls {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 300px;
+  height: 100px;
+  top: 0;
+  right: 0;
+  font-size: medium;
+  font-weight: 400;
+}
+
+@keyframes glow {
+  from {
+    text-shadow: @text-shadow-start-color;
+  }
+  to {
+    text-shadow: 0 0 30px @text-shadow-end-color-first,
+      0 0 10px @text-shadow-end-color-second;
+  }
+}
