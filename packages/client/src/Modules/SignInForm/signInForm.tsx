@@ -1,21 +1,32 @@
-import { Button, Card, Form, Input } from 'antd'
+import { Alert, Button, Card, Form, Input } from 'antd'
+import { FC, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { store } from '../../Redux/store'
+import { TLoginData } from '../../Redux/user/types'
+import { asyncLogin } from '../../Redux/user/userState'
 import './signInForm.less'
-import { FC } from 'react'
-
-const onFinish = (values: any) => {
-  console.log('Success:', values)
-}
-
-const onFinishFailed = (errorInfo: any) => {
-  console.log('Failed:', errorInfo)
-}
-
-type FieldType = {
-  username?: string
-  password?: string
-}
 
 export const SignInForm: FC = () => {
+  const [errorMessage, setErrorMessage] = useState('')
+  const navigate = useNavigate()
+  const onFinish = async (values: TLoginData) => {
+    console.log('Success:', values)
+
+    try {
+      store.dispatch(asyncLogin(values))
+
+      setTimeout(() => navigate('/'), 800)
+    } catch (e) {
+      console.log(e)
+      setErrorMessage('Не верный логин или пароль')
+      return false
+    }
+  }
+
+  const onFinishFailed = (errorInfo: any) => {
+    console.log('Failed:', errorInfo)
+  }
+
   return (
     <Card title="Войти" className="sign-in-form">
       <Form
@@ -25,22 +36,29 @@ export const SignInForm: FC = () => {
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="on">
-        <Form.Item<FieldType>
+        <Form.Item<TLoginData>
           label="Логин"
-          name="username"
+          name="login"
           rules={[{ required: true, message: 'Введите свой логин!' }]}>
           <Input />
         </Form.Item>
 
-        <Form.Item<FieldType>
+        <Form.Item<TLoginData>
           label="Пароль"
           name="password"
           rules={[{ required: true, message: 'Введите свой пароль!' }]}>
           <Input.Password className="input-password" />
         </Form.Item>
+        {errorMessage ? (
+          <Alert message={errorMessage} type="error" showIcon />
+        ) : (
+          ''
+        )}
 
         <Form.Item wrapperCol={{ offset: 1, span: 30 }}>
-          <Button type="link">Ещё нет аккаунта? Зарегистрируйтесь!</Button>
+          <Button type="link" onClick={() => navigate('/signup')}>
+            Ещё нет аккаунта? Зарегистрируйтесь!
+          </Button>
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 9, span: 20 }}>

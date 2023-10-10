@@ -1,0 +1,70 @@
+@scroll-light-color: rgba(255, 255, 255, 0.29);
+@scroll-dark-color: rgb(20, 20, 20);
+@scroll-hover-color: #253861;
+
+.leader-board-table {
+  width: 95%;
+  height: 95%;
+
+  .ant-table-body {
+    &::-webkit-scrollbar {
+      width: 10px;
+      height: 8px;
+      background-color: @scroll-dark-color;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: @scroll-dark-color;
+      border-radius: 9em;
+      box-shadow: inset 1px 1px 10px @scroll-light-color;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: @scroll-hover-color;
+    }
+
+    &::-webkit-scrollbar-button:vertical:start:decrement {
+      background: linear-gradient(
+          120deg,
+          @scroll-dark-color 40%,
+          rgba(0, 0, 0, 0) 41%
+        ),
+        linear-gradient(240deg, @scroll-dark-color 40%, rgba(0, 0, 0, 0) 41%),
+        linear-gradient(0deg, @scroll-dark-color 30%, rgba(0, 0, 0, 0) 31%);
+      background-color: @scroll-light-color;
+    }
+
+    &::-webkit-scrollbar-button:vertical:end:increment {
+      background: linear-gradient(
+          300deg,
+          @scroll-dark-color 40%,
+          rgba(0, 0, 0, 0) 41%
+        ),
+        linear-gradient(60deg, @scroll-dark-color 40%, rgba(0, 0, 0, 0) 41%),
+        linear-gradient(180deg, @scroll-dark-color 30%, rgba(0, 0, 0, 0) 31%);
+      background-color: @scroll-light-color;
+    }
+
+    &::-webkit-scrollbar-button:horizontal:start:decrement {
+      background: linear-gradient(
+          30deg,
+          @scroll-dark-color 40%,
+          rgba(0, 0, 0, 0) 41%
+        ),
+        linear-gradient(150deg, @scroll-dark-color 40%, rgba(0, 0, 0, 0) 41%),
+        linear-gradient(270deg, @scroll-dark-color 30%, rgba(0, 0, 0, 0) 31%);
+      background-color: @scroll-light-color;
+    }
+
+    &::-webkit-scrollbar-button:horizontal:end:increment {
+      background: linear-gradient(
+          210deg,
+          @scroll-dark-color 40%,
+          rgba(0, 0, 0, 0) 41%
+        ),
+        linear-gradient(330deg, @scroll-dark-color 40%, rgba(0, 0, 0, 0) 41%),
+        linear-gradient(90deg, @scroll-dark-color 30%, rgba(0, 0, 0, 0) 31%);
+      background-color: @scroll-light-color;
+    }
+  }
+}

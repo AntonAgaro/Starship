@@ -1,20 +1,15 @@
-import { useEffect } from 'react'
+import { BrowserRouter } from 'react-router-dom'
 import './App.css'
-import withBasicProviders from './Providers/withProviders'
+import withBasicProviders from './Providers/withBasicProviders'
 import withThemeProvider from './Providers/withThemeProvider'
+import Router from './Routes/Router'
 
 function App() {
-  useEffect(() => {
-    const fetchServerData = async () => {
-      const url = `http://localhost:${__SERVER_PORT__}`
-      const response = await fetch(url)
-      const data = await response.json()
-      console.log(data)
-    }
-
-    fetchServerData()
-  }, [])
-  return <div className="App">Вот тут будет жить ваше приложение :)</div>
+  return (
+    <BrowserRouter>
+      <Router />
+    </BrowserRouter>
+  )
 }
 
 export default withBasicProviders(withThemeProvider)(App)
