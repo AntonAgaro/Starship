@@ -1,3 +1,7 @@
+1. Запустить проект: npm run dev  http://localhost:3000/
+2. Видео: https://disk.yandex.ru/i/ZEySYrjrRPq_Wg
+3. запустить тесты: npm run test
+
 ### Как запускать?
 
 1. Убедитесь что у вас установлен `node` и `docker`
