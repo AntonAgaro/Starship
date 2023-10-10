@@ -1,3 +1,5 @@
+export type children = string | null | JSX.Element
+
 export type TProfileInfo = {
   first_name: string
   second_name: string

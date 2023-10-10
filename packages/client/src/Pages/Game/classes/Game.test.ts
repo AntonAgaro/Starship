@@ -1,10 +1,10 @@
-import Game from './Game'
-import { describe, expect, test, beforeEach } from '@jest/globals'
-import Player from './Player'
+import { beforeEach, describe, expect, test } from '@jest/globals'
 import BattleField from './BattleField'
 import Enemy from './Enemy'
-import PlayerBullet from './PlayerBullet'
 import Explosion from './Explosion'
+import Game from './Game'
+import Player from './Player'
+import PlayerBullet from './PlayerBullet'
 
 let canvas: HTMLCanvasElement
 let game: Game
@@ -72,7 +72,9 @@ describe('Test Game class', () => {
 
   test('Explosion correctly created', () => {
     game['addEnemies']()
+    jest.useFakeTimers()
     game['createExplosion'](game['enemies'][0])
+    jest.advanceTimersByTime(40)
     expect(game['explosions'][0]).toBeInstanceOf(Explosion)
   })
 
@@ -80,7 +82,7 @@ describe('Test Game class', () => {
     jest.useFakeTimers()
     game['addEnemies']()
     game['createExplosion'](game['enemies'][0])
-    jest.advanceTimersByTime(501)
+    jest.advanceTimersByTime(1100)
     expect(game['explosions'].length).toBe(0)
   })
 })
