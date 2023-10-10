@@ -14,7 +14,10 @@ const initialState: GameState = {
 export const HIT_POINT_UPDATED = 'game/hit-point-updated'
 export const SCORE_UPDATED = 'game/score-updated'
 
-export function gameReducer(state = initialState, action) {
+export function gameReducer(
+  state = initialState,
+  action: { type: any; payload: any }
+) {
   switch (action.type) {
     case HIT_POINT_UPDATED: {
       return {

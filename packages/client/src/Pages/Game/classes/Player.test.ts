@@ -1,5 +1,5 @@
+import { beforeEach, describe, expect, test } from '@jest/globals'
 import Player from './Player'
-import { describe, expect, test, beforeEach } from '@jest/globals'
 
 let player: Player
 describe('Test Player class', () => {
@@ -15,6 +15,7 @@ describe('Test Player class', () => {
         velocity: 600,
       },
       imgUrl: 'img',
+      shotDamage: 100,
     })
   })
 
