@@ -1,15 +1,23 @@
-import React, { FC, useState } from 'react'
-import { Layout, Menu } from 'antd'
 import type { MenuProps } from 'antd'
+import { Layout, Menu } from 'antd'
+import { FC, SetStateAction, useEffect, useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { RouteUrls } from '../Routes/Router'
 import './mainLayouts.less'
+import UserInfo from '../Components/userInfo/userInfo'
+import { TProfileInfo } from '../types'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../Redux/store'
+
 const MainLayout: FC = () => {
-  const { Content, Footer, Header } = Layout
+  const currentProfile = useSelector(
+    (rootState: RootState) => rootState.user
+  ) as TProfileInfo
+
   const urls = Object.values(RouteUrls).filter(item => {
     return isNaN(Number(item))
   })
-
+  const { Content, Header } = Layout
   const [current, setCurrent] = useState('mail')
   const navigate = useNavigate()
 
@@ -28,7 +36,7 @@ const MainLayout: FC = () => {
   })
 
   return (
-    <Layout>
+    <Layout className="main">
       <Header className="main-header">
         <Menu
           theme="dark"
@@ -37,11 +45,11 @@ const MainLayout: FC = () => {
           items={menuItems}
           selectedKeys={[current]}
         />
+        {currentProfile && <UserInfo profile={currentProfile} />}
       </Header>
-      <Content>
+      <Content className="main-content">
         <Outlet />
       </Content>
-      <Footer>Footer</Footer>
     </Layout>
   )
 }

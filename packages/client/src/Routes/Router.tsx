@@ -1,6 +1,7 @@
-import React, { Route, Routes } from 'react-router-dom'
+import React from 'react'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import MainLayout from '../Layouts/mainLayout'
-import Game from '../Pages/Game/game'
+import GamePage from '../Pages/Game/game'
 import Landing from '../Pages/Landing/landing'
 import LeaderBoard from '../Pages/LeaderBoard/leaderBoard'
 import SignIn from '../Pages/SignIn/signIn'
@@ -10,12 +11,12 @@ import CreateTopic from '../Pages/Forum/CreateTopic/createTopic'
 import Topic from '../Pages/Forum/Topic/topic'
 import Forum from '../Pages/Forum/forum'
 import Error from '../Pages/Error/error'
+import CheckAuthorized from '../Containers/CheckAuthorized/CheckAuthorized'
 
 export enum RouteUrls {
   landing = '/',
   game = '/game',
   leaderBoard = '/leaderboard',
-
   signIn = '/signin',
   signUp = '/signup',
   profile = '/profile',
@@ -27,25 +28,91 @@ export enum RouteUrls {
   error500 = '/error',
 }
 
-const Router = () => (
-  <Routes>
-    <Route element={<MainLayout />}>
-      <Route path={RouteUrls.landing} element={<Landing />} />
-      <Route path={RouteUrls.game} element={<Game />} />
-      <Route path={RouteUrls.leaderBoard} element={<LeaderBoard />} />
+const Router = () => {
+  const navigateToSignIn = <Navigate to={RouteUrls.signIn} replace />
 
-      <Route path={RouteUrls.signIn} element={<SignIn />} />
-      <Route path={RouteUrls.signUp} element={<SignUp />} />
-      <Route path={RouteUrls.profile} element={<Profile />} />
+  return (
+    <Routes>
+      <Route element={<MainLayout />}>
+        <Route
+          path={RouteUrls.landing}
+          element={
+            <CheckAuthorized unauthView={navigateToSignIn}>
+              <Landing />
+            </CheckAuthorized>
+          }
+        />
+        <Route
+          path={RouteUrls.game}
+          element={
+            <CheckAuthorized unauthView={navigateToSignIn}>
+              <GamePage />
+            </CheckAuthorized>
+          }
+        />
+        <Route
+          path={RouteUrls.leaderBoard}
+          element={
+            <CheckAuthorized unauthView={navigateToSignIn}>
+              <LeaderBoard />
+            </CheckAuthorized>
+          }
+        />
+        <Route
+          path={RouteUrls.signIn}
+          element={
+            <CheckAuthorized unauthView={<SignIn />}>
+              <Navigate to={RouteUrls.landing} replace />
+            </CheckAuthorized>
+          }
+        />
+        <Route
+          path={RouteUrls.signUp}
+          element={
+            <CheckAuthorized unauthView={<SignUp />}>
+              <Navigate to={RouteUrls.landing} replace />
+            </CheckAuthorized>
+          }
+        />
+        <Route
+          path={RouteUrls.profile}
+          element={
+            <CheckAuthorized unauthView={navigateToSignIn}>
+              <Profile />
+            </CheckAuthorized>
+          }
+        />
 
-      <Route path={RouteUrls.forum} element={<Forum />} />
-      <Route path={RouteUrls.createTopic} element={<CreateTopic />} />
-      <Route path={RouteUrls.topic} element={<Topic />} />
+        <Route
+          path={RouteUrls.forum}
+          element={
+            <CheckAuthorized unauthView={navigateToSignIn}>
+              <Forum />
+            </CheckAuthorized>
+          }
+        />
+        <Route
+          path={RouteUrls.createTopic}
+          element={
+            <CheckAuthorized unauthView={navigateToSignIn}>
+              <CreateTopic />
+            </CheckAuthorized>
+          }
+        />
+        <Route
+          path={RouteUrls.topic}
+          element={
+            <CheckAuthorized unauthView={navigateToSignIn}>
+              <Topic />
+            </CheckAuthorized>
+          }
+        />
 
-      <Route path={RouteUrls.error404} element={<Error code={404} />} />
-      <Route path={RouteUrls.error500} element={<Error code={500} />} />
-    </Route>
-  </Routes>
-)
+        <Route path={RouteUrls.error404} element={<Error code={404} />} />
+        <Route path={RouteUrls.error500} element={<Error code={500} />} />
+      </Route>
+    </Routes>
+  )
+}
 
 export default Router

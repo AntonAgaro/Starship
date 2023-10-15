@@ -1,4 +1,13 @@
-import React, { FC } from 'react'
+import { FC, useEffect } from 'react'
+import { SignInForm } from '../../Modules/SignInForm'
 import './signIn.less'
-const SignIn: FC = () => <div className="wrapper">Sign in page</div>
+
+const SignIn: FC = () => {
+  return (
+    <div className="wrapper">
+      <SignInForm />
+    </div>
+  )
+}
+
 export default SignIn
