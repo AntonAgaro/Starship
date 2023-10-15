@@ -3,6 +3,7 @@ import { Form, Button, Input, message } from 'antd'
 import { TChangePassword } from '../../../../../../Redux/user/types'
 import axios from 'axios'
 import UserApi from '../../../../../../Api/user'
+import { isValidPassword } from '../../../../../../Utils/validation'
 
 type PasswordChangeFormValues = {
   oldPassword: string
@@ -63,6 +64,13 @@ const PasswordChangeForm = () => {
                 if (!value) {
                   return Promise.reject(
                     new Error('Это поле не может быть пустым.')
+                  )
+                }
+                if (!isValidPassword(value)) {
+                  return Promise.reject(
+                    new Error(
+                      'Пароль должен содержать от 8 до 40 символов и хотя бы одну заглавную букву и цифру.'
+                    )
                   )
                 }
                 if (getFieldValue('oldPassword') === value) {

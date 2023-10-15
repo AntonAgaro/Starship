@@ -6,6 +6,13 @@ import axios from 'axios'
 import { TSignUpData } from '../../Redux/user/types'
 import { asyncSignUp } from '../../Redux/user/userState'
 import { store } from '../../Redux/store'
+import {
+  isValidEmail,
+  isValidLogin,
+  isValidName,
+  isValidPassword,
+  isValidPhone,
+} from '../../Utils/validation'
 
 export const SignUpForm: FC = () => {
   const navigate = useNavigate()
@@ -52,49 +59,168 @@ export const SignUpForm: FC = () => {
         <Form.Item<TSignUpData>
           label="Логин"
           name="login"
-          rules={[{ required: true, message: 'Введите свой логин!' }]}>
+          rules={[
+            () => ({
+              validator(rule, value) {
+                if (!value) {
+                  return Promise.reject(
+                    new Error('Это поле не может быть пустым.')
+                  )
+                }
+                if (!isValidLogin(value)) {
+                  return Promise.reject(
+                    new Error(
+                      'Логин должен быть от 3 до 20 символов и содержать только буквы, цифры, дефис и нижнее подчеркивание.'
+                    )
+                  )
+                }
+                return Promise.resolve()
+              },
+            }),
+          ]}>
           <Input />
         </Form.Item>
 
         <Form.Item<TSignUpData>
           label="Пароль"
           name="password"
-          rules={[{ required: true, message: 'Введите свой пароль!' }]}>
+          rules={[
+            () => ({
+              validator(rule, value) {
+                if (!value) {
+                  return Promise.reject(
+                    new Error('Это поле не может быть пустым.')
+                  )
+                }
+                if (!isValidPassword(value)) {
+                  return Promise.reject(
+                    new Error(
+                      'Пароль должен содержать от 8 до 40 символов и хотя бы одну заглавную букву и цифру.'
+                    )
+                  )
+                }
+
+                return Promise.resolve()
+              },
+            }),
+          ]}>
           <Input.Password className="input-password" />
         </Form.Item>
 
         <Form.Item<TSignUpData>
           label="Повторите пароль"
           name="passwordRepeat"
-          rules={[{ required: true, message: 'Повторите свой пароль!' }]}>
+          rules={[
+            ({ getFieldValue }) => ({
+              validator(rule, value) {
+                if (!value) {
+                  return Promise.reject(
+                    new Error('Это поле не может быть пустым.')
+                  )
+                }
+                if (getFieldValue('password') === value) {
+                  return Promise.resolve()
+                }
+                return Promise.reject(new Error('Пароли не совпадают'))
+              },
+            }),
+          ]}>
           <Input.Password className="input-password" />
         </Form.Item>
 
         <Form.Item<TSignUpData>
           label="Имя"
           name="first_name"
-          rules={[{ required: true, message: 'Введите своё имя!' }]}>
+          rules={[
+            () => ({
+              validator(rule, value) {
+                if (!value) {
+                  return Promise.reject(
+                    new Error('Это поле не может быть пустым.')
+                  )
+                }
+                if (!isValidName(value)) {
+                  return Promise.reject(
+                    new Error(
+                      'Имя должно содержать только буквы, дефисы и пробелы.'
+                    )
+                  )
+                }
+                return Promise.resolve()
+              },
+            }),
+          ]}>
           <Input />
         </Form.Item>
 
         <Form.Item<TSignUpData>
           label="Фамилия"
           name="second_name"
-          rules={[{ required: true, message: 'Введите свою фамилию!' }]}>
+          rules={[
+            () => ({
+              validator(rule, value) {
+                if (!value) {
+                  return Promise.reject(
+                    new Error('Это поле не может быть пустым.')
+                  )
+                }
+                if (!isValidName(value)) {
+                  return Promise.reject(
+                    new Error(
+                      'Фамилия должно содержать только буквы, дефисы и пробелы.'
+                    )
+                  )
+                }
+                return Promise.resolve()
+              },
+            }),
+          ]}>
           <Input />
         </Form.Item>
 
         <Form.Item<TSignUpData>
           label="Email"
           name="email"
-          rules={[{ required: true, message: 'Введите свой email!' }]}>
+          rules={[
+            () => ({
+              validator(rule, value) {
+                if (!value) {
+                  return Promise.reject(
+                    new Error('Это поле не может быть пустым.')
+                  )
+                }
+                if (!isValidEmail(value)) {
+                  return Promise.reject(new Error('Неправильный формат email.'))
+                }
+                return Promise.resolve()
+              },
+            }),
+          ]}>
           <Input />
         </Form.Item>
 
         <Form.Item<TSignUpData>
           label="Номер телефона"
           name="phone"
-          rules={[{ required: true, message: 'Введите свой номер!' }]}>
+          rules={[
+            () => ({
+              validator(rule, value) {
+                if (!value) {
+                  return Promise.reject(
+                    new Error('Это поле не может быть пустым.')
+                  )
+                }
+                if (!isValidPhone(value)) {
+                  return Promise.reject(
+                    new Error(
+                      'Неправильный формат номера телефона. Допустимы только цифры и символ + в начале.'
+                    )
+                  )
+                }
+                return Promise.resolve()
+              },
+            }),
+          ]}>
           <Input />
         </Form.Item>
         {errorMessage ? (
