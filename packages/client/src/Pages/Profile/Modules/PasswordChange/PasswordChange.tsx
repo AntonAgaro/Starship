@@ -1,7 +1,9 @@
 import React from 'react'
 import styles from './PasswordChange.module.less'
-import Title from 'antd/es/typography/Title'
+import { Typography } from 'antd'
 import PasswordChangeForm from './Modules/PasswordChangeForm/PasswordChangeForm'
+
+const { Title } = Typography
 
 const PasswordChange = () => {
   return (

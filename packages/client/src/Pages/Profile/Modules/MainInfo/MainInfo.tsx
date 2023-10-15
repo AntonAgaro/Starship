@@ -1,8 +1,10 @@
 import React from 'react'
 import styles from './MainInfo.module.less'
-import Title from 'antd/es/typography/Title'
+import { Typography } from 'antd'
 import EditUserPhoto from './Modules/EditUserPhoto/EditUserPhoto'
 import EditInfoForm from './Modules/EditInfoForm/EditInfoForm'
+
+const { Title } = Typography
 
 const MainInfo = () => {
   return (

@@ -1,8 +1,10 @@
 import React, { FC } from 'react'
 import styles from './profile.module.less'
-import Title from 'antd/es/typography/Title'
+import { Typography } from 'antd'
 import MainInfo from './Modules/MainInfo/MainInfo'
 import PasswordChange from './Modules/PasswordChange/PasswordChange'
+
+const { Title } = Typography
 
 const Profile: FC = () => {
   return (
