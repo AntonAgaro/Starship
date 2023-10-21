@@ -29,8 +29,6 @@ export const SignUpForm: FC = () => {
         setTimeout(() => navigate('/'), 800)
       } catch (e) {
         if (axios.isAxiosError(e)) {
-          console.log(e)
-
           const { reason } = e.response?.data ?? {}
           setErrorMessage(`Ошибка регистрации: ${reason}`)
         }

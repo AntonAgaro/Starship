@@ -13,3 +13,17 @@ export type TSignUpData = {
   phone: string
   email: string
 }
+
+export type TChangeProfile = {
+  first_name: string
+  second_name: string
+  login: string
+  email: string
+  phone: string
+  display_name: string
+}
+
+export type TChangePassword = {
+  newPassword: string
+  oldPassword: string
+}
