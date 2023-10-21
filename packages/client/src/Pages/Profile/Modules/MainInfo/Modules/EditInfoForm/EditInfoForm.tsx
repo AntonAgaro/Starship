@@ -6,6 +6,12 @@ import { TProfileInfo } from '../../../../../../types'
 import { asyncChangeProfile } from '../../../../../../Redux/user/userState'
 import axios from 'axios'
 import { TChangeProfile } from '../../../../../../Redux/user/types'
+import {
+  isValidEmail,
+  isValidLogin,
+  isValidName,
+  isValidPhone,
+} from '../../../../../../Utils/validation'
 
 const EditInfoForm = () => {
   const [form] = Form.useForm()
@@ -36,42 +42,146 @@ const EditInfoForm = () => {
           label="Логин"
           name="login"
           initialValue={currentProfile.login}
-          rules={[{ required: true, message: 'Введите свой логин!' }]}>
+          rules={[
+            () => ({
+              validator(rule, value) {
+                if (!value) {
+                  return Promise.reject(
+                    new Error('Это поле не может быть пустым.')
+                  )
+                }
+                if (!isValidLogin(value)) {
+                  return Promise.reject(
+                    new Error(
+                      'Логин должен быть от 3 до 20 символов и содержать только буквы, цифры, дефис и нижнее подчеркивание.'
+                    )
+                  )
+                }
+                return Promise.resolve()
+              },
+            }),
+          ]}>
           <Input />
         </Form.Item>
         <Form.Item
           label="Отображаемое имя"
           name="display_name"
           initialValue={currentProfile.display_name}
-          rules={[{ required: true, message: 'Введите свое имя!' }]}>
+          rules={[
+            () => ({
+              validator(rule, value) {
+                if (!value) {
+                  return Promise.reject(
+                    new Error('Это поле не может быть пустым.')
+                  )
+                }
+                if (!isValidName(value)) {
+                  return Promise.reject(
+                    new Error(
+                      'Имя должно содержать только буквы, дефисы и пробелы.'
+                    )
+                  )
+                }
+                return Promise.resolve()
+              },
+            }),
+          ]}>
           <Input />
         </Form.Item>
         <Form.Item
           label="Имя"
           name="first_name"
           initialValue={currentProfile.first_name}
-          rules={[{ required: true, message: 'Введите своё имя!' }]}>
+          rules={[
+            () => ({
+              validator(rule, value) {
+                if (!value) {
+                  return Promise.reject(
+                    new Error('Это поле не может быть пустым.')
+                  )
+                }
+                if (!isValidName(value)) {
+                  return Promise.reject(
+                    new Error(
+                      'Имя должно содержать только буквы, дефисы и пробелы.'
+                    )
+                  )
+                }
+                return Promise.resolve()
+              },
+            }),
+          ]}>
           <Input />
         </Form.Item>
         <Form.Item
           label="Фамилия"
           name="second_name"
           initialValue={currentProfile.second_name}
-          rules={[{ required: true, message: 'Введите свою фамилию!' }]}>
+          rules={[
+            () => ({
+              validator(rule, value) {
+                if (!value) {
+                  return Promise.reject(
+                    new Error('Это поле не может быть пустым.')
+                  )
+                }
+                if (!isValidName(value)) {
+                  return Promise.reject(
+                    new Error(
+                      'Фамилия должно содержать только буквы, дефисы и пробелы.'
+                    )
+                  )
+                }
+                return Promise.resolve()
+              },
+            }),
+          ]}>
           <Input />
         </Form.Item>
         <Form.Item
           label="Номер телефона"
           name="phone"
           initialValue={currentProfile.phone}
-          rules={[{ required: true, message: 'Введите свой номер!' }]}>
+          rules={[
+            () => ({
+              validator(rule, value) {
+                if (!value) {
+                  return Promise.reject(
+                    new Error('Это поле не может быть пустым.')
+                  )
+                }
+                if (!isValidPhone(value)) {
+                  return Promise.reject(
+                    new Error(
+                      'Неправильный формат номера телефона. Допустимы только цифры и символ + в начале.'
+                    )
+                  )
+                }
+                return Promise.resolve()
+              },
+            }),
+          ]}>
           <Input />
         </Form.Item>
         <Form.Item
           label="Почта"
           name="email"
           initialValue={currentProfile.email}
-          rules={[{ required: true, message: 'Введите свою почту!' }]}>
+          rules={[
+            () => ({
+              validator(rule, value) {
+                if (!value) {
+                  return Promise.reject(
+                    new Error('Это поле не может быть пустым.')
+                  )
+                }
+                if (!isValidEmail(value)) {
+                  return Promise.reject(new Error('Неправильный формат email.'))
+                }
+                return Promise.resolve()
+              },
+            }),
+          ]}>
           <Input type="email" />
         </Form.Item>
         <Form.Item>
