@@ -12,10 +12,7 @@ export abstract class ApiBase {
       withCredentials: true,
       baseURL: this.handle,
       responseType: 'json',
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
+      headers: { 'Content-Type': 'application/json' },
     })
   }
 }
