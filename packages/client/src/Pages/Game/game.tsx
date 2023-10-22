@@ -15,6 +15,7 @@ import styles from './game.module.less'
 
 export enum Buttons {
   escape = 'Escape',
+  fullScreenToggle = 'f',
 }
 
 const GamePage: FC = () => {
@@ -31,6 +32,10 @@ const GamePage: FC = () => {
     const handleKeyPress = (event: KeyboardEvent) => {
       if (event.key === Buttons.escape) {
         handleStop()
+      }
+
+      if (event.key === Buttons.fullScreenToggle) {
+        toggleFullScreen()
       }
     }
     window.addEventListener('keydown', handleKeyPress)
@@ -83,6 +88,14 @@ const GamePage: FC = () => {
     game.current?.destroy()
     game.current = null
     navigate(RouteUrls.landing)
+  }
+
+  const toggleFullScreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen()
+    } else if (document.exitFullscreen) {
+      document.exitFullscreen()
+    }
   }
 
   useEffect(() => {

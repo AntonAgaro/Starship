@@ -17,6 +17,7 @@ const GameStartModal: FC<GameStartModalProps> = ({
       <div className={styles.controls}>
         <div>Управление кораблём: &larr; &uarr; &rarr; &darr;</div>
         <div>Выстрел: Пробел</div>
+        <div>Полный экран: f</div>
       </div>
       <div className={styles.startGameText} onClick={onStart}>
         НАЧАТЬ ИГРУ
