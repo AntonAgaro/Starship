@@ -83,9 +83,9 @@ const GamePage: FC = () => {
     const data = {
       data: {
         scoreStarship: playerScore,
-        userName: currentProfile.display_name
-          ? currentProfile.display_name
-          : currentProfile.login,
+        userName: currentProfile?.display_name
+          ? currentProfile?.display_name
+          : currentProfile?.login,
       },
       ratingFieldName: 'scoreStarship',
       teamName: 'starship',
