@@ -30,12 +30,13 @@ const GamePage: FC = () => {
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
-      if (event.key === Buttons.escape) {
-        handleStop()
-      }
-
-      if (event.key === Buttons.fullScreenToggle) {
-        toggleFullScreen()
+      switch (event.key) {
+        case Buttons.escape:
+          handleStop()
+          break
+        case Buttons.fullScreenToggle:
+          toggleFullScreen()
+          break
       }
     }
     window.addEventListener('keydown', handleKeyPress)
