@@ -6,7 +6,7 @@ export class LeaderBoardApi extends ApiBase {
     super('/leaderboard')
   }
 
-  async getLeaderboard() {
+  async getLeaderboard(): Promise<LeaderBoard> {
     const data = { ratingFieldName: 'scoreStarship', cursor: 0, limit: 10 }
     const result = await this.axios.post('/all', data)
     return result.data
@@ -19,7 +19,7 @@ export class LeaderBoardApi extends ApiBase {
     }
     ratingFieldName: string
     teamName: string
-  }): Promise<LeaderBoard> {
+  }) {
     const result = await this.axios.post('/', data)
     return result.data
   }
