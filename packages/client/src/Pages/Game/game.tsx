@@ -12,14 +12,24 @@ import {
   selectPlayerScore,
 } from './classes/helpers/stateManager'
 import styles from './game.module.less'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../Redux/store'
+import { TProfileInfo } from '../../types'
+import LeaderBoardApi from '../../Api/leaderboard'
+import axios from 'axios'
 
 export enum Buttons {
   escape = 'Escape',
 }
 
+const LeaderboardAPI = new LeaderBoardApi()
+
 const GamePage: FC = () => {
   const game = useRef<Game | null>(null)
   const navigate = useNavigate()
+  const currentProfile = useSelector(
+    (rootState: RootState) => rootState.user
+  ) as TProfileInfo
   const [isStartModalVisible, setStartModalVisible] = useState(true)
   const [isGameStopped, setIsGameStopped] = useState(false)
   const [isGameOver, setIsGameOver] = useState(false)
@@ -69,8 +79,30 @@ const GamePage: FC = () => {
     setStartModalVisible(false)
   }
 
+  const setLeaderBoard = async () => {
+    const data = {
+      data: {
+        scoreStarship: playerScore,
+        userName: currentProfile.display_name
+          ? currentProfile.display_name
+          : currentProfile.login,
+      },
+      ratingFieldName: 'scoreStarship',
+      teamName: 'starship',
+    }
+
+    try {
+      await LeaderboardAPI.leaderboard(data)
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        console.log(e.response?.data)
+      }
+    }
+  }
+
   const handleStop = () => {
     setIsGameStopped(true)
+    setLeaderBoard()
     game.current?.pause()
   }
 
@@ -86,7 +118,10 @@ const GamePage: FC = () => {
   }
 
   useEffect(() => {
-    if (playerHitPoints <= 0) setIsGameOver(true)
+    if (playerHitPoints <= 0) {
+      setIsGameOver(true)
+      setLeaderBoard()
+    }
   }, [playerHitPoints])
 
   const width = 1000,

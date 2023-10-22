@@ -1,10 +1,16 @@
-import { FC } from 'react'
-import LeaderBoardTable from '../../Modules/LeaderBoardTable/leaderBoardTable'
-import './leaderBoard.less'
+import { useEffect } from 'react'
+import LeaderBoardTable from './Modules/LeaderBoardTable/leaderBoardTable'
+import { store } from '../../Redux/store'
+import styles from './leaderBoard.module.less'
+import { asyncGetLeaderBoard } from '../../Redux/leaderboard/leaderBoardState'
 
-const LeaderBoard: FC = () => {
+const LeaderBoard = () => {
+  useEffect(() => {
+    store.dispatch(asyncGetLeaderBoard())
+  }, [])
+
   return (
-    <div className="wrapper">
+    <div className={styles.wrapper}>
       <LeaderBoardTable />
     </div>
   )
