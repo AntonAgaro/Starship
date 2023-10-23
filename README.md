@@ -1,4 +1,10 @@
 ### Как запускать?
+Для работы SSR:
+1. yarn build
+2. yarn linkup
+3. yarn dev:
+4. http://localhost:3001 - ssr dev server
+5. http://localhost:3000 - client dev server
 
 1. Убедитесь что у вас установлен `node` и `docker`
 2. Выполните команду `yarn bootstrap` - это обязательный шаг, без него ничего работать не будет :)
