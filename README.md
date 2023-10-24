@@ -1,10 +1,11 @@
 ### Как запускать?
 Для работы SSR:
-1. yarn build
-2. yarn linkup
-3. yarn dev:
-4. http://localhost:3001 - ssr dev server
-5. http://localhost:3000 - client dev server
+* В корневой папке делаем yarn build 
+* Нужно зайти в папку packages/client, сделать yarn link, перейти в папку packages/server, сделать yarn link client:
+* cd packages/client && yarn link && cd ../server && yarn link client
+* Переходим в корневую папку и делаем yarn dev, в итоге запускается:
+http://localhost:3001 - ssr dev server
+http://localhost:3000 - client dev server
 
 1. Убедитесь что у вас установлен `node` и `docker`
 2. Выполните команду `yarn bootstrap` - это обязательный шаг, без него ничего работать не будет :)
