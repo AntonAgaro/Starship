@@ -5,12 +5,16 @@ import './index.css'
 import { Provider } from 'react-redux'
 import { store } from './Redux/store'
 import CheckUserContainer from './Containers/CheckUserContainer/CheckUserContainer'
+import { BrowserRouter } from 'react-router-dom'
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+ReactDOM.hydrateRoot(
+  document.getElementById('root') as HTMLElement,
   <React.StrictMode>
     <Provider store={store}>
       <CheckUserContainer>
-        <App />
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
       </CheckUserContainer>
     </Provider>
   </React.StrictMode>
