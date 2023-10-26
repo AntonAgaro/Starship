@@ -27,3 +27,12 @@ export type TChangePassword = {
   newPassword: string
   oldPassword: string
 }
+
+export type TOAuthServiceInfo = {
+  service_id: string
+}
+
+export type TOAuthRequest = {
+  code: string
+  redirect_uri: string
+}
