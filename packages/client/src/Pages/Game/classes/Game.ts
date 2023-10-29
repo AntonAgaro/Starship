@@ -185,8 +185,12 @@ export default class Game {
 
   destroy() {
     this.deactivateEnemies()
+
     document.removeEventListener(GameEventsEnum.AddPlayerBullets, this)
     document.removeEventListener(GameEventsEnum.AddExplosion, this)
+
+    this.player.destroy()
+    this.imagesPreloader.destroy()
   }
 
   start() {
