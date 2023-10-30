@@ -1,26 +1,28 @@
+import axios from 'axios'
 import { FC, useEffect, useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import LeaderBoardApi from '../../Api/leaderboard'
 import Canvas from '../../Components/Canvas'
 import GameEndModal from '../../Modules/GameEndModal/gameEndModal'
 import GameInterface from '../../Modules/GameInterface/gameInterface'
 import GameStartModal from '../../Modules/GameStartModal/gameStartModal'
+import { RootState } from '../../Redux/store'
 import { RouteUrls } from '../../Routes/Router'
+import { TProfileInfo } from '../../types'
 import Game from './classes/Game'
 import {
   gameStore,
+  selectPlayerFps,
   selectPlayerHitPoints,
   selectPlayerScore,
 } from './classes/helpers/stateManager'
 import styles from './game.module.less'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../Redux/store'
-import { TProfileInfo } from '../../types'
-import LeaderBoardApi from '../../Api/leaderboard'
-import axios from 'axios'
 
 export enum Buttons {
   escape = 'Escape',
   fullScreenToggle = 'f',
+  performanceToggle = 'p',
 }
 
 const LeaderboardAPI = new LeaderBoardApi()
@@ -37,6 +39,8 @@ const GamePage: FC = () => {
 
   const [playerHitPoints, setPlayerHitPoints] = useState(200)
   const [playerScore, setPlayerScore] = useState(0)
+  const [playerFps, setPlayerFps] = useState(0)
+  const [isPlayerFpsVisible, setPlayerFpsVisible] = useState(false)
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
@@ -46,6 +50,11 @@ const GamePage: FC = () => {
           break
         case Buttons.fullScreenToggle:
           toggleFullScreen()
+          break
+        case Buttons.performanceToggle:
+          isPlayerFpsVisible
+            ? setPlayerFpsVisible(false)
+            : setPlayerFpsVisible(true)
           break
       }
     }
@@ -59,10 +68,15 @@ const GamePage: FC = () => {
       setPlayerScore(selectPlayerScore(gameStore.getState()))
     )
 
+    const fpsUnsubscribe = gameStore.subscribe(() =>
+      setPlayerFps(selectPlayerFps(gameStore.getState()))
+    )
+
     return () => {
       window.removeEventListener('keydown', handleKeyPress)
       scoreUnsubscribe()
       hitPointsUnsubscribe()
+      fpsUnsubscribe()
     }
   }, [])
 
@@ -156,6 +170,8 @@ const GamePage: FC = () => {
             height={`${height}px`}
             hitPoints={playerHitPoints}
             score={playerScore}
+            fps={playerFps}
+            performanceVisible={isPlayerFpsVisible}
           />
           <Canvas
             width={width}

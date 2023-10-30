@@ -39,6 +39,7 @@ import {
   performPlayerAndEnemyCollision,
 } from './helpers/gameHelpers'
 import {
+  FPS_UPDATED,
   HIT_POINT_UPDATED,
   SCORE_UPDATED,
   gameStore,
@@ -66,6 +67,8 @@ export default class Game {
   private addEnemiesInterval
   //@ts-expect-error activateEnemies() в конструкторе инициализирует эту переменную
   private addEnemiesBulletsInterval
+
+  private lastRenderTime = 0
 
   isPaused: boolean
   constructor(settings: IGameSettings) {
@@ -191,6 +194,7 @@ export default class Game {
 
     this.player.destroy()
     this.imagesPreloader.destroy()
+    this.isPaused = true
   }
 
   start() {
@@ -343,6 +347,19 @@ export default class Game {
     this.explosions.forEach(explosion => {
       this.renderObject(explosion)
     })
+
+    const currentTimestamp = performance.now()
+
+    const currentFps = Math.ceil(
+      1 / ((currentTimestamp - this.lastRenderTime) / 1000)
+    )
+
+    gameStore.dispatch({
+      type: FPS_UPDATED,
+      payload: currentFps > 60 ? 60 : currentFps,
+    })
+
+    this.lastRenderTime = currentTimestamp
   }
 
   renderObject(object: GameBlock) {
