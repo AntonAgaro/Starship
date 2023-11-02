@@ -5,13 +5,14 @@ import ApiOAuth from '../../Api/oauth.'
 import { store } from '../../Redux/store'
 import { asyncOAuthLogin } from '../../Redux/user/userState'
 import { useNavigate } from 'react-router-dom'
+import { redirect_uri } from '../../Routes/Router'
 
 type TOAuthProps = {
   showButton?: boolean
 }
 export const OAuthComponent: FC<TOAuthProps> = (props: TOAuthProps) => {
   const OAuthAPI = new ApiOAuth()
-  const redirect_uri = 'http://localhost:3000'
+
   const OAuth = async () => {
     const info: TOAuthServiceInfo = await OAuthAPI.getServiceInfo({
       redirect_uri,
@@ -23,11 +24,11 @@ export const OAuthComponent: FC<TOAuthProps> = (props: TOAuthProps) => {
     }
   }
 
-  return props.showButton ? (
-    <Button type="link" onClick={() => OAuth()}>
-      Войти через аккаунт Яндекс
-    </Button>
-  ) : (
-    <div></div>
+  return (
+    props.showButton && (
+      <Button type="link" onClick={OAuth}>
+        Войти через аккаунт Яндекс
+      </Button>
+    )
   )
 }

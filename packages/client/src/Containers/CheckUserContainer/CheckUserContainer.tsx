@@ -5,7 +5,8 @@ import Loading from '../../Components/Loading/Loading'
 import { RootState, store } from '../../Redux/store'
 import { TProfileInfo } from '../../types'
 import { asyncGetProfile, asyncOAuthLogin } from '../../Redux/user/userState'
-
+import { RouteUrls, redirect_uri } from '../../Routes/Router'
+import {} from 'react-router'
 interface iCheckUserContainerProps {
   children: JSX.Element
 }
@@ -23,17 +24,21 @@ const CheckUserContainer = (props: iCheckUserContainerProps) => {
   }
 
   useEffect(() => {
-    const code = new URLSearchParams(window.location.search).get('code')
-    const redirect_uri = 'http://localhost:3000'
-    if (code != null) {
-      try {
-        store.dispatch(asyncOAuthLogin({ code, redirect_uri }))
-      } catch (e) {
-        window.location.href = redirect_uri
+    const asyncDispatch = async () => {
+      const code = new URLSearchParams(window.location.search).get('code')
+
+      if (code != null) {
+        try {
+          await store.dispatch(asyncOAuthLogin({ code, redirect_uri }))
+        } catch (e) {
+          window.location.href = redirect_uri + RouteUrls.signIn
+        }
+      } else {
+        getProfile()
       }
-    } else {
-      getProfile()
     }
+
+    asyncDispatch()
   }, [])
 
   if (loading && !currentProfile) {

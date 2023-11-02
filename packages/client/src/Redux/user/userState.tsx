@@ -90,12 +90,10 @@ const slice = createSlice({
       .addCase(
         asyncOAuthLogin.fulfilled,
         (state, action: PayloadAction<TUserState>) => {
-          //window.location.href =  window.location.href.split("?")[0]
           return action.payload
         }
       )
       .addCase(asyncOAuthLogin.rejected, state => {
-        setTimeout(() => (window.location.href = '/signin'), 1000) // Не знаю как правильно из редьюсера послать команду роутеру что бы перейти на страницу авторизации
         return null
       })
 
@@ -121,8 +119,6 @@ const slice = createSlice({
       .addCase(
         asyncLogout.fulfilled,
         (state, action: PayloadAction<TUserState>) => {
-          setTimeout(() => (window.location.href = '/signin'), 1000) // Не знаю как правильно из редьюсера послать команду роутеру что бы перейти на страницу авторизации
-
           return action.payload
         }
       )

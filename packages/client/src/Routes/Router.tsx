@@ -28,6 +28,8 @@ export enum RouteUrls {
   error500 = '/error',
 }
 
+export const redirect_uri = 'http://localhost:3000'
+
 const Router = () => {
   const navigateToSignIn = <Navigate to={RouteUrls.signIn} replace />
 

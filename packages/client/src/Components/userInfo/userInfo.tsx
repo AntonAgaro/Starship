@@ -5,6 +5,7 @@ import { Avatar, Divider, Dropdown, MenuProps } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import { asyncLogout } from '../../Redux/user/userState'
 import { store } from '../../Redux/store'
+import { RouteUrls } from '../../Routes/Router'
 
 type TUserInfoProps = {
   profile: TProfileInfo
@@ -38,9 +39,11 @@ const UserInfo: FC<TUserInfoProps> = (props: { profile: TProfileInfo }) => {
       label: 'Выйти',
       onClick: async () => {
         try {
-          store.dispatch(asyncLogout())
+          await store.dispatch(asyncLogout())
         } catch (e) {
           console.log(e)
+        } finally {
+          navigate(RouteUrls.signIn)
         }
       },
     },
