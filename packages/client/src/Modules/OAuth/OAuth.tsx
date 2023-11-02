@@ -24,11 +24,11 @@ export const OAuthComponent: FC<TOAuthProps> = (props: TOAuthProps) => {
     }
   }
 
-  return (
-    props.showButton && (
-      <Button type="link" onClick={OAuth}>
-        Войти через аккаунт Яндекс
-      </Button>
-    )
+  return props.showButton ? (
+    <Button type="link" onClick={OAuth}>
+      Войти через аккаунт Яндекс
+    </Button>
+  ) : (
+    <div></div>
   )
 }
