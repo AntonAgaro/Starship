@@ -6,6 +6,8 @@ interface IImagePreloaderSettings {
 export default class ImagesPreloader {
   private resources: Record<string, HTMLImageElement | null> = {}
   private onReadyCallbacks: TOnReadyCallbacks
+  private unsubscribeController = new AbortController()
+  private unsubscribeFromEventsSignal = this.unsubscribeController.signal
 
   constructor(settings: IImagePreloaderSettings) {
     this.onReadyCallbacks = settings.onReadyCallbacks
@@ -24,15 +26,19 @@ export default class ImagesPreloader {
     this.resources[url] = null
     img.src = url
 
-    img.addEventListener('load', () => {
-      this.resources[url] = img
+    img.addEventListener(
+      'load',
+      () => {
+        this.resources[url] = img
 
-      if (this.isReady()) {
-        this.onReadyCallbacks.forEach(callback => {
-          callback()
-        })
-      }
-    })
+        if (this.isReady()) {
+          this.onReadyCallbacks.forEach(callback => {
+            callback()
+          })
+        }
+      },
+      { signal: this.unsubscribeFromEventsSignal }
+    )
   }
 
   public getImg(url: string): HTMLImageElement {
@@ -52,5 +58,9 @@ export default class ImagesPreloader {
     }
 
     return ready
+  }
+
+  public destroy() {
+    this.unsubscribeController.abort()
   }
 }

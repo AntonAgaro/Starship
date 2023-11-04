@@ -12,21 +12,33 @@ export default class Player
 {
   shotDamage: number
   score: number
+  private unsubscribeController = new AbortController()
+  private unsubscribeFromEventsSignal = this.unsubscribeController.signal
 
   constructor(settings: GameBlockSettings & Pick<Shooter, 'shotDamage'>) {
     super(settings)
 
-    window.addEventListener('keydown', e => {
-      if (e.code === 'Space') {
-        document.dispatchEvent(new CustomEvent(GameEventsEnum.AddPlayerBullets))
-      } else if (e.code === 'ArrowRight' || e.code === 'ArrowLeft') {
-        this.changeMoveDirection(e.code)
-      }
-    })
+    window.addEventListener(
+      'keydown',
+      e => {
+        if (e.code === 'Space') {
+          document.dispatchEvent(
+            new CustomEvent(GameEventsEnum.AddPlayerBullets)
+          )
+        } else if (e.code === 'ArrowRight' || e.code === 'ArrowLeft') {
+          this.changeMoveDirection(e.code)
+        }
+      },
+      { signal: this.unsubscribeFromEventsSignal }
+    )
 
-    window.addEventListener('keyup', () => {
-      this.stop()
-    })
+    window.addEventListener(
+      'keyup',
+      () => {
+        this.stop()
+      },
+      { signal: this.unsubscribeFromEventsSignal }
+    )
 
     this.shotDamage = settings.shotDamage
     this.score = 0
@@ -75,5 +87,9 @@ export default class Player
 
   private stop() {
     this.setDx(0)
+  }
+
+  public destroy() {
+    this.unsubscribeController.abort()
   }
 }
