@@ -32,7 +32,7 @@ const GameEndModal: FC<GameEndModalProps> = ({
         <div className={styles.actions}>
           <div className={styles.resultText}>ВЫ НАБРАЛИ {points} ОЧКОВ</div>
           <div className={styles.actionText} onClick={onStart}>
-            ИГРАТЬ ЕШЁ
+            ИГРАТЬ ЕЩЁ
           </div>
           <div className={styles.actionText} onClick={onExit}>
             ВЫЙТИ
