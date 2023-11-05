@@ -1,12 +1,13 @@
 import { useEffect } from 'react'
 import LeaderBoardTable from './Modules/LeaderBoardTable/leaderBoardTable'
-import { store } from '../../Redux/store'
 import styles from './leaderBoard.module.less'
 import { asyncGetLeaderBoard } from '../../Redux/leaderboard/leaderBoardState'
+import { useAppDispatch } from '../../Hooks/reduxHooks'
 
 const LeaderBoard = () => {
+  const dispatch = useAppDispatch()
   useEffect(() => {
-    store.dispatch(asyncGetLeaderBoard())
+    dispatch(asyncGetLeaderBoard())
   }, [])
 
   return (
