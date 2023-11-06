@@ -25,11 +25,11 @@ async function startServer() {
       root: srcClientPath,
       appType: 'custom',
     })
-  }
 
-  // Use vite's connect instance as middleware. If you use your own
-  // express router (express.Router()), you should use router.use
-  app.use(vite!.middlewares)
+    // Use vite's connect instance as middleware. If you use your own
+    // express router (express.Router()), you should use router.use
+    app.use(vite!.middlewares)
+  }
 
   app.get('/api', (_, res) => {
     res.json('👋 Howdy from the server :)')
