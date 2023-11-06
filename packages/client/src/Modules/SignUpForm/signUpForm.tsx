@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { TSignUpData } from '../../Redux/user/types'
 import { asyncSignUp } from '../../Redux/user/userState'
-import { store } from '../../Redux/store'
 import {
   isValidEmail,
   isValidLogin,
@@ -13,9 +12,11 @@ import {
   isValidPassword,
   isValidPhone,
 } from '../../Utils/validation'
+import { useAppDispatch } from '../../Hooks/reduxHooks'
 
 export const SignUpForm: FC = () => {
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
 
   const [errorMessage, setErrorMessage] = useState('')
 
@@ -32,7 +33,7 @@ export const SignUpForm: FC = () => {
     if (errors == 0) {
       setErrorMessage('')
       try {
-        store.dispatch(asyncSignUp(values))
+        dispatch(asyncSignUp(values))
         setTimeout(() => navigate('/'), 800)
       } catch (e) {
         if (axios.isAxiosError(e)) {

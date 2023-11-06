@@ -4,13 +4,14 @@ import { TProfileInfo } from '../../types'
 import { Avatar, Divider, Dropdown, MenuProps } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import { asyncLogout } from '../../Redux/user/userState'
-import { store } from '../../Redux/store'
+import { useAppDispatch } from '../../Hooks/reduxHooks'
 
 type TUserInfoProps = {
   profile: TProfileInfo
 }
 const UserInfo: FC<TUserInfoProps> = (props: { profile: TProfileInfo }) => {
   const { profile } = props
+  const dispatch = useAppDispatch()
 
   const name =
     (profile?.display_name ? profile.display_name : profile.login) +
@@ -38,7 +39,7 @@ const UserInfo: FC<TUserInfoProps> = (props: { profile: TProfileInfo }) => {
       label: 'Выйти',
       onClick: async () => {
         try {
-          store.dispatch(asyncLogout())
+          dispatch(asyncLogout())
         } catch (e) {
           console.log(e)
         }

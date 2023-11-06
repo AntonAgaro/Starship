@@ -3,17 +3,18 @@ import './signInForm.less'
 import { FC, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { asyncLogin } from '../../Redux/user/userState'
-import { store } from '../../Redux/store'
 import { TLoginData } from '../../Redux/user/types'
+import { useAppDispatch } from '../../Hooks/reduxHooks'
 
 export const SignInForm: FC = () => {
   const [errorMessage, setErrorMessage] = useState('')
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
   const onFinish = async (values: TLoginData) => {
     console.log('Success:', values)
 
     try {
-      store.dispatch(asyncLogin(values))
+      dispatch(asyncLogin(values))
 
       setTimeout(() => navigate('/'), 800)
     } catch (e) {

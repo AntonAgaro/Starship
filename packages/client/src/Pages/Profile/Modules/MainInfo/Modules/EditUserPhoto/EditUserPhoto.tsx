@@ -3,16 +3,18 @@ import React from 'react'
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface'
 import { PlusOutlined } from '@ant-design/icons'
 import type { UploadChangeParam } from 'antd/es/upload'
-import { RootState, store } from '../../../../../../Redux/store'
+import { RootState } from '../../../../../../Redux/store'
 import { asyncGetProfile } from '../../../../../../Redux/user/userState'
 import { useSelector } from 'react-redux'
 import { TProfileInfo } from '../../../../../../types'
+import { useAppDispatch } from '../../../../../../Hooks/reduxHooks'
 
 const EditUserPhoto = () => {
   const [messageApi, contextHolder] = message.useMessage()
   const currentProfile = useSelector(
     (rootState: RootState) => rootState.user
   ) as TProfileInfo
+  const dispatch = useAppDispatch()
 
   const avatarUrl =
     'https://ya-praktikum.tech/api/v2/resources/' + currentProfile.avatar
@@ -30,7 +32,7 @@ const EditUserPhoto = () => {
   }
 
   const getProfile = async () => {
-    await store.dispatch(asyncGetProfile())
+    await dispatch(asyncGetProfile())
   }
 
   const handleChange: UploadProps['onChange'] = () => {

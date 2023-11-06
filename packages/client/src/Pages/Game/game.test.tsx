@@ -5,10 +5,11 @@ import '@testing-library/jest-dom/jest-globals'
 import { beforeEach, describe, expect, test } from '@jest/globals'
 import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
-import { store } from '../../Redux/store'
+import { createStore } from '../../Redux/store'
 
 describe('Test GamePage', () => {
   beforeEach(() => {
+    const store = createStore()
     render(
       <Provider store={store}>
         <BrowserRouter>
