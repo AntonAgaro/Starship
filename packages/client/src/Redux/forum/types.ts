@@ -22,3 +22,15 @@ export type TTopicInfo = {
   last_comment_date_time: string | null
   author: TAuthorInfo
 }
+
+export type TTopicListInfo = {
+  list: TTopicInfo
+  current_page: number
+  num_pages: number
+}
+
+export type TCommentListInfo = {
+  list: TCommentInfo
+  current_page: number
+  num_pages: number
+}
