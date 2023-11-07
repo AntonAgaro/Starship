@@ -1,8 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import ForumApi from '../../Api/forum'
 import {
-  TCommentInfo,
-  TCommentListInfo,
   TCreateTopicData,
   TDeleteTopicData,
   TGetTopicData,
@@ -11,10 +9,6 @@ import {
 } from './types'
 
 const currentTopicInitialState = null as TTopicInfo
-
-const currentCommentListInitialState = null as TCommentListInfo
-
-const currentCommentInitialState = null as TCommentInfo
 
 const forumApi = new ForumApi()
 

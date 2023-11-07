@@ -1,10 +1,13 @@
 import {
   TCommentInfo,
-  TCommentListInfo,
+  TCreateCommentData,
   TCreateTopicData,
+  TDeleteCommentData,
+  TGetCommentData,
   TGetTopicData,
   TTopicInfo,
   TTopicListInfo,
+  TUpdateCommentData,
   TUpdateTopicData,
 } from '../Redux/forum/types'
 import { ApiBase } from './base'
@@ -43,30 +46,22 @@ export class ForumApi extends ApiBase {
     return result.data
   }
 
-  async createComment(data: {
-    text: string
-    author_id: number
-    topic_id: number
-  }): Promise<TCommentInfo> {
+  async getComment(data: TGetCommentData): Promise<TCommentInfo> {
+    const result = await this.axios.post(`/${data.topic_id}`, data)
+    return result.data
+  }
+
+  async createComment(data: TCreateCommentData): Promise<TCommentInfo> {
     const result = await this.axios.post(`/create/${data.topic_id}`, data)
     return result.data
   }
 
-  async updateComment(data: {
-    comment_id: number
-    text: string
-    author_id: number
-    topic_id: number
-  }): Promise<TCommentInfo> {
+  async updateComment(data: TUpdateCommentData): Promise<TCommentInfo> {
     const result = await this.axios.post(`/update/${data.topic_id}`, data)
     return result.data
   }
 
-  async deleteComment(data: {
-    comment_id: number
-    author_id: number
-    topic_id: number
-  }) {
+  async deleteComment(data: TDeleteCommentData) {
     const result = await this.axios.post(`/delete/${data.topic_id}`, data)
     return result.data
   }

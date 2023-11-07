@@ -1,9 +1,9 @@
 export type TCommentInfo = {
   id: number
+  topic_id: number
   text: string
-  createdDateTime: string
+  created_date_time: string
   author: TAuthorInfo
-  auhor_id: number
 } | null
 
 export type TAuthorInfo = {
@@ -52,5 +52,27 @@ export type TGetTopicData = {
 
 export type TDeleteTopicData = {
   topic_id: number
+  author_id: number
+}
+
+export type TCreateCommentData = {
+  text: string
+  author_id: number
+  topic_id: number
+}
+export type TUpdateCommentData = {
+  Comment_id: number
+  title: string
+  author_id: number
+  topic_id: number
+}
+export type TGetCommentData = {
+  topic_id: number
+  Comment_id: number
+}
+
+export type TDeleteCommentData = {
+  topic_id: number
+  Comment_id: number
   author_id: number
 }
