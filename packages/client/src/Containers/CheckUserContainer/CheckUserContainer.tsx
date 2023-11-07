@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Layout } from 'antd'
 import Loading from '../../Components/Loading/Loading'
-import { RootState, store } from '../../Redux/store'
+import { RootState } from '../../Redux/store'
 import { TProfileInfo } from '../../types'
 import { asyncGetProfile, asyncOAuthLogin } from '../../Redux/user/userState'
 import { RouteUrls, redirect_uri } from '../../Routes/Router'
 import {} from 'react-router'
+
 interface iCheckUserContainerProps {
   children: JSX.Element
 }
@@ -17,9 +18,10 @@ const CheckUserContainer = (props: iCheckUserContainerProps) => {
   const currentProfile = useSelector(
     (rootState: RootState) => rootState.user
   ) as TProfileInfo
+  const dispatch = useAppDispatch()
 
   const getProfile = async () => {
-    await store.dispatch(asyncGetProfile())
+    await dispatch(asyncGetProfile())
     setLoading(false)
   }
 

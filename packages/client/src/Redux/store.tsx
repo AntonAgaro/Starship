@@ -1,10 +1,20 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { userState } from './user/userState'
 import { leaderBoardState } from './leaderboard/leaderBoardState'
+import { TUserState } from './user/types'
+import { LeaderBoard } from './leaderboard/types'
 
-export const store = configureStore({
-  reducer: { user: userState, leaderboard: leaderBoardState },
-})
+export interface AppState {
+  user: TUserState
+  leaderboard: LeaderBoard
+}
 
-export type RootState = ReturnType<typeof store.getState>
-export type AppDispatch = typeof store.dispatch
+export const createStore = (preloadedState?: AppState) => {
+  return configureStore({
+    reducer: { user: userState, leaderboard: leaderBoardState },
+    preloadedState,
+  })
+}
+
+export type AppDispatch = ReturnType<typeof createStore>['dispatch']
+export type RootState = AppState
