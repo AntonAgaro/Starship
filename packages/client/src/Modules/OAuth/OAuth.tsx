@@ -2,9 +2,6 @@ import { Button } from 'antd'
 import { FC, useEffect } from 'react'
 import { TOAuthServiceInfo } from '../../Redux/user/types'
 import ApiOAuth from '../../Api/oauth.'
-import { store } from '../../Redux/store'
-import { asyncOAuthLogin } from '../../Redux/user/userState'
-import { useNavigate } from 'react-router-dom'
 import { redirect_uri } from '../../Routes/Router'
 
 type TOAuthProps = {
