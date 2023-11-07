@@ -1,8 +1,11 @@
 import {
   TCommentInfo,
   TCommentListInfo,
+  TCreateTopicData,
+  TGetTopicData,
   TTopicInfo,
   TTopicListInfo,
+  TUpdateTopicData,
 } from '../Redux/forum/types'
 import { ApiBase } from './base'
 
@@ -17,18 +20,12 @@ export class ForumApi extends ApiBase {
     return result.data
   }
 
-  async createTopic(data: {
-    title: string
-    author_id: number
-  }): Promise<TTopicInfo> {
+  async createTopic(data: TCreateTopicData): Promise<TTopicInfo> {
     const result = await this.axios.post('/create', data)
     return result.data
   }
 
-  async updateTopic(data: {
-    title: string
-    topic_id: number
-  }): Promise<TTopicInfo> {
+  async updateTopic(data: TUpdateTopicData): Promise<TTopicInfo> {
     const result = await this.axios.post('/update', data)
     return result.data
   }
@@ -38,9 +35,11 @@ export class ForumApi extends ApiBase {
     return result.data
   }
 
-  async getCommentList(page = 0, topic_id: number): Promise<TCommentListInfo> {
-    const data = { page, limit: 10 }
-    const result = await this.axios.post(`/${topic_id}`, data)
+  async getTopic(data: TGetTopicData): Promise<TTopicInfo> {
+    const result = await this.axios.post(`/${data.topic_id}`, {
+      ...data,
+      limit: 10,
+    })
     return result.data
   }
 
