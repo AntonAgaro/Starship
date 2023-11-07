@@ -4,6 +4,7 @@ import { TProfileInfo } from '../../types'
 import { Avatar, Divider, Dropdown, MenuProps } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import { asyncLogout } from '../../Redux/user/userState'
+import { RouteUrls } from '../../Routes/Router'
 import { useAppDispatch } from '../../Hooks/reduxHooks'
 
 type TUserInfoProps = {
@@ -11,7 +12,6 @@ type TUserInfoProps = {
 }
 const UserInfo: FC<TUserInfoProps> = (props: { profile: TProfileInfo }) => {
   const { profile } = props
-  const dispatch = useAppDispatch()
 
   const name =
     (profile?.display_name ? profile.display_name : profile.login) +
@@ -19,6 +19,7 @@ const UserInfo: FC<TUserInfoProps> = (props: { profile: TProfileInfo }) => {
     (' ' + profile?.second_name ?? '')
 
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
 
   const items: MenuProps['items'] = [
     {
@@ -39,9 +40,11 @@ const UserInfo: FC<TUserInfoProps> = (props: { profile: TProfileInfo }) => {
       label: 'Выйти',
       onClick: async () => {
         try {
-          dispatch(asyncLogout())
+          await dispatch(asyncLogout())
         } catch (e) {
           console.log(e)
+        } finally {
+          navigate(RouteUrls.signIn)
         }
       },
     },

@@ -4,6 +4,7 @@ import { FC, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { asyncLogin } from '../../Redux/user/userState'
 import { TLoginData } from '../../Redux/user/types'
+import { OAuthComponent } from '../OAuth/OAuth'
 import { useAppDispatch } from '../../Hooks/reduxHooks'
 
 export const SignInForm: FC = () => {
@@ -60,6 +61,9 @@ export const SignInForm: FC = () => {
           <Button type="link" onClick={() => navigate('/signup')}>
             Ещё нет аккаунта? Зарегистрируйтесь!
           </Button>
+        </Form.Item>
+        <Form.Item wrapperCol={{ offset: 1, span: 30 }}>
+          <OAuthComponent showButton />
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 9, span: 20 }}>
