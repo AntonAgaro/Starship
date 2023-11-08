@@ -8,8 +8,11 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as process from 'process'
 import jsesc from 'jsesc'
+import { createClientAndConnect } from './db'
 
 const isDev = () => process.env.NODE_ENV === 'development'
+
+createClientAndConnect()
 
 async function startServer() {
   const app = express()
