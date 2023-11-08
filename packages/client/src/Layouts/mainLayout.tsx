@@ -34,6 +34,12 @@ const MainLayout: FC = () => {
       label: `${url}`,
     })
   })
+  useEffect(() => {
+    const code = new URLSearchParams(window.location.search).get('code')
+    if (code != null) {
+      navigate(RouteUrls.landing)
+    }
+  }, [])
 
   return (
     <Layout className="main">

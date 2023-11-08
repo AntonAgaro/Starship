@@ -12,3 +12,13 @@ export type TProfileInfo = {
   avatar: string
   role?: string
 }
+export type TOAuthServiceInfo = {
+  service_id: string
+}
+
+export type TOAuthRequest = {
+  OauthSignInRequest: {
+    code: string
+    redirect_uri: string
+  }
+}

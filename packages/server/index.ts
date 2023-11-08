@@ -7,6 +7,7 @@ import express from 'express'
 import * as fs from 'fs'
 import * as path from 'path'
 import * as process from 'process'
+import jsesc from 'jsesc'
 
 const isDev = () => process.env.NODE_ENV === 'development'
 
@@ -67,10 +68,16 @@ async function startServer() {
       }
 
       //  render the app HTML.
-      const appHtml = await render(url)
+      const [initialState, appHtml] = await render(url)
+      const initStateSerialized = jsesc(JSON.stringify(initialState), {
+        json: true,
+        isScriptContext: true,
+      })
 
       //  Inject the app-rendered HTML into the template.
-      const html = template.replace(`<!-- ssr content --->`, appHtml)
+      const html = template
+        .replace(`<!-- ssr content --->`, appHtml)
+        .replace('`<!--store-data-->`', initStateSerialized)
 
       //  Send the rendered HTML back.
       res.status(200).set({ 'Content-Type': 'text/html' }).end(html)

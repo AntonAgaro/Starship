@@ -1,7 +1,7 @@
 import React from 'react'
 import { Form, Button, Input, message } from 'antd'
 import { useSelector } from 'react-redux'
-import { RootState, store } from '../../../../../../Redux/store'
+import { RootState } from '../../../../../../Redux/store'
 import { TProfileInfo } from '../../../../../../types'
 import { asyncChangeProfile } from '../../../../../../Redux/user/userState'
 import axios from 'axios'
@@ -12,8 +12,10 @@ import {
   isValidName,
   isValidPhone,
 } from '../../../../../../Utils/validation'
+import { useAppDispatch } from '../../../../../../Hooks/reduxHooks'
 
 const EditInfoForm = () => {
+  const dispatch = useAppDispatch()
   const [form] = Form.useForm()
   const [messageApi, contextHolder] = message.useMessage()
   const currentProfile = useSelector(
@@ -22,7 +24,7 @@ const EditInfoForm = () => {
 
   const onSubmit = (values: TChangeProfile) => {
     try {
-      store.dispatch(asyncChangeProfile(values))
+      dispatch(asyncChangeProfile(values))
       messageApi.success('Данные изменены')
     } catch (e) {
       if (axios.isAxiosError(e)) {

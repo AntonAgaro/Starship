@@ -4,13 +4,15 @@ import { renderToString } from 'react-dom/server'
 //нужно для ssr
 import React from 'react'
 import { Provider } from 'react-redux'
-import { store } from './src/Redux/store'
+import { createStore } from './src/Redux/store'
 import CheckUserContainer from './src/Containers/CheckUserContainer/CheckUserContainer'
 import App from './src/App'
 import { StaticRouter } from 'react-router-dom/server'
 
-export function render(url: string) {
-  return renderToString(
+async function render(url: string) {
+  const store = createStore()
+  const preloadedState = store.getState()
+  const renderResult = renderToString(
     <React.StrictMode>
       <Provider store={store}>
         <CheckUserContainer>
@@ -21,4 +23,7 @@ export function render(url: string) {
       </Provider>
     </React.StrictMode>
   )
+  return [preloadedState, renderResult]
 }
+
+export { render }
