@@ -1,4 +1,4 @@
-import { Avatar, Button, Flex, List, Pagination, Space } from 'antd'
+import { Avatar, Button, Flex, List, Modal, Pagination, Space } from 'antd'
 import {
   LikeOutlined,
   MessageOutlined,
@@ -85,7 +85,23 @@ export const ForumTopicList: FC = () => {
               shape="round"
               icon={<DeleteOutlined />}
               size={size}
-              onClick={() => deleteTopic(item)}
+              onClick={() => {
+                Modal.confirm({
+                  title: 'Удаление обсуждения',
+                  content: `Удалить обсуждение "${item?.title}"? Действие невозможно будет отменить`,
+                  okText: 'Да',
+                  cancelText: 'Нет',
+                  onOk: () => {
+                    deleteTopic(item)
+                  },
+                  footer: (_, { OkBtn, CancelBtn }) => (
+                    <>
+                      <CancelBtn />
+                      <OkBtn />
+                    </>
+                  ),
+                })
+              }}
             />,
           ]}>
           <List.Item.Meta
