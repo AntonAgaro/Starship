@@ -26,6 +26,7 @@ export type TTopicInfo = {
 
 export type TTopicListInfo = {
   list: TTopicInfo[]
+  total: number
   current_page: number
   num_pages: number
 } | null

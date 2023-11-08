@@ -1,11 +1,12 @@
 import { FC } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { TProfileInfo } from '../../types'
 import { Avatar, Divider, Dropdown, MenuProps } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import { asyncLogout } from '../../Redux/user/userState'
 import { RouteUrls } from '../../Routes/Router'
 import { useAppDispatch } from '../../Hooks/reduxHooks'
+import { TProfileInfo } from '../../Redux/user/types'
+import { getDisplayProfileName, getProfileAvatar } from '../../Utils/helpers'
 
 type TUserInfoProps = {
   profile: TProfileInfo
@@ -13,10 +14,7 @@ type TUserInfoProps = {
 const UserInfo: FC<TUserInfoProps> = (props: { profile: TProfileInfo }) => {
   const { profile } = props
 
-  const name =
-    (profile?.display_name ? profile.display_name : profile.login) +
-    (' ' + profile?.first_name ?? '') +
-    (' ' + profile?.second_name ?? '')
+  const name = getDisplayProfileName(profile)
 
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
@@ -54,11 +52,7 @@ const UserInfo: FC<TUserInfoProps> = (props: { profile: TProfileInfo }) => {
     <Dropdown menu={{ items }}>
       <a onClick={e => e.preventDefault()}>
         <Avatar
-          src={
-            profile.avatar
-              ? `https://ya-praktikum.tech/api/v2/resources${profile.avatar}`
-              : ''
-          }
+          src={getProfileAvatar(profile)}
           style={{ backgroundColor: '#87d068', marginLeft: '25px' }}
           icon={<UserOutlined rev={undefined} />}
         />

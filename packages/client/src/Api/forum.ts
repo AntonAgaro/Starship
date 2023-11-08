@@ -1,3 +1,4 @@
+import { topicListStub } from '../Mocks/topicListStub'
 import {
   TCommentInfo,
   TCreateCommentData,
@@ -10,15 +11,22 @@ import {
   TUpdateCommentData,
   TUpdateTopicData,
 } from '../Redux/forum/types'
+import { num_per_page } from '../Utils/helpers'
 import { ApiBase } from './base'
 
 export class ForumApi extends ApiBase {
+  private mock_mode = true
+
   constructor() {
     super('/forum')
   }
 
   async getTopicList(page = 0): Promise<TTopicListInfo> {
-    const data = { page, limit: 10 }
+    if (this.mock_mode) {
+      return topicListStub(page)
+    }
+
+    const data = { page, limit: num_per_page }
     const result = await this.axios.post('/', data)
     return result.data
   }
@@ -41,7 +49,7 @@ export class ForumApi extends ApiBase {
   async getTopic(data: TGetTopicData): Promise<TTopicInfo> {
     const result = await this.axios.post(`/${data.topic_id}`, {
       ...data,
-      limit: 10,
+      limit: num_per_page,
     })
     return result.data
   }

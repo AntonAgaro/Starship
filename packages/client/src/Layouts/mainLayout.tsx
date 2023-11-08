@@ -5,9 +5,9 @@ import { Outlet, useNavigate } from 'react-router-dom'
 import { RouteUrls } from '../Routes/Router'
 import './mainLayouts.less'
 import UserInfo from '../Components/userInfo/userInfo'
-import { TProfileInfo } from '../types'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../Redux/store'
+import { TProfileInfo } from '../Redux/user/types'
 
 const MainLayout: FC = () => {
   const currentProfile = useSelector(
