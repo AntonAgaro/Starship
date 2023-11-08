@@ -1,4 +1,9 @@
-import { topicListStub } from '../Mocks/topicListStub'
+import {
+  addTopicStub,
+  removeTopicStub,
+  topicListStub,
+  updateTopicStub,
+} from '../Mocks/topicListStub'
 import {
   TCommentInfo,
   TCreateCommentData,
@@ -32,16 +37,28 @@ export class ForumApi extends ApiBase {
   }
 
   async createTopic(data: TCreateTopicData): Promise<TTopicInfo> {
+    if (this.mock_mode) {
+      return addTopicStub(data.title)
+    }
+
     const result = await this.axios.post('/create', data)
     return result.data
   }
 
-  async updateTopic(data: TUpdateTopicData): Promise<TTopicInfo> {
+  async updateTopic(data: TUpdateTopicData): Promise<TTopicInfo | undefined> {
+    if (this.mock_mode) {
+      return updateTopicStub(data.title, data.topic_id)
+    }
+
     const result = await this.axios.post('/update', data)
     return result.data
   }
 
   async deleteTopic(data: { topic_id: number }) {
+    if (this.mock_mode) {
+      return removeTopicStub(data.topic_id)
+    }
+
     const result = await this.axios.post('/delete', data)
     return result.data
   }

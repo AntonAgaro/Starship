@@ -5,12 +5,12 @@ import {
   EditOutlined,
   DeleteOutlined,
 } from '@ant-design/icons'
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../../Hooks/reduxHooks'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../Redux/store'
-import { TTopicListInfo } from '../../Redux/forum/types'
+import { TTopicInfo, TTopicListInfo } from '../../Redux/forum/types'
 import {
   getDisplayProfileName,
   getProfileAvatar,
@@ -18,9 +18,11 @@ import {
 } from '../../Utils/helpers'
 import { asyncGetTopicList } from '../../Redux/forum/topicListState'
 import React from 'react'
+import { asyncDeleteTopic } from '../../Redux/forum/currentTopicState'
+import { TProfileInfo } from '../../Redux/user/types'
 
 export const ForumTopicList: FC = () => {
-  //const [data, setData] = useState(null)
+  const [page, setPage] = useState(1)
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
@@ -28,9 +30,14 @@ export const ForumTopicList: FC = () => {
     (rootState: RootState) => rootState.topicList
   ) as TTopicListInfo
 
+  const profile = useSelector(
+    (rootState: RootState) => rootState.user
+  ) as TProfileInfo
+
   useEffect(() => {
-    dispatch(asyncGetTopicList(1))
-  }, [])
+    dispatch(asyncGetTopicList(page))
+  }, [page])
+
   const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
     <Space>
       {React.createElement(icon)}
@@ -38,6 +45,16 @@ export const ForumTopicList: FC = () => {
     </Space>
   )
   const size = 'small'
+
+  const deleteTopic = async (item: TTopicInfo) => {
+    if (item) {
+      await dispatch(
+        asyncDeleteTopic({ topic_id: item.id, author_id: profile.id })
+      )
+      dispatch(asyncGetTopicList(page))
+    }
+  }
+
   return (
     <List
       itemLayout="horizontal"
@@ -49,7 +66,7 @@ export const ForumTopicList: FC = () => {
             defaultCurrent={1}
             pageSize={num_per_page}
             total={topicList?.total}
-            onChange={page => dispatch(asyncGetTopicList(page))}
+            onChange={page => setPage(page)}
           />
         </div>
       }
@@ -68,6 +85,7 @@ export const ForumTopicList: FC = () => {
               shape="round"
               icon={<DeleteOutlined />}
               size={size}
+              onClick={() => deleteTopic(item)}
             />,
           ]}>
           <List.Item.Meta
