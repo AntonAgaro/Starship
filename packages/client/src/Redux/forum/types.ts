@@ -35,6 +35,7 @@ export type TCommentListInfo = {
   list: TCommentInfo[]
   current_page: number
   num_pages: number
+  total: number
 } | null
 
 export type TCreateTopicData = {

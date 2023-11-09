@@ -1,8 +1,16 @@
 import Title from 'antd/es/skeleton/Title'
-import { TAuthorInfo, TTopicInfo, TTopicListInfo } from '../Redux/forum/types'
+import {
+  TAuthorInfo,
+  TCommentInfo,
+  TCommentListInfo,
+  TTopicInfo,
+  TTopicListInfo,
+} from '../Redux/forum/types'
 import { num_per_page } from '../Utils/helpers'
 import Topic from '../Pages/Forum/Topic/topic'
 const numElements = 42
+
+const loremIpsum = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`
 
 const authorGenerate = (n: number): TAuthorInfo => {
   return {
@@ -15,14 +23,48 @@ const authorGenerate = (n: number): TAuthorInfo => {
   }
 }
 
-const topicGenerate = (n: number, title: string): TTopicInfo => {
+const commentGenerate = (n: number, topic_id: number): TCommentInfo => {
+  return {
+    id: n + 1144,
+    text: loremIpsum,
+    topic_id,
+    created_date_time: new Date().toISOString(),
+    author: authorGenerate(n + 2000),
+  }
+}
+
+const commentsListGenerate = (n_: number, topic_id: number): TCommentInfo[] => {
+  const comments: TCommentInfo[] = []
+  let n = n_
+  while (comments.length < numElements) {
+    const newItem: TCommentInfo = commentGenerate(n + 600, topic_id)
+    comments.push(newItem)
+    n++
+  }
+
+  return comments
+}
+
+const topicGenerate = (
+  n: number,
+  title: string,
+  generateComments = false
+): TTopicInfo => {
   const author: TAuthorInfo = authorGenerate(n)
+  const list = generateComments ? commentsListGenerate(n + 300, n) : []
+
   return {
     id: n,
     title: title != '' ? title : `Mock Topic ${n}`,
     created_date_time: new Date().toISOString(),
     author: author,
     last_comment_date_time: new Date().toISOString(),
+    comments: {
+      list: list,
+      num_pages: -1,
+      current_page: 1,
+      total: list.length,
+    },
   }
 }
 
@@ -31,7 +73,7 @@ const topicListStubGenerate = (): TTopicInfo[] => {
 
   let n = 1
   while (result.length < numElements) {
-    const newItem: TTopicInfo = topicGenerate(n, '')
+    const newItem: TTopicInfo = topicGenerate(n, '', true)
     result.push(newItem)
     n++
   }
@@ -61,6 +103,41 @@ export const topicListStub = (
     const newItem: TTopicInfo = stubList[i]
 
     result.list.push(newItem)
+  }
+  result.num_pages = numPages
+  console.log(result)
+  return result
+}
+
+export const commentListStub = (
+  page: number,
+  limit: number = num_per_page,
+  topic_id: number
+): TCommentListInfo | null => {
+  const result: TCommentListInfo = {
+    list: [],
+    total: stubList.length,
+    current_page: page,
+    num_pages: 0,
+  }
+
+  const currentTopic: TTopicInfo | undefined = stubList.find(
+    el => el?.id == topic_id
+  )
+
+  if (!currentTopic) return null
+
+  const len = currentTopic.comments?.list?.length ?? 0
+
+  const numPages = Math.ceil(len / limit)
+  const start = (page - 1) * limit
+
+  for (let i = start; i < start + limit && i < len; i++) {
+    const newItem: TCommentInfo | undefined = currentTopic.comments?.list[i]
+
+    if (newItem) {
+      result.list.push(newItem)
+    }
   }
   result.num_pages = numPages
   console.log(result)
