@@ -1,4 +1,13 @@
-import { Avatar, Button, Flex, List, Modal, Pagination, Space } from 'antd'
+import {
+  Avatar,
+  Button,
+  Flex,
+  Form,
+  List,
+  Modal,
+  Pagination,
+  Space,
+} from 'antd'
 import {
   LikeOutlined,
   MessageOutlined,
@@ -18,11 +27,20 @@ import {
 } from '../../Utils/helpers'
 import { asyncGetTopicList } from '../../Redux/forum/topicListState'
 import React from 'react'
-import { asyncDeleteTopic } from '../../Redux/forum/currentTopicState'
+import {
+  asyncDeleteTopic,
+  asyncUpdateTopic,
+} from '../../Redux/forum/currentTopicState'
 import { TProfileInfo } from '../../Redux/user/types'
+import ForumTopicAddEdit, {
+  UpdateTopicValues,
+} from '../ForumTopicAddEdit/ForumTopicAddEdit'
 
 export const ForumTopicList: FC = () => {
   const [page, setPage] = useState(1)
+  const [title, setTitle] = useState('')
+  const [topic_id, setTopicId] = useState(0)
+  const [openTopicEdit, setOpenTopicEdit] = useState(false)
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
@@ -55,74 +73,100 @@ export const ForumTopicList: FC = () => {
     }
   }
 
+  const updateTopic = async (data: UpdateTopicValues) => {
+    if (topic_id) {
+      await dispatch(
+        asyncUpdateTopic({ topic_id, author_id: profile.id, title: data.title })
+      )
+      dispatch(asyncGetTopicList(page))
+    }
+    setOpenTopicEdit(false)
+  }
+
   return (
-    <List
-      itemLayout="horizontal"
-      size="large"
-      dataSource={topicList?.list}
-      footer={
-        <div>
-          <Pagination
-            defaultCurrent={1}
-            pageSize={num_per_page}
-            total={topicList?.total}
-            onChange={page => setPage(page)}
-          />
-        </div>
-      }
-      renderItem={item => (
-        <List.Item
-          key={item?.title}
-          actions={[
-            <Button
-              type="primary"
-              shape="round"
-              icon={<EditOutlined />}
-              size={size}
-            />,
-            <Button
-              type="primary"
-              shape="round"
-              icon={<DeleteOutlined />}
-              size={size}
-              onClick={() => {
-                Modal.confirm({
-                  title: 'Удаление обсуждения',
-                  content: `Удалить обсуждение "${item?.title}"? Действие невозможно будет отменить`,
-                  okText: 'Да',
-                  cancelText: 'Нет',
-                  onOk: () => {
-                    deleteTopic(item)
-                  },
-                  footer: (_, { OkBtn, CancelBtn }) => (
-                    <>
-                      <CancelBtn />
-                      <OkBtn />
-                    </>
-                  ),
-                })
-              }}
-            />,
-          ]}>
-          <List.Item.Meta
-            avatar={<Avatar src={getProfileAvatar(item?.author)} />}
-            title={item?.title}
-            description={getDisplayProfileName(item?.author)}
-          />
-          <Flex gap="small">
-            <IconText
-              icon={LikeOutlined}
-              text="156"
-              key="list-vertical-like-o"
+    <div>
+      <h1 style={{ color: 'white' }}>Форум</h1>
+      <List
+        itemLayout="horizontal"
+        size="large"
+        dataSource={topicList?.list}
+        footer={
+          <div>
+            <Pagination
+              defaultCurrent={1}
+              pageSize={num_per_page}
+              total={topicList?.total}
+              onChange={page => setPage(page)}
             />
-            <IconText
-              icon={MessageOutlined}
-              text="2"
-              key="list-vertical-message"
+          </div>
+        }
+        renderItem={item => (
+          <List.Item
+            key={item?.title}
+            actions={[
+              <Button
+                type="primary"
+                shape="round"
+                icon={<EditOutlined />}
+                size={size}
+                onClick={() => {
+                  setTitle(item ? item.title : '')
+                  setTopicId(item ? item.id : -1)
+                  setOpenTopicEdit(true)
+                }}
+              />,
+              <Button
+                type="primary"
+                shape="round"
+                icon={<DeleteOutlined />}
+                size={size}
+                onClick={() => {
+                  Modal.confirm({
+                    title: 'Удаление обсуждения',
+                    content: `Удалить обсуждение "${item?.title}"? Действие невозможно будет отменить`,
+                    centered: true,
+                    okText: 'Да',
+                    cancelText: 'Нет',
+                    onOk: () => {
+                      deleteTopic(item)
+                    },
+                    footer: (_, { OkBtn, CancelBtn }) => (
+                      <>
+                        <CancelBtn />
+                        <OkBtn />
+                      </>
+                    ),
+                  })
+                }}
+              />,
+            ]}>
+            <List.Item.Meta
+              avatar={<Avatar src={getProfileAvatar(item?.author)} />}
+              title={item?.title}
+              description={getDisplayProfileName(item?.author)}
             />
-          </Flex>
-        </List.Item>
-      )}
-    />
+            <Flex gap="small">
+              <IconText
+                icon={LikeOutlined}
+                text="156"
+                key="list-vertical-like-o"
+              />
+              <IconText
+                icon={MessageOutlined}
+                text="2"
+                key="list-vertical-message"
+              />
+            </Flex>
+          </List.Item>
+        )}
+      />
+      <ForumTopicAddEdit
+        oldTitle={title}
+        topic_id={topic_id}
+        onCreate={updateTopic}
+        open={openTopicEdit}
+        onCancel={() => setOpenTopicEdit(false)}
+      />
+    </div>
   )
 }

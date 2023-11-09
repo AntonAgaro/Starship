@@ -47,7 +47,7 @@ export class ForumApi extends ApiBase {
 
   async updateTopic(data: TUpdateTopicData): Promise<TTopicInfo | undefined> {
     if (this.mock_mode) {
-      return updateTopicStub(data.title, data.topic_id)
+      return await updateTopicStub(data.title, data.topic_id)
     }
 
     const result = await this.axios.post('/update', data)

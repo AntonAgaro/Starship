@@ -1,6 +1,7 @@
 import Title from 'antd/es/skeleton/Title'
 import { TAuthorInfo, TTopicInfo, TTopicListInfo } from '../Redux/forum/types'
 import { num_per_page } from '../Utils/helpers'
+import Topic from '../Pages/Forum/Topic/topic'
 const numElements = 42
 
 const authorGenerate = (n: number): TAuthorInfo => {
@@ -70,20 +71,27 @@ export const removeTopicStub = (topic_id: number) => {
   stubList = stubList.filter((el: TTopicInfo) => el?.id != topic_id)
 }
 
-export const updateTopicStub = (
+export const updateTopicStub = async (
   title: string,
   topic_id: number
-): TTopicInfo | undefined => {
+): Promise<TTopicInfo | undefined> => {
+  const old = JSON.parse(JSON.stringify(stubList)) as TTopicInfo[]
+
+  console.log(title, topic_id)
+
   const n = stubList.length + 1
 
-  const newItem: TTopicInfo | undefined = stubList.find(
-    el => el?.id == topic_id
-  )
+  let newItem: TTopicInfo | undefined = undefined
 
-  if (newItem) {
-    newItem.title = title
-  }
+  old.map((el: TTopicInfo, index) => {
+    if (el?.id == topic_id) {
+      el.title = title
+      newItem = el
+      old[index] = el
+    }
+  })
 
+  stubList = old
   return newItem
 }
 
