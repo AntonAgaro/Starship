@@ -114,13 +114,6 @@ export const commentListStub = (
   limit: number = num_per_page,
   topic_id: number
 ): TCommentListInfo | null => {
-  const result: TCommentListInfo = {
-    list: [],
-    total: stubList.length,
-    current_page: page,
-    num_pages: 0,
-  }
-
   const currentTopic: TTopicInfo | undefined = stubList.find(
     el => el?.id == topic_id
   )
@@ -128,7 +121,12 @@ export const commentListStub = (
   if (!currentTopic) return null
 
   const len = currentTopic.comments?.list?.length ?? 0
-
+  const result: TCommentListInfo = {
+    list: [],
+    total: len,
+    current_page: page,
+    num_pages: 0,
+  }
   const numPages = Math.ceil(len / limit)
   const start = (page - 1) * limit
 
