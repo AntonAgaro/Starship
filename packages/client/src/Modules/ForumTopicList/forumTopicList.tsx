@@ -168,7 +168,7 @@ export const ForumTopicList: FC = () => {
               />
               <IconText
                 icon={MessageOutlined}
-                text="2"
+                text={item?.comments?.total.toString() ?? ''}
                 key="list-vertical-message"
               />
             </Flex>
