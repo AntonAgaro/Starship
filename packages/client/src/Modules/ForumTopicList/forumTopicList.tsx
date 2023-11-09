@@ -28,6 +28,7 @@ import {
 import { asyncGetTopicList } from '../../Redux/forum/topicListState'
 import React from 'react'
 import {
+  asyncCreateTopic,
   asyncDeleteTopic,
   asyncUpdateTopic,
 } from '../../Redux/forum/currentTopicState'
@@ -74,18 +75,32 @@ export const ForumTopicList: FC = () => {
   }
 
   const updateTopic = async (data: UpdateTopicValues) => {
-    if (topic_id) {
+    setOpenTopicEdit(false)
+    if (topic_id !== 0) {
       await dispatch(
         asyncUpdateTopic({ topic_id, author_id: profile.id, title: data.title })
       )
-      dispatch(asyncGetTopicList(page))
+    } else {
+      await dispatch(
+        asyncCreateTopic({ author_id: profile.id, title: data.title })
+      )
     }
-    setOpenTopicEdit(false)
+    dispatch(asyncGetTopicList(page))
   }
 
   return (
     <div>
-      <h1 style={{ color: 'white' }}>Форум</h1>
+      <Flex justify="space-around" align="center">
+        <h1 style={{ color: 'white' }}>Форум</h1>
+        <Button
+          onClick={() => {
+            setTitle('')
+            setTopicId(0)
+            setOpenTopicEdit(true)
+          }}>
+          +
+        </Button>
+      </Flex>
       <List
         itemLayout="horizontal"
         size="large"

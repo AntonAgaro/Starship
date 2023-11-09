@@ -99,7 +99,8 @@ export const addTopicStub = (title: string): TTopicInfo => {
   const n = stubList.length + 1
 
   const newItem: TTopicInfo = topicGenerate(n, title)
-
+  stubList.reverse()
   stubList.push(newItem)
+  stubList.reverse()
   return newItem
 }
