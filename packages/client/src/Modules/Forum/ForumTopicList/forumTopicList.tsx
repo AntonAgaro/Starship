@@ -36,6 +36,8 @@ import { TProfileInfo } from '../../../Redux/user/types'
 import ForumTopicAddEdit, {
   UpdateTopicValues,
 } from '../ForumTopicAddEdit/ForumTopicAddEdit'
+import { RouteUrls } from '../../../Routes/Router'
+import './forumTopicList.less'
 
 export const ForumTopicList: FC = () => {
   const [page, setPage] = useState(1)
@@ -157,7 +159,22 @@ export const ForumTopicList: FC = () => {
             ]}>
             <List.Item.Meta
               avatar={<Avatar src={getProfileAvatar(item?.author)} />}
-              title={item?.title}
+              title={
+                item ? (
+                  <Button
+                    type="link"
+                    className="topic-header"
+                    onClick={() =>
+                      navigate(
+                        RouteUrls.topic.replace(':id', item.id.toString())
+                      )
+                    }>
+                    {item?.title}
+                  </Button>
+                ) : (
+                  ''
+                )
+              }
               description={getDisplayProfileName(item?.author)}
             />
             <Flex gap="small">

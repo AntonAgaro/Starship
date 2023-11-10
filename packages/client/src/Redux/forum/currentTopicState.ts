@@ -16,6 +16,9 @@ export const asyncGetTopic = createAsyncThunk<TTopicInfo, TGetTopicData>(
   'forum/getTopic',
   async (data: TGetTopicData) => {
     const response = await forumApi.getTopic(data)
+    if (!response) {
+      window.location.href = '/404/'
+    }
     return response as TTopicInfo
   }
 )

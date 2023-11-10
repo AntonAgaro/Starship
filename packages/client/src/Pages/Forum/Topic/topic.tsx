@@ -3,7 +3,8 @@ import './topic.less'
 import { ForumTopic } from '../../../Modules/Forum/ForumTopic/forumTopic'
 import { useParams } from 'react-router-dom'
 
-const { id } = useParams()
+export const Topic: FC = () => {
+  const { id } = useParams()
 
-const Topic: FC = () => <ForumTopic topic_id={id ? Number.parseInt(id) : 0} />
-export default Topic
+  return <ForumTopic topic_id={id ? Number.parseInt(id) : 0} />
+}

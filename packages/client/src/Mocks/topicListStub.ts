@@ -7,7 +7,7 @@ import {
   TTopicListInfo,
 } from '../Redux/forum/types'
 import { num_per_page } from '../Utils/helpers'
-import Topic from '../Pages/Forum/Topic/topic'
+
 const numElements = 42
 
 const loremIpsum = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`
@@ -109,13 +109,13 @@ export const topicListStub = (
   return result
 }
 
-export const commentListStub = (
+export const getTopicStub = (
   page: number,
-  limit: number = num_per_page,
-  topic_id: number
-): TCommentListInfo | null => {
-  const currentTopic: TTopicInfo | undefined = stubList.find(
-    el => el?.id == topic_id
+  topic_id: number,
+  limit: number = num_per_page
+): TTopicInfo | null => {
+  const currentTopic: TTopicInfo | undefined = JSON.parse(
+    JSON.stringify(stubList.find(el => el?.id == topic_id))
   )
 
   if (!currentTopic) return null
@@ -138,8 +138,11 @@ export const commentListStub = (
     }
   }
   result.num_pages = numPages
+
+  currentTopic.comments = result
+
   console.log(result)
-  return result
+  return currentTopic
 }
 
 export const removeTopicStub = (topic_id: number) => {
@@ -178,4 +181,21 @@ export const addTopicStub = (title: string): TTopicInfo => {
   stubList.push(newItem)
   stubList.reverse()
   return newItem
+}
+
+export const removeCommentStub = (topic_id: number, Comment_id: number) => {
+  const old = JSON.parse(JSON.stringify(stubList)) as TTopicInfo[]
+
+  old.map((currentTopic: TTopicInfo, index) => {
+    if (currentTopic?.id == topic_id && currentTopic.comments) {
+      const comments = currentTopic.comments?.list.filter(
+        (el: TCommentInfo) => el?.id != Comment_id
+      )
+
+      currentTopic.comments.list = comments
+      old[index] = currentTopic
+    }
+  })
+
+  stubList = old
 }

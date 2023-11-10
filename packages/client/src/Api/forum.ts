@@ -1,5 +1,7 @@
 import {
   addTopicStub,
+  getTopicStub,
+  removeCommentStub,
   removeTopicStub,
   topicListStub,
   updateTopicStub,
@@ -23,7 +25,7 @@ export class ForumApi extends ApiBase {
   private mock_mode = true
 
   constructor() {
-    super('/forum')
+    super('/forum', true)
   }
 
   async getTopicList(page = 0): Promise<TTopicListInfo> {
@@ -63,7 +65,11 @@ export class ForumApi extends ApiBase {
     return result.data
   }
 
-  async getTopic(data: TGetTopicData): Promise<TTopicInfo> {
+  async getTopic(data: TGetTopicData): Promise<TTopicInfo | undefined> {
+    if (this.mock_mode) {
+      return getTopicStub(data.page, data.topic_id, num_per_page)
+    }
+
     const result = await this.axios.post(`/${data.topic_id}`, {
       ...data,
       limit: num_per_page,
@@ -87,6 +93,11 @@ export class ForumApi extends ApiBase {
   }
 
   async deleteComment(data: TDeleteCommentData) {
+    if (this.mock_mode) {
+      removeCommentStub(data.topic_id, data.Comment_id)
+      return
+    }
+
     const result = await this.axios.post(`/delete/${data.topic_id}`, data)
     return result.data
   }

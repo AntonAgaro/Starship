@@ -46,16 +46,10 @@ export const ForumTopic: FC<TTopicProps> = (props: TTopicProps) => {
   ) as TProfileInfo
 
   useEffect(() => {
-    const fetchAsync = async () => {
-      await dispatch(asyncGetTopic({ page, topic_id: props.topic_id }))
-
-      if (currentTopic === null) {
-        navigate(RouteUrls.error404)
-      }
-    }
     if (props.topic_id === 0) {
       navigate(RouteUrls.error404)
     }
+    dispatch(asyncGetTopic({ page, topic_id: props.topic_id }))
   }, [page])
 
   const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
