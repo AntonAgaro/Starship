@@ -25,6 +25,7 @@ import {
 import { TProfileInfo } from '../../../Redux/user/types'
 
 import { asyncDeleteComment } from '../../../Redux/forum/currentCommentState'
+import { RouteUrls } from '../../../Routes/Router'
 
 type TTopicProps = { topic_id: number }
 
@@ -45,7 +46,16 @@ export const ForumTopic: FC<TTopicProps> = (props: TTopicProps) => {
   ) as TProfileInfo
 
   useEffect(() => {
-    dispatch(asyncGetTopic({ page, topic_id: props.topic_id }))
+    const fetchAsync = async () => {
+      await dispatch(asyncGetTopic({ page, topic_id: props.topic_id }))
+
+      if (currentTopic === null) {
+        navigate(RouteUrls.error404)
+      }
+    }
+    if (props.topic_id === 0) {
+      navigate(RouteUrls.error404)
+    }
   }, [page])
 
   const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
