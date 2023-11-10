@@ -243,3 +243,53 @@ export const addCommentStub = async (
   stubList = old
   return newItem
 }
+
+export const updateCommentStub = async (
+  text: string,
+  author_id: number,
+  topic_id: number,
+  comment_id: number
+): Promise<TCommentInfo | undefined> => {
+  const old = JSON.parse(JSON.stringify(stubList)) as TTopicInfo[]
+
+  let result: TCommentInfo | undefined = undefined
+
+  old.map((currentTopic: TTopicInfo, index) => {
+    if (currentTopic?.id == topic_id) {
+      if (currentTopic.comments) {
+        currentTopic.comments.list.map(
+          (currentComment: TCommentInfo, indexComment) => {
+            if (currentComment?.id == comment_id) {
+              currentComment.text = text
+              if (currentTopic.comments) {
+                currentTopic.comments.list[indexComment] = currentComment
+                result = currentComment
+              }
+            }
+          }
+        )
+
+        old[index] = currentTopic
+      }
+    }
+  })
+
+  stubList = old
+  return result
+}
+
+export const getCommentStub = async (
+  topic_id: number,
+  comment_id: number
+): Promise<TCommentInfo | undefined> => {
+  const currentTopic: TTopicInfo | undefined = JSON.parse(
+    JSON.stringify(stubList.find(el => el?.id == topic_id))
+  )
+
+  if (!currentTopic) return null
+
+  const result: TCommentInfo | undefined = currentTopic.comments?.list.find(
+    el => el?.id == comment_id
+  )
+  return result
+}

@@ -51,7 +51,7 @@ const ForumCommentAddEdit: React.FC<CommentAddEditFormProps> = props => {
         form={form}
         layout="vertical"
         name="form_comment_add_edit"
-        initialValues={{ modifier: 'public', title: props.oldText }}>
+        initialValues={{ modifier: 'public', text: props.oldText }}>
         <Form.Item
           name="text"
           label="Текст комментарий"

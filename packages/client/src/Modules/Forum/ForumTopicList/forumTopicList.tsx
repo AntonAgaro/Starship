@@ -192,13 +192,15 @@ export const ForumTopicList: FC = () => {
           </List.Item>
         )}
       />
-      <ForumTopicAddEdit
-        oldTitle={title}
-        topic_id={topic_id}
-        onCreate={updateTopic}
-        open={openTopicEdit}
-        onCancel={() => setOpenTopicEdit(false)}
-      />
+      {openTopicEdit && (
+        <ForumTopicAddEdit
+          oldTitle={title}
+          topic_id={topic_id}
+          onCreate={updateTopic}
+          open={openTopicEdit}
+          onCancel={() => setOpenTopicEdit(false)}
+        />
+      )}
     </div>
   )
 }

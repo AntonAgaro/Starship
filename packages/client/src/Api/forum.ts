@@ -1,10 +1,12 @@
 import {
   addCommentStub,
   addTopicStub,
+  getCommentStub,
   getTopicStub,
   removeCommentStub,
   removeTopicStub,
   topicListStub,
+  updateCommentStub,
   updateTopicStub,
 } from '../Mocks/topicListStub'
 import {
@@ -78,7 +80,10 @@ export class ForumApi extends ApiBase {
     return result.data
   }
 
-  async getComment(data: TGetCommentData): Promise<TCommentInfo> {
+  async getComment(data: TGetCommentData): Promise<TCommentInfo | undefined> {
+    if (this.mock_mode) {
+      return await getCommentStub(data.topic_id, data.comment_id)
+    }
     const result = await this.axios.post(`/${data.topic_id}`, data)
     return result.data
   }
@@ -93,7 +98,17 @@ export class ForumApi extends ApiBase {
     return result.data
   }
 
-  async updateComment(data: TUpdateCommentData): Promise<TCommentInfo> {
+  async updateComment(
+    data: TUpdateCommentData
+  ): Promise<TCommentInfo | undefined> {
+    if (this.mock_mode) {
+      return await updateCommentStub(
+        data.text,
+        data.author_id,
+        data.topic_id,
+        data.comment_id
+      )
+    }
     const result = await this.axios.post(`/update/${data.topic_id}`, data)
     return result.data
   }

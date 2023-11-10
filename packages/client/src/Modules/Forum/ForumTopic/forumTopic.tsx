@@ -188,14 +188,16 @@ export const ForumTopic: FC<TTopicProps> = (props: TTopicProps) => {
         )}
       />
 
-      <ForumCommentAddEdit
-        oldText={text}
-        topic_id={props.topic_id}
-        onCreate={updateComment}
-        open={openCommentEdit}
-        onCancel={() => setOpenCommentEdit(false)}
-        comment_id={comment_id}
-      />
+      {openCommentEdit && (
+        <ForumCommentAddEdit
+          oldText={text}
+          topic_id={props.topic_id}
+          onCreate={updateComment}
+          open={openCommentEdit}
+          onCancel={() => setOpenCommentEdit(false)}
+          comment_id={comment_id}
+        />
+      )}
     </div>
   )
 }
