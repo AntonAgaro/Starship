@@ -1,60 +1,51 @@
-import {
-  Avatar,
-  Button,
-  Flex,
-  Form,
-  List,
-  Modal,
-  Pagination,
-  Space,
-} from 'antd'
-import {
-  LikeOutlined,
-  MessageOutlined,
-  EditOutlined,
-  DeleteOutlined,
-} from '@ant-design/icons'
+import { Avatar, Button, Flex, List, Modal, Pagination, Space } from 'antd'
+import { LikeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import { FC, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAppDispatch } from '../../Hooks/reduxHooks'
+import { useAppDispatch } from '../../../Hooks/reduxHooks'
 import { useSelector } from 'react-redux'
-import { RootState } from '../../Redux/store'
-import { TTopicInfo, TTopicListInfo } from '../../Redux/forum/types'
+import { RootState } from '../../../Redux/store'
+import {
+  TCommentInfo,
+  TTopicInfo,
+  TTopicListInfo,
+} from '../../../Redux/forum/types'
 import {
   getDisplayProfileName,
   getProfileAvatar,
   num_per_page,
-} from '../../Utils/helpers'
-import { asyncGetTopicList } from '../../Redux/forum/topicListState'
+} from '../../../Utils/helpers'
 import React from 'react'
 import {
   asyncCreateTopic,
   asyncDeleteTopic,
+  asyncGetTopic,
   asyncUpdateTopic,
-} from '../../Redux/forum/currentTopicState'
-import { TProfileInfo } from '../../Redux/user/types'
-import ForumTopicAddEdit, {
-  UpdateTopicValues,
-} from '../ForumTopicAddEdit/ForumTopicAddEdit'
+} from '../../../Redux/forum/currentTopicState'
+import { TProfileInfo } from '../../../Redux/user/types'
 
-export const ForumTopicList: FC = () => {
+import { asyncDeleteComment } from '../../../Redux/forum/currentCommentState'
+
+type TTopicProps = { topic_id: number }
+
+export const ForumTopic: FC<TTopicProps> = (props: TTopicProps) => {
   const [page, setPage] = useState(1)
-  const [title, setTitle] = useState('')
-  const [topic_id, setTopicId] = useState(0)
-  const [openTopicEdit, setOpenTopicEdit] = useState(false)
+  const [title, setText] = useState('')
+  const [comment_id, setCommentId] = useState(0)
+  const [openCommentEdit, setOpenCommentEdit] = useState(false)
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
-  const topicList = useSelector(
-    (rootState: RootState) => rootState.topicList
-  ) as TTopicListInfo
+  const currentTopic = useSelector(
+    (rootState: RootState) => rootState.currentTopic
+  ) as TTopicInfo
 
   const profile = useSelector(
     (rootState: RootState) => rootState.user
   ) as TProfileInfo
 
   useEffect(() => {
-    dispatch(asyncGetTopicList(page))
+    dispatch(asyncGetTopic({ page, topic_id: props.topic_id }))
   }, [page])
 
   const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
@@ -65,16 +56,20 @@ export const ForumTopicList: FC = () => {
   )
   const size = 'small'
 
-  const deleteTopic = async (item: TTopicInfo) => {
+  const deleteComment = async (item: TCommentInfo) => {
     if (item) {
       await dispatch(
-        asyncDeleteTopic({ topic_id: item.id, author_id: profile.id })
+        asyncDeleteComment({
+          author_id: profile.id,
+          topic_id: props.topic_id,
+          Comment_id: item.id,
+        })
       )
-      dispatch(asyncGetTopicList(page))
+      dispatch(asyncGetTopic({ page, topic_id: props.topic_id }))
     }
   }
 
-  const updateTopic = async (data: UpdateTopicValues) => {
+  /*   const updateComment = async (data: UpdateCommentValues) => {
     setOpenTopicEdit(false)
     if (topic_id !== 0) {
       await dispatch(
@@ -85,39 +80,40 @@ export const ForumTopicList: FC = () => {
         asyncCreateTopic({ author_id: profile.id, title: data.title })
       )
     }
-    dispatch(asyncGetTopicList(page))
+    dispatch(asyncGetTopic({page, topic_id: props.topic_id}))
   }
-
+ */
   return (
     <div>
       <Flex justify="space-around" align="center">
-        <h1 style={{ color: 'white' }}>Форум</h1>
+        <h1 style={{ color: 'white' }}>{currentTopic?.title}</h1>
         <Button
           onClick={() => {
-            setTitle('')
-            setTopicId(0)
-            setOpenTopicEdit(true)
+            setText('')
+            setCommentId(0)
+
+            // setOpenTopicEdit(true)
           }}>
-          +
+          + Ответить
         </Button>
       </Flex>
       <List
         itemLayout="horizontal"
         size="large"
-        dataSource={topicList?.list}
+        dataSource={currentTopic?.comments?.list}
         footer={
           <div>
             <Pagination
               defaultCurrent={1}
               pageSize={num_per_page}
-              total={topicList?.total}
+              total={currentTopic?.comments?.total}
               onChange={page => setPage(page)}
             />
           </div>
         }
         renderItem={item => (
           <List.Item
-            key={item?.title}
+            key={'_comment_' + item?.id}
             actions={[
               <Button
                 type="primary"
@@ -125,9 +121,9 @@ export const ForumTopicList: FC = () => {
                 icon={<EditOutlined />}
                 size={size}
                 onClick={() => {
-                  setTitle(item ? item.title : '')
-                  setTopicId(item ? item.id : -1)
-                  setOpenTopicEdit(true)
+                  setText(item ? item.text : '')
+                  setCommentId(item ? item.id : -1)
+                  // setOpenTopicEdit(true)
                 }}
               />,
               <Button
@@ -137,13 +133,13 @@ export const ForumTopicList: FC = () => {
                 size={size}
                 onClick={() => {
                   Modal.confirm({
-                    title: 'Удаление обсуждения',
-                    content: `Удалить обсуждение "${item?.title}"? Действие невозможно будет отменить`,
+                    title: 'Удаление комментария',
+                    content: `Удалить обсуждение комментарий? Действие невозможно будет отменить`,
                     centered: true,
                     okText: 'Да',
                     cancelText: 'Нет',
                     onOk: () => {
-                      deleteTopic(item)
+                      deleteComment(item)
                     },
                     footer: (_, { OkBtn, CancelBtn }) => (
                       <>
@@ -157,30 +153,19 @@ export const ForumTopicList: FC = () => {
             ]}>
             <List.Item.Meta
               avatar={<Avatar src={getProfileAvatar(item?.author)} />}
-              title={item?.title}
-              description={getDisplayProfileName(item?.author)}
+              description={item?.text}
+              title={getDisplayProfileName(item?.author)}
             />
             <Flex gap="small">
+              {item?.created_date_time}
               <IconText
                 icon={LikeOutlined}
-                text="156"
+                text=""
                 key="list-vertical-like-o"
-              />
-              <IconText
-                icon={MessageOutlined}
-                text={item?.comments?.total.toString() ?? ''}
-                key="list-vertical-message"
               />
             </Flex>
           </List.Item>
         )}
-      />
-      <ForumTopicAddEdit
-        oldTitle={title}
-        topic_id={topic_id}
-        onCreate={updateTopic}
-        open={openTopicEdit}
-        onCancel={() => setOpenTopicEdit(false)}
       />
     </div>
   )
