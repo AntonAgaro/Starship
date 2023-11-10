@@ -7,6 +7,8 @@ import {
   TTopicListInfo,
 } from '../Redux/forum/types'
 import { num_per_page } from '../Utils/helpers'
+import ApiAuth from '../Api/auth'
+import UserApi from '../Api/user'
 
 const numElements = 42
 
@@ -183,13 +185,13 @@ export const addTopicStub = (title: string): TTopicInfo => {
   return newItem
 }
 
-export const removeCommentStub = (topic_id: number, Comment_id: number) => {
+export const removeCommentStub = (topic_id: number, comment_id: number) => {
   const old = JSON.parse(JSON.stringify(stubList)) as TTopicInfo[]
 
   old.map((currentTopic: TTopicInfo, index) => {
     if (currentTopic?.id == topic_id && currentTopic.comments) {
       const comments = currentTopic.comments?.list.filter(
-        (el: TCommentInfo) => el?.id != Comment_id
+        (el: TCommentInfo) => el?.id != comment_id
       )
 
       currentTopic.comments.list = comments
@@ -198,4 +200,46 @@ export const removeCommentStub = (topic_id: number, Comment_id: number) => {
   })
 
   stubList = old
+}
+
+export const addCommentStub = async (
+  text: string,
+  author_id: number,
+  topic_id: number
+): Promise<TCommentInfo> => {
+  const old = JSON.parse(JSON.stringify(stubList)) as TTopicInfo[]
+
+  const users = new UserApi()
+
+  const user = await users.getUserInfo(author_id)
+  const newItem: TCommentInfo = {
+    author: user,
+    id: -1,
+    topic_id,
+    text,
+    created_date_time: new Date().toISOString(),
+  }
+  old.map((currentTopic: TTopicInfo, index) => {
+    if (currentTopic?.id == topic_id) {
+      if (!currentTopic.comments) {
+        currentTopic.comments = {
+          list: [],
+          num_pages: 0,
+          total: 0,
+          current_page: 0,
+        }
+      } else {
+        currentTopic.comments.list.reverse()
+      }
+
+      newItem.id = currentTopic.comments.list.length + 1
+
+      currentTopic.comments.list.push(newItem)
+      currentTopic.comments.list.reverse()
+      old[index] = currentTopic
+    }
+  })
+
+  stubList = old
+  return newItem
 }

@@ -64,7 +64,7 @@ export type TCreateCommentData = {
 }
 export type TUpdateCommentData = {
   Comment_id: number
-  title: string
+  text: string
   author_id: number
   topic_id: number
 }

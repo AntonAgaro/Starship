@@ -1,4 +1,5 @@
 import {
+  addCommentStub,
   addTopicStub,
   getTopicStub,
   removeCommentStub,
@@ -83,6 +84,11 @@ export class ForumApi extends ApiBase {
   }
 
   async createComment(data: TCreateCommentData): Promise<TCommentInfo> {
+    console.log(data)
+    if (this.mock_mode) {
+      return await addCommentStub(data.text, data.author_id, data.topic_id)
+    }
+
     const result = await this.axios.post(`/create/${data.topic_id}`, data)
     return result.data
   }
@@ -94,7 +100,7 @@ export class ForumApi extends ApiBase {
 
   async deleteComment(data: TDeleteCommentData) {
     if (this.mock_mode) {
-      removeCommentStub(data.topic_id, data.Comment_id)
+      await removeCommentStub(data.topic_id, data.comment_id)
       return
     }
 

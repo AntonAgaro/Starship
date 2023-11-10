@@ -24,14 +24,21 @@ import {
 } from '../../../Redux/forum/currentTopicState'
 import { TProfileInfo } from '../../../Redux/user/types'
 
-import { asyncDeleteComment } from '../../../Redux/forum/currentCommentState'
+import {
+  asyncCreateComment,
+  asyncDeleteComment,
+  asyncUpdateComment,
+} from '../../../Redux/forum/currentCommentState'
 import { RouteUrls } from '../../../Routes/Router'
+import ForumCommentAddEdit, {
+  UpdateCommentValues,
+} from '../ForumCommentAddEdit/ForumCommentAddEdit'
 
 type TTopicProps = { topic_id: number }
 
 export const ForumTopic: FC<TTopicProps> = (props: TTopicProps) => {
   const [page, setPage] = useState(1)
-  const [title, setText] = useState('')
+  const [text, setText] = useState('')
   const [comment_id, setCommentId] = useState(0)
   const [openCommentEdit, setOpenCommentEdit] = useState(false)
   const navigate = useNavigate()
@@ -66,27 +73,36 @@ export const ForumTopic: FC<TTopicProps> = (props: TTopicProps) => {
         asyncDeleteComment({
           author_id: profile.id,
           topic_id: props.topic_id,
-          Comment_id: item.id,
+          comment_id: item.id,
         })
       )
       dispatch(asyncGetTopic({ page, topic_id: props.topic_id }))
     }
   }
 
-  /*   const updateComment = async (data: UpdateCommentValues) => {
-    setOpenTopicEdit(false)
-    if (topic_id !== 0) {
+  const updateComment = async (data: UpdateCommentValues) => {
+    setOpenCommentEdit(false)
+    if (comment_id != 0) {
       await dispatch(
-        asyncUpdateTopic({ topic_id, author_id: profile.id, title: data.title })
+        asyncUpdateComment({
+          author_id: profile.id,
+          comment_id,
+          text: data.text,
+          topic_id: props.topic_id,
+        })
       )
     } else {
       await dispatch(
-        asyncCreateTopic({ author_id: profile.id, title: data.title })
+        asyncCreateComment({
+          author_id: profile.id,
+          text: data.text,
+          topic_id: props.topic_id,
+        })
       )
     }
-    dispatch(asyncGetTopic({page, topic_id: props.topic_id}))
+    dispatch(asyncGetTopic({ page, topic_id: props.topic_id }))
   }
- */
+
   return (
     <div>
       <Flex justify="space-around" align="center">
@@ -96,7 +112,7 @@ export const ForumTopic: FC<TTopicProps> = (props: TTopicProps) => {
             setText('')
             setCommentId(0)
 
-            // setOpenTopicEdit(true)
+            setOpenCommentEdit(true)
           }}>
           + Ответить
         </Button>
@@ -127,7 +143,7 @@ export const ForumTopic: FC<TTopicProps> = (props: TTopicProps) => {
                 onClick={() => {
                   setText(item ? item.text : '')
                   setCommentId(item ? item.id : -1)
-                  // setOpenTopicEdit(true)
+                  setOpenCommentEdit(true)
                 }}
               />,
               <Button
@@ -170,6 +186,15 @@ export const ForumTopic: FC<TTopicProps> = (props: TTopicProps) => {
             </Flex>
           </List.Item>
         )}
+      />
+
+      <ForumCommentAddEdit
+        oldText={text}
+        topic_id={props.topic_id}
+        onCreate={updateComment}
+        open={openCommentEdit}
+        onCancel={() => setOpenCommentEdit(false)}
+        comment_id={comment_id}
       />
     </div>
   )
