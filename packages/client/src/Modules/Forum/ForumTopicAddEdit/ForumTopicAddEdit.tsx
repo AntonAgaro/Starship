@@ -26,7 +26,7 @@ const ForumTopicAddEdit: React.FC<TopicAddEditFormProps> = props => {
       const input = myRef.current as InputRef
       input.focus() // TODO: так и не добился автофокуса при показе модала, не работает автофокус
     }
-  })
+  }, [])
 
   return (
     <Modal

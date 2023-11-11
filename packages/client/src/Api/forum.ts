@@ -52,7 +52,7 @@ export class ForumApi extends ApiBase {
 
   async updateTopic(data: TUpdateTopicData): Promise<TTopicInfo | undefined> {
     if (this.mock_mode) {
-      return await updateTopicStub(data.title, data.topic_id)
+      return updateTopicStub(data.title, data.topic_id)
     }
 
     const result = await this.axios.post('/update', data)
@@ -82,7 +82,7 @@ export class ForumApi extends ApiBase {
 
   async getComment(data: TGetCommentData): Promise<TCommentInfo | undefined> {
     if (this.mock_mode) {
-      return await getCommentStub(data.topic_id, data.comment_id)
+      return getCommentStub(data.topic_id, data.comment_id)
     }
     const result = await this.axios.post(`/${data.topic_id}`, data)
     return result.data
@@ -91,7 +91,7 @@ export class ForumApi extends ApiBase {
   async createComment(data: TCreateCommentData): Promise<TCommentInfo> {
     console.log(data)
     if (this.mock_mode) {
-      return await addCommentStub(data.text, data.author_id, data.topic_id)
+      return addCommentStub(data.text, data.author_id, data.topic_id)
     }
 
     const result = await this.axios.post(`/create/${data.topic_id}`, data)
@@ -102,7 +102,7 @@ export class ForumApi extends ApiBase {
     data: TUpdateCommentData
   ): Promise<TCommentInfo | undefined> {
     if (this.mock_mode) {
-      return await updateCommentStub(
+      return updateCommentStub(
         data.text,
         data.author_id,
         data.topic_id,
@@ -115,7 +115,7 @@ export class ForumApi extends ApiBase {
 
   async deleteComment(data: TDeleteCommentData) {
     if (this.mock_mode) {
-      await removeCommentStub(data.topic_id, data.comment_id)
+      removeCommentStub(data.topic_id, data.comment_id)
       return
     }
 

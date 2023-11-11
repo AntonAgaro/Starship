@@ -42,7 +42,7 @@ import './forumTopicList.less'
 export const ForumTopicList: FC = () => {
   const [page, setPage] = useState(1)
   const [title, setTitle] = useState('')
-  const [topic_id, setTopicId] = useState(0)
+  const [topicId, setTopicId] = useState(0)
   const [openTopicEdit, setOpenTopicEdit] = useState(false)
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
@@ -78,9 +78,13 @@ export const ForumTopicList: FC = () => {
 
   const updateTopic = async (data: UpdateTopicValues) => {
     setOpenTopicEdit(false)
-    if (topic_id !== 0) {
+    if (topicId !== 0) {
       await dispatch(
-        asyncUpdateTopic({ topic_id, author_id: profile.id, title: data.title })
+        asyncUpdateTopic({
+          topic_id: topicId,
+          author_id: profile.id,
+          title: data.title,
+        })
       )
     } else {
       await dispatch(
@@ -195,7 +199,7 @@ export const ForumTopicList: FC = () => {
       {openTopicEdit && (
         <ForumTopicAddEdit
           oldTitle={title}
-          topic_id={topic_id}
+          topic_id={topicId}
           onCreate={updateTopic}
           open={openTopicEdit}
           onCancel={() => setOpenTopicEdit(false)}

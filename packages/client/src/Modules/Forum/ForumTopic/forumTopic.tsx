@@ -5,23 +5,14 @@ import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../../../Hooks/reduxHooks'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../Redux/store'
-import {
-  TCommentInfo,
-  TTopicInfo,
-  TTopicListInfo,
-} from '../../../Redux/forum/types'
+import { TCommentInfo, TTopicInfo } from '../../../Redux/forum/types'
 import {
   getDisplayProfileName,
   getProfileAvatar,
   num_per_page,
 } from '../../../Utils/helpers'
 import React from 'react'
-import {
-  asyncCreateTopic,
-  asyncDeleteTopic,
-  asyncGetTopic,
-  asyncUpdateTopic,
-} from '../../../Redux/forum/currentTopicState'
+import { asyncGetTopic } from '../../../Redux/forum/currentTopicState'
 import { TProfileInfo } from '../../../Redux/user/types'
 
 import {
@@ -39,7 +30,7 @@ type TTopicProps = { topic_id: number }
 export const ForumTopic: FC<TTopicProps> = (props: TTopicProps) => {
   const [page, setPage] = useState(1)
   const [text, setText] = useState('')
-  const [comment_id, setCommentId] = useState(0)
+  const [commentId, setCommentId] = useState(0)
   const [openCommentEdit, setOpenCommentEdit] = useState(false)
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
@@ -82,11 +73,11 @@ export const ForumTopic: FC<TTopicProps> = (props: TTopicProps) => {
 
   const updateComment = async (data: UpdateCommentValues) => {
     setOpenCommentEdit(false)
-    if (comment_id != 0) {
+    if (commentId != 0) {
       await dispatch(
         asyncUpdateComment({
           author_id: profile.id,
-          comment_id,
+          comment_id: commentId,
           text: data.text,
           topic_id: props.topic_id,
         })
@@ -195,7 +186,7 @@ export const ForumTopic: FC<TTopicProps> = (props: TTopicProps) => {
           onCreate={updateComment}
           open={openCommentEdit}
           onCancel={() => setOpenCommentEdit(false)}
-          comment_id={comment_id}
+          comment_id={commentId}
         />
       )}
     </div>
