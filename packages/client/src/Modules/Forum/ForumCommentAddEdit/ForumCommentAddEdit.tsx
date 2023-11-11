@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react'
 import { Form, Input, InputRef, Modal } from 'antd'
-import TextArea from 'antd/es/input/TextArea'
 
 export interface UpdateCommentValues {
   text: string
@@ -14,6 +13,7 @@ interface CommentAddEditFormProps {
   onCreate: (values: UpdateCommentValues) => void
   onCancel: () => void
 }
+const { TextArea } = Input
 
 const ForumCommentAddEdit: React.FC<CommentAddEditFormProps> = props => {
   const [form] = Form.useForm()

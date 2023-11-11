@@ -67,6 +67,7 @@ export type TUpdateCommentData = {
   text: string
   author_id: number
   topic_id: number
+  page: number
 }
 export type TGetCommentData = {
   topic_id: number

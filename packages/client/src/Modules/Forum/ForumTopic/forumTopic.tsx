@@ -1,6 +1,6 @@
 import { Avatar, Button, Flex, List, Modal, Pagination, Space } from 'antd'
 import { LikeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
-import { FC, useEffect, useState } from 'react'
+import { FC, useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../../../Hooks/reduxHooks'
 import { useSelector } from 'react-redux'
@@ -46,8 +46,9 @@ export const ForumTopic: FC<TTopicProps> = (props: TTopicProps) => {
   useEffect(() => {
     if (props.topic_id === 0) {
       navigate(RouteUrls.error404)
+    } else {
+      dispatch(asyncGetTopic({ page, topic_id: props.topic_id }))
     }
-    dispatch(asyncGetTopic({ page, topic_id: props.topic_id }))
   }, [page])
 
   const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
@@ -73,40 +74,35 @@ export const ForumTopic: FC<TTopicProps> = (props: TTopicProps) => {
 
   const updateComment = async (data: UpdateCommentValues) => {
     setOpenCommentEdit(false)
-    if (commentId != 0) {
-      await dispatch(
-        asyncUpdateComment({
-          author_id: profile.id,
-          comment_id: commentId,
-          text: data.text,
-          topic_id: props.topic_id,
-        })
-      )
-    } else {
-      await dispatch(
-        asyncCreateComment({
-          author_id: profile.id,
-          text: data.text,
-          topic_id: props.topic_id,
-        })
-      )
-    }
-    dispatch(asyncGetTopic({ page, topic_id: props.topic_id }))
+
+    await dispatch(
+      asyncUpdateComment({
+        author_id: profile.id,
+        comment_id: commentId,
+        text: data.text,
+        topic_id: props.topic_id,
+        page,
+      })
+    )
+    await dispatch(asyncGetTopic({ page, topic_id: props.topic_id }))
   }
+
+  const openEditForm = useCallback((item: TCommentInfo | null = null) => {
+    if (item) {
+      setText(item ? item.text : '')
+      setCommentId(item ? item.id : -1)
+    } else {
+      setText('')
+      setCommentId(0)
+    }
+    setOpenCommentEdit(true)
+  }, [])
 
   return (
     <div>
       <Flex justify="space-around" align="center">
         <h1 style={{ color: 'white' }}>{currentTopic?.title}</h1>
-        <Button
-          onClick={() => {
-            setText('')
-            setCommentId(0)
-
-            setOpenCommentEdit(true)
-          }}>
-          + Ответить
-        </Button>
+        <Button onClick={() => openEditForm()}>+ Ответить</Button>
       </Flex>
       <List
         itemLayout="horizontal"
@@ -131,11 +127,7 @@ export const ForumTopic: FC<TTopicProps> = (props: TTopicProps) => {
                 shape="round"
                 icon={<EditOutlined />}
                 size={size}
-                onClick={() => {
-                  setText(item ? item.text : '')
-                  setCommentId(item ? item.id : -1)
-                  setOpenCommentEdit(true)
-                }}
+                onClick={() => openEditForm(item)}
               />,
               <Button
                 type="primary"

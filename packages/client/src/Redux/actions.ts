@@ -4,4 +4,5 @@ import { actions as leaderBoardState } from './leaderboard/leaderBoardState'
 export default {
   userState,
   leaderBoardState,
+  currentTopicState,
 }

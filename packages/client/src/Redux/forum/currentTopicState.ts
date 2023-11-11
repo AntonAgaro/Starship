@@ -47,7 +47,7 @@ export const asyncUpdateTopic = createAsyncThunk<TTopicInfo, TUpdateTopicData>(
   }
 )
 
-const slice = createSlice({
+export const sliceTopic = createSlice({
   name: 'forum/currentTopic',
   initialState: currentTopicInitialState,
   reducers: {
@@ -99,5 +99,5 @@ const slice = createSlice({
   },
 })
 
-export const { actions } = slice
-export const currentTopicState = slice.reducer
+export const { actions } = sliceTopic
+export const currentTopicState = sliceTopic.reducer

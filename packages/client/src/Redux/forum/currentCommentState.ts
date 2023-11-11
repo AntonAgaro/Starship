@@ -5,8 +5,11 @@ import {
   TCreateCommentData,
   TDeleteCommentData,
   TGetCommentData,
+  TGetTopicData,
   TUpdateCommentData,
 } from './types'
+import { useAppDispatch } from '../../Hooks/reduxHooks'
+import { asyncGetTopic } from './currentTopicState'
 
 const currentCommentInitialState = null as TCommentInfo
 
@@ -40,7 +43,19 @@ export const asyncUpdateComment = createAsyncThunk<
   TCommentInfo,
   TUpdateCommentData
 >('forum/updateComment', async (data: TUpdateCommentData) => {
-  const response = await forumApi.updateComment(data)
+  const { author_id, text, topic_id, page } = data
+  let response = null
+
+  if (data.comment_id === 0) {
+    response = await forumApi.createComment(data)
+  } else {
+    response = await forumApi.createComment({ author_id, text, topic_id })
+  }
+  /*   const dispatch = useAppDispatch()
+
+
+    await  dispatch(asyncGetTopic( {page, topic_id})) - вызов игнорируется! Не знаю что делать*/
+
   return response as TCommentInfo
 })
 

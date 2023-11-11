@@ -14,7 +14,7 @@ import {
   EditOutlined,
   DeleteOutlined,
 } from '@ant-design/icons'
-import { FC, useEffect, useState } from 'react'
+import { FC, useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../../../Hooks/reduxHooks'
 import { useSelector } from 'react-redux'
@@ -94,18 +94,22 @@ export const ForumTopicList: FC = () => {
     dispatch(asyncGetTopicList(page))
   }
 
+  const openEditForm = useCallback((item: TTopicInfo | null = null) => {
+    if (item) {
+      setTitle(item ? item.title : '')
+      setTopicId(item ? item.id : -1)
+    } else {
+      setTitle('')
+      setTopicId(0)
+    }
+    setOpenTopicEdit(true)
+  }, [])
+
   return (
     <div>
       <Flex justify="space-around" align="center">
         <h1 style={{ color: 'white' }}>Форум</h1>
-        <Button
-          onClick={() => {
-            setTitle('')
-            setTopicId(0)
-            setOpenTopicEdit(true)
-          }}>
-          +
-        </Button>
+        <Button onClick={() => openEditForm()}>+</Button>
       </Flex>
       <List
         itemLayout="horizontal"
@@ -130,11 +134,7 @@ export const ForumTopicList: FC = () => {
                 shape="round"
                 icon={<EditOutlined />}
                 size={size}
-                onClick={() => {
-                  setTitle(item ? item.title : '')
-                  setTopicId(item ? item.id : -1)
-                  setOpenTopicEdit(true)
-                }}
+                onClick={() => openEditForm(item)}
               />,
               <Button
                 type="primary"
