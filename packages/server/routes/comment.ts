@@ -3,9 +3,9 @@ import Comment from '../controllers/Comment'
 import removeSpecialCharacters from '../utils/removeSpecialCharacters'
 
 const router = Router()
-const LOCAL_URL = `/forum/comment`
+const ROUTE = `/forum/comment`
 
-router.get(LOCAL_URL, async (req, res) => {
+router.get(ROUTE, async (req, res) => {
   try {
     const { comment_id } = req.query
 
@@ -23,7 +23,7 @@ router.get(LOCAL_URL, async (req, res) => {
   return
 })
 
-router.post(LOCAL_URL, async (req, res) => {
+router.post(ROUTE, async (req, res) => {
   try {
     const { topic_id, author_id, text } = req.body
 
@@ -47,7 +47,7 @@ router.post(LOCAL_URL, async (req, res) => {
   return
 })
 
-router.put(LOCAL_URL, async (req, res) => {
+router.put(ROUTE, async (req, res) => {
   try {
     const { comment_id, text } = req.body
 
@@ -68,7 +68,7 @@ router.put(LOCAL_URL, async (req, res) => {
   return
 })
 
-router.delete(LOCAL_URL, async (req, res) => {
+router.delete(ROUTE, async (req, res) => {
   try {
     const { id } = req.body
 

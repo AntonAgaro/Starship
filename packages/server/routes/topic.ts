@@ -3,9 +3,9 @@ import Topic from '../controllers/Topic'
 import removeSpecialCharacters from '../utils/removeSpecialCharacters'
 
 const router = Router()
-const LOCAL_URL = `/forum/topic`
+const ROUTE = `/forum/topic`
 
-router.get(LOCAL_URL, async (req, res) => {
+router.get(ROUTE, async (req, res) => {
   const id: number | unknown = req.query?.id
 
   if (!id) return res.status(400).send('Param id is required.')
@@ -25,7 +25,7 @@ router.get(`forum/topics`, async (_req, res) => {
   res.json(topics)
 })
 
-router.post(LOCAL_URL, async (req, res) => {
+router.post(ROUTE, async (req, res) => {
   const { title, author_id } = req.body
 
   if (!(title && author_id)) {
@@ -44,7 +44,7 @@ router.post(LOCAL_URL, async (req, res) => {
   return
 })
 
-router.put(LOCAL_URL, async (req, res) => {
+router.put(ROUTE, async (req, res) => {
   try {
     const { topic_id, title } = req.body
 
@@ -63,7 +63,7 @@ router.put(LOCAL_URL, async (req, res) => {
   return
 })
 
-router.delete(LOCAL_URL, async (req, res) => {
+router.delete(ROUTE, async (req, res) => {
   try {
     const { id } = req.body
 
