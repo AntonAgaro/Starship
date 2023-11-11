@@ -1,13 +1,13 @@
 import { Upload, message } from 'antd'
 import React from 'react'
-import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface'
+import type { RcFile, UploadProps } from 'antd/es/upload/interface'
 import { PlusOutlined } from '@ant-design/icons'
 import type { UploadChangeParam } from 'antd/es/upload'
 import { RootState } from '../../../../../../Redux/store'
 import { asyncGetProfile } from '../../../../../../Redux/user/userState'
 import { useSelector } from 'react-redux'
-import { TProfileInfo } from '../../../../../../types'
 import { useAppDispatch } from '../../../../../../Hooks/reduxHooks'
+import { TProfileInfo } from '../../../../../../Redux/user/types'
 
 const EditUserPhoto = () => {
   const [messageApi, contextHolder] = message.useMessage()
