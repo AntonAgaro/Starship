@@ -16,7 +16,6 @@ import { asyncGetTopic } from '../../../Redux/forum/currentTopicState'
 import { TProfileInfo } from '../../../Redux/user/types'
 
 import {
-  asyncCreateComment,
   asyncDeleteComment,
   asyncUpdateComment,
 } from '../../../Redux/forum/currentCommentState'
@@ -66,9 +65,9 @@ export const ForumTopic: FC<TTopicProps> = (props: TTopicProps) => {
           author_id: profile.id,
           topic_id: props.topic_id,
           comment_id: item.id,
+          page,
         })
       )
-      dispatch(asyncGetTopic({ page, topic_id: props.topic_id }))
     }
   }
 
@@ -84,7 +83,6 @@ export const ForumTopic: FC<TTopicProps> = (props: TTopicProps) => {
         page,
       })
     )
-    await dispatch(asyncGetTopic({ page, topic_id: props.topic_id }))
   }
 
   const openEditForm = useCallback((item: TCommentInfo | null = null) => {

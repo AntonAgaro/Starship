@@ -23,7 +23,7 @@ const ForumCommentAddEdit: React.FC<CommentAddEditFormProps> = props => {
   useEffect(() => {
     if (myRef && myRef.current) {
       const input = myRef.current as InputRef
-      input.focus() // TODO: так и не добился автофокуса при показе модала, не работает автофокус
+      input.focus()
     }
   }, [])
 

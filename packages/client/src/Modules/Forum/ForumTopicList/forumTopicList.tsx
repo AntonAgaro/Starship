@@ -1,13 +1,4 @@
-import {
-  Avatar,
-  Button,
-  Flex,
-  Form,
-  List,
-  Modal,
-  Pagination,
-  Space,
-} from 'antd'
+import { Avatar, Button, Flex, List, Modal, Pagination, Space } from 'antd'
 import {
   LikeOutlined,
   MessageOutlined,
@@ -28,7 +19,6 @@ import {
 import { asyncGetTopicList } from '../../../Redux/forum/topicListState'
 import React from 'react'
 import {
-  asyncCreateTopic,
   asyncDeleteTopic,
   asyncUpdateTopic,
 } from '../../../Redux/forum/currentTopicState'
@@ -70,28 +60,22 @@ export const ForumTopicList: FC = () => {
   const deleteTopic = async (item: TTopicInfo) => {
     if (item) {
       await dispatch(
-        asyncDeleteTopic({ topic_id: item.id, author_id: profile.id })
+        asyncDeleteTopic({ topic_id: item.id, author_id: profile.id, page })
       )
-      dispatch(asyncGetTopicList(page))
     }
   }
 
   const updateTopic = async (data: UpdateTopicValues) => {
     setOpenTopicEdit(false)
-    if (topicId !== 0) {
-      await dispatch(
-        asyncUpdateTopic({
-          topic_id: topicId,
-          author_id: profile.id,
-          title: data.title,
-        })
-      )
-    } else {
-      await dispatch(
-        asyncCreateTopic({ author_id: profile.id, title: data.title })
-      )
-    }
-    dispatch(asyncGetTopicList(page))
+
+    await dispatch(
+      asyncUpdateTopic({
+        topic_id: topicId,
+        author_id: profile.id,
+        title: data.title,
+        page,
+      })
+    )
   }
 
   const openEditForm = useCallback((item: TTopicInfo | null = null) => {

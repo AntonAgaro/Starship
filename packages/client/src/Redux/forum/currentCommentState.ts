@@ -26,23 +26,19 @@ export const asyncGetComment = createAsyncThunk<TCommentInfo, TGetCommentData>(
 export const asyncDeleteComment = createAsyncThunk<
   TCommentInfo,
   TDeleteCommentData
->('forum/deleteComment', async (data: TDeleteCommentData) => {
+>('forum/deleteComment', async (data: TDeleteCommentData, { dispatch }) => {
   const response = await forumApi.deleteComment(data)
-  return response as null
-})
 
-export const asyncCreateComment = createAsyncThunk<
-  TCommentInfo,
-  TCreateCommentData
->('forum/createComment', async (data: TCreateCommentData) => {
-  const response = await forumApi.createComment(data)
-  return response as TCommentInfo
+  const { topic_id, page } = data
+
+  await dispatch(asyncGetTopic({ page, topic_id }))
+  return response as null
 })
 
 export const asyncUpdateComment = createAsyncThunk<
   TCommentInfo,
   TUpdateCommentData
->('forum/updateComment', async (data: TUpdateCommentData) => {
+>('forum/updateComment', async (data: TUpdateCommentData, { dispatch }) => {
   const { author_id, text, topic_id, page } = data
   let response = null
 
@@ -51,10 +47,7 @@ export const asyncUpdateComment = createAsyncThunk<
   } else {
     response = await forumApi.createComment({ author_id, text, topic_id })
   }
-  /*   const dispatch = useAppDispatch()
-
-
-    await  dispatch(asyncGetTopic( {page, topic_id})) - вызов игнорируется! Не знаю что делать*/
+  await dispatch(asyncGetTopic({ page, topic_id }))
 
   return response as TCommentInfo
 })
@@ -96,16 +89,6 @@ const slice = createSlice({
         }
       )
       .addCase(asyncGetComment.rejected, state => {
-        return null
-      })
-
-      .addCase(
-        asyncCreateComment.fulfilled,
-        (state, action: PayloadAction<TCommentInfo>) => {
-          return action.payload
-        }
-      )
-      .addCase(asyncCreateComment.rejected, state => {
         return null
       })
   },

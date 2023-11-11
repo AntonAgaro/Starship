@@ -7,6 +7,7 @@ import {
   TTopicInfo,
   TUpdateTopicData,
 } from './types'
+import { asyncGetTopicList } from './topicListState'
 
 const currentTopicInitialState = null as TTopicInfo
 
@@ -25,24 +26,31 @@ export const asyncGetTopic = createAsyncThunk<TTopicInfo, TGetTopicData>(
 
 export const asyncDeleteTopic = createAsyncThunk<TTopicInfo, TDeleteTopicData>(
   'forum/deleteTopic',
-  async (data: TDeleteTopicData) => {
+  async (data: TDeleteTopicData, { dispatch }) => {
     const response = await forumApi.deleteTopic(data)
-    return response as null
-  }
-)
 
-export const asyncCreateTopic = createAsyncThunk<TTopicInfo, TCreateTopicData>(
-  'forum/createTopic',
-  async (data: TCreateTopicData) => {
-    const response = await forumApi.createTopic(data)
-    return response as TTopicInfo
+    const { page } = data
+
+    await dispatch(asyncGetTopicList(page))
+
+    return response as null
   }
 )
 
 export const asyncUpdateTopic = createAsyncThunk<TTopicInfo, TUpdateTopicData>(
   'forum/updateTopic',
-  async (data: TUpdateTopicData) => {
-    const response = await forumApi.updateTopic(data)
+  async (data: TUpdateTopicData, { dispatch }) => {
+    const { page, topic_id, title, author_id } = data
+    let response = null
+
+    if (topic_id === 0) {
+      response = await forumApi.createTopic({ title, author_id })
+    } else {
+      response = await forumApi.updateTopic(data)
+    }
+
+    await dispatch(asyncGetTopicList(page))
+
     return response as TTopicInfo
   }
 )
@@ -84,16 +92,6 @@ export const sliceTopic = createSlice({
         }
       )
       .addCase(asyncGetTopic.rejected, state => {
-        return null
-      })
-
-      .addCase(
-        asyncCreateTopic.fulfilled,
-        (state, action: PayloadAction<TTopicInfo>) => {
-          return action.payload
-        }
-      )
-      .addCase(asyncCreateTopic.rejected, state => {
         return null
       })
   },

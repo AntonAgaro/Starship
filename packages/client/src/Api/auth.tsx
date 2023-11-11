@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { TProfileInfo } from '../types'
 import { ApiBase } from './base'
+import { TProfileInfo } from '../Redux/user/types'
 
 export class ApiAuth extends ApiBase {
   constructor() {

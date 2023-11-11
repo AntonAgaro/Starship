@@ -46,6 +46,7 @@ export type TUpdateTopicData = {
   topic_id: number
   title: string
   author_id: number
+  page: number
 }
 export type TGetTopicData = {
   page: number
@@ -55,6 +56,7 @@ export type TGetTopicData = {
 export type TDeleteTopicData = {
   topic_id: number
   author_id: number
+  page: number
 }
 
 export type TCreateCommentData = {
@@ -78,4 +80,5 @@ export type TDeleteCommentData = {
   topic_id: number
   comment_id: number
   author_id: number
+  page: number
 }
