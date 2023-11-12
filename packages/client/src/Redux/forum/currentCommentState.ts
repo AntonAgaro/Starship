@@ -2,13 +2,10 @@ import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import ForumApi from '../../Api/forum'
 import {
   TCommentInfo,
-  TCreateCommentData,
   TDeleteCommentData,
   TGetCommentData,
-  TGetTopicData,
   TUpdateCommentData,
 } from './types'
-import { useAppDispatch } from '../../Hooks/reduxHooks'
 import { asyncGetTopic } from './currentTopicState'
 
 const currentCommentInitialState = null as TCommentInfo
