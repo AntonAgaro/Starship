@@ -2,10 +2,13 @@ import React from 'react'
 import { Form, Button, Input, message } from 'antd'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../../Redux/store'
-import { TProfileInfo } from '../../../../../../types'
+
 import { asyncChangeProfile } from '../../../../../../Redux/user/userState'
 import axios from 'axios'
-import { TChangeProfile } from '../../../../../../Redux/user/types'
+import {
+  TChangeProfile,
+  TProfileInfo,
+} from '../../../../../../Redux/user/types'
 import {
   isValidEmail,
   isValidLogin,

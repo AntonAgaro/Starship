@@ -9,7 +9,7 @@ import GameInterface from '../../Modules/GameInterface/gameInterface'
 import GameStartModal from '../../Modules/GameStartModal/gameStartModal'
 import { RootState } from '../../Redux/store'
 import { RouteUrls } from '../../Routes/Router'
-import { TProfileInfo } from '../../types'
+
 import Game from './classes/Game'
 import {
   gameStore,
@@ -18,6 +18,7 @@ import {
   selectPlayerScore,
 } from './classes/helpers/stateManager'
 import styles from './game.module.less'
+import { TProfileInfo } from '../../Redux/user/types'
 
 export enum Buttons {
   escape = 'Escape',

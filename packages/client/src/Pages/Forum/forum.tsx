@@ -1,4 +1,5 @@
 import React, { FC } from 'react'
 import './forum.less'
-const Forum: FC = () => <div className="wrapper">Forum page</div>
+import { ForumTopicList } from '../../Modules/Forum/ForumTopicList/forumTopicList'
+const Forum: FC = () => <ForumTopicList />
 export default Forum

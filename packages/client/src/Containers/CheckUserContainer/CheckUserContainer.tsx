@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Layout } from 'antd'
 import Loading from '../../Components/Loading/Loading'
-import { RootState, createStore } from '../../Redux/store'
+import { RootState } from '../../Redux/store'
 import { useAppDispatch } from '../../Hooks/reduxHooks'
-import { TProfileInfo } from '../../types'
 import { asyncGetProfile, asyncOAuthLogin } from '../../Redux/user/userState'
 import { RouteUrls, redirect_uri } from '../../Routes/Router'
 import {} from 'react-router'
+import { TProfileInfo } from '../../Redux/user/types'
 interface iCheckUserContainerProps {
   children: JSX.Element
 }
