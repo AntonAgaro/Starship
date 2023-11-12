@@ -1,3 +1,13 @@
 body {
   margin: 0;
 }
+
+:root {
+  --component-bg: rgba(8, 8, 8, 0.1);
+  --component-text: #000;
+}
+
+[data-theme='dark'] {
+  --component-bg: rgba(254, 254, 254, 0.1);
+  --component-text: #fff;
+}

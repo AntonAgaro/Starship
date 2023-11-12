@@ -7,6 +7,7 @@ import './mainLayouts.less'
 import UserInfo from '../Components/userInfo/userInfo'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../Redux/store'
+import ThemeSwitcher from '../Modules/ThemeSwitcher/ThemeSwitcher'
 import { TProfileInfo } from '../Redux/user/types'
 
 const MainLayout: FC = () => {
@@ -52,6 +53,7 @@ const MainLayout: FC = () => {
           selectedKeys={[current]}
         />
         {currentProfile && <UserInfo profile={currentProfile} />}
+        <ThemeSwitcher />
       </Header>
       <Content className="main-content">
         <Outlet />
