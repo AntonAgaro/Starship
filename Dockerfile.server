@@ -3,7 +3,7 @@ ARG SERVER_PORT=3001
 
 FROM node:$NODE_VERSION-buster as base
 
-WORKDIR /app
+WORKDIR /app_build
 
 FROM base as builder
 
@@ -12,16 +12,16 @@ RUN yarn install --frozen-lockfile
 
 COPY . .
 
-RUN yarn lerna bootstrap
-RUN rm -rf /app/packages/server/dist/ && yarn build --scope=server
-
+RUN yarn lerna bootstrap && yarn build
 
 FROM node:$NODE_VERSION-buster-slim as production
 WORKDIR /app
 
-COPY --from=builder /app/packages/server/dist/ /app/
-COPY --from=builder /app/packages/server/package.json /app/package.json
+COPY --from=builder /app_build/packages/server/dist/ /app_build/packages/server/package.json /app/
+
 RUN yarn install --production=true
+
+COPY --from=builder /app_build/packages/client /app/node_modules/client
 
 EXPOSE $SERVER_PORT
 CMD [ "node", "/app/index.js" ]
