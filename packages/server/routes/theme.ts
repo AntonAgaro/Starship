@@ -1,21 +1,8 @@
 import { Router } from 'express'
-import ChosenTheme from '../controllers/ChosenTheme'
 import Theme from '../controllers/Theme'
 
 const router = Router()
 const ROUTE = `/theme`
-
-router.get(`${ROUTE}/available`, async (req, res) => {
-  try {
-    const availableThemes = await new Theme({}).getAllThemes()
-
-    res.json(availableThemes)
-  } catch (error) {
-    res.json(error)
-  }
-
-  return
-})
 
 router.get(`${ROUTE}/token`, async (req, res) => {
   try {
@@ -23,9 +10,7 @@ router.get(`${ROUTE}/token`, async (req, res) => {
 
     if (!token) return res.status(400).send('token query param is required')
 
-    const chosenTheme = await new ChosenTheme({
-      user_theme_token: token as unknown as string,
-    }).getChosenThemeByThemeToken
+    const chosenTheme = await Theme.getThemeByThemeToken(token as string)
 
     res.json(chosenTheme)
   } catch (error) {
@@ -41,9 +26,7 @@ router.get(`${ROUTE}/login`, async (req, res) => {
 
     if (!login) return res.status(400).send('login query param is required')
 
-    const chosenTheme = await new ChosenTheme({
-      user_login: login as unknown as string,
-    }).getChosenThemeByThemeToken
+    const chosenTheme = await Theme.getThemeByUserLogin(login as string)
 
     res.json(chosenTheme)
   } catch (error) {
@@ -55,15 +38,15 @@ router.get(`${ROUTE}/login`, async (req, res) => {
 
 router.put(`${ROUTE}/token`, async (req, res) => {
   try {
-    const { token, theme_id } = req.body
+    const { token, theme } = req.body
 
-    if (!(token && theme_id))
-      return res.status(400).send('properties token and theme_id are required.')
+    if (!(token && theme))
+      return res.status(400).send('properties token and theme are required.')
 
-    const updatedChosenTheme = await new ChosenTheme({
-      user_theme_token: token,
-      theme_id,
-    }).updateChosenThemeWithThemeToken()
+    const updatedChosenTheme = await Theme.updateThemeWithThemeToken(
+      theme,
+      token
+    )
 
     res.json(updatedChosenTheme)
   } catch (error) {
@@ -75,15 +58,15 @@ router.put(`${ROUTE}/token`, async (req, res) => {
 
 router.put(`${ROUTE}/login`, async (req, res) => {
   try {
-    const { login, theme_id } = req.body
+    const { login, theme } = req.body
 
-    if (!(login && theme_id))
-      return res.status(400).send('properties login and theme_id are required.')
+    if (!(login && theme))
+      return res.status(400).send('properties login and theme are required.')
 
-    const updatedChosenTheme = await new ChosenTheme({
-      user_login: login,
-      theme_id,
-    }).updateChosenThemeWithUserLogin()
+    const updatedChosenTheme = await Theme.updateThemeWithUserLogin(
+      theme,
+      login
+    )
 
     res.json(updatedChosenTheme)
   } catch (error) {
@@ -95,18 +78,15 @@ router.put(`${ROUTE}/login`, async (req, res) => {
 
 router.post('${ROUTE}/token', async (req, res) => {
   try {
-    const { token, theme_id } = req.body
+    const { token, theme } = req.body
 
-    if (!(token && theme_id)) {
-      return res.status(400).send('properties token, theme_id are required.')
+    if (!(token && theme)) {
+      return res.status(400).send('properties token, theme are required.')
     }
 
-    const chosenTheme = await new ChosenTheme({
-      user_theme_token: token,
-      theme_id,
-    }).createChosenThemeWithThemeToken()
+    const chosenTheme = await Theme.createThemeWithThemeToken(theme, token)
 
-    res.json(chosenTheme)
+    res.status(201).json(chosenTheme)
   } catch (error) {
     res.json(error)
   }
@@ -116,18 +96,15 @@ router.post('${ROUTE}/token', async (req, res) => {
 
 router.post('${ROUTE}/login', async (req, res) => {
   try {
-    const { login, theme_id } = req.body
+    const { login, theme } = req.body
 
-    if (!(login && theme_id)) {
-      return res.status(400).send('properties login, theme_id are required.')
+    if (!(login && theme)) {
+      return res.status(400).send('properties login, theme are required.')
     }
 
-    const chosenTheme = await new ChosenTheme({
-      user_login: login,
-      theme_id,
-    }).createChosenThemeWithThemeToken()
+    const chosenTheme = await Theme.createThemeWithUserLogin(theme, login)
 
-    res.json(chosenTheme)
+    res.status(201).json(chosenTheme)
   } catch (error) {
     res.json(error)
   }
@@ -141,22 +118,9 @@ router.delete('${ROUTE}/token', async (req, res) => {
 
     if (!token) return res.status(400).send('property token is required.')
 
-    const chosenTheme = new ChosenTheme({ user_theme_token: token })
-    const response = await chosenTheme.removeChosenThemeWithThemeToken()
+    const response = await Theme.removeThemeWithThemeToken(token)
 
     res.json(response)
-  } catch (error) {
-    res.json(error)
-  }
-
-  return
-})
-
-router.get(`${ROUTE}/login`, async (req, res) => {
-  try {
-    const availableThemes = await new Theme({}).getAllThemes()
-
-    res.json(availableThemes)
   } catch (error) {
     res.json(error)
   }
