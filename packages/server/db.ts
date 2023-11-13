@@ -14,7 +14,7 @@ export const createClientAndConnect = async (): Promise<Client | null> => {
       user: POSTGRES_USER,
       host: POSTGRES_HOST,
       database: POSTGRES_DB,
-      password: POSTGRES_PASSWORD,
+      password: String(POSTGRES_PASSWORD),
       port: Number(POSTGRES_PORT),
     })
 

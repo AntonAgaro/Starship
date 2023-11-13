@@ -12,4 +12,16 @@ type TComment = {
   updated_at?: Date
 }
 
-export { TComment, stateMessage }
+type TChosenTheme = {
+  theme_id?: number
+  user_theme_token?: string
+  user_login?: string
+  id?: number
+}
+
+type TTheme = {
+  id?: number
+  theme_name?: string
+}
+
+export { TChosenTheme, TComment, TTheme, stateMessage }
