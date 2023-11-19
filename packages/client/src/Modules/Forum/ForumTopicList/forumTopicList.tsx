@@ -1,32 +1,35 @@
-import { Avatar, Button, Flex, List, Modal, Pagination, Space } from 'antd'
 import {
+  DeleteOutlined,
+  EditOutlined,
   LikeOutlined,
   MessageOutlined,
-  EditOutlined,
-  DeleteOutlined,
 } from '@ant-design/icons'
-import { FC, useCallback, useEffect, useState } from 'react'
+import { Avatar, Button, Flex, List, Modal, Pagination, Space } from 'antd'
+import React, { FC, useCallback, useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../../../Hooks/reduxHooks'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../../Redux/store'
-import { TTopicInfo, TTopicListInfo } from '../../../Redux/forum/types'
-import {
-  getDisplayProfileName,
-  getProfileAvatar,
-  num_per_page,
-} from '../../../Utils/helpers'
-import { asyncGetTopicList } from '../../../Redux/forum/topicListState'
-import React from 'react'
+import { asyncGetTopicEmojis } from '../../../Redux/emoji/topicEmojiState'
+import { EmojiState } from '../../../Redux/emoji/types'
 import {
   asyncDeleteTopic,
   asyncUpdateTopic,
 } from '../../../Redux/forum/currentTopicState'
+import { asyncGetTopicList } from '../../../Redux/forum/topicListState'
+import { TTopicInfo, TTopicListInfo } from '../../../Redux/forum/types'
+import { RootState } from '../../../Redux/store'
 import { TProfileInfo } from '../../../Redux/user/types'
+import { RouteUrls } from '../../../Routes/Router'
+import { EMOJI } from '../../../Utils/constants'
+import {
+  getDisplayProfileName,
+  getEntityEmojisCountFromState,
+  getProfileAvatar,
+  num_per_page,
+} from '../../../Utils/helpers'
 import ForumTopicAddEdit, {
   UpdateTopicValues,
 } from '../ForumTopicAddEdit/ForumTopicAddEdit'
-import { RouteUrls } from '../../../Routes/Router'
 import './forumTopicList.less'
 
 export const ForumTopicList: FC = () => {
@@ -41,6 +44,10 @@ export const ForumTopicList: FC = () => {
     (rootState: RootState) => rootState.topicList
   ) as TTopicListInfo
 
+  const topicsEmojis = useSelector(
+    (rootState: RootState) => rootState.topicEmojiState
+  ) as EmojiState
+
   const profile = useSelector(
     (rootState: RootState) => rootState.user
   ) as TProfileInfo
@@ -48,6 +55,14 @@ export const ForumTopicList: FC = () => {
   useEffect(() => {
     dispatch(asyncGetTopicList(page))
   }, [page])
+
+  useEffect(() => {
+    if (topicList?.list.length && topicList?.list.length > 0) {
+      topicList.list.forEach(topic => {
+        dispatch(asyncGetTopicEmojis(topic?.id as number))
+      })
+    }
+  }, [topicList])
 
   const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
     <Space>
@@ -168,7 +183,11 @@ export const ForumTopicList: FC = () => {
             <Flex gap="small">
               <IconText
                 icon={LikeOutlined}
-                text="156"
+                text={getEntityEmojisCountFromState(
+                  topicsEmojis,
+                  item?.id ?? 0,
+                  EMOJI.LIKE
+                )}
                 key="list-vertical-like-o"
               />
               <IconText

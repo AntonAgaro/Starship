@@ -1,3 +1,4 @@
+import { EmojiState } from '../Redux/emoji/types'
 import { TAuthorInfo } from '../Redux/forum/types'
 import { TProfileInfo } from '../Redux/user/types'
 
@@ -26,6 +27,18 @@ export const getProfileAvatar = (
   } else {
     return placeholder
   }
+}
+
+export const getEntityEmojisCountFromState = (
+  state: EmojiState,
+  entityId: number,
+  emojiId: number
+): string => {
+  return entityId
+    ? String(
+        state[String(entityId)]?.find(item => item.id === emojiId)?.count ?? 0
+      )
+    : '0'
 }
 
 export const num_per_page = 7

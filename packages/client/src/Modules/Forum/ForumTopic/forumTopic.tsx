@@ -1,25 +1,33 @@
+import {
+  DeleteOutlined,
+  DislikeOutlined,
+  EditOutlined,
+  LikeOutlined,
+} from '@ant-design/icons'
 import { Avatar, Button, Flex, List, Modal, Pagination, Space } from 'antd'
-import { LikeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
-import { FC, useCallback, useEffect, useState } from 'react'
+import React, { FC, useCallback, useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../../../Hooks/reduxHooks'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../../Redux/store'
+import { asyncGetTopic } from '../../../Redux/forum/currentTopicState'
 import { TCommentInfo, TTopicInfo } from '../../../Redux/forum/types'
+import { RootState } from '../../../Redux/store'
+import { TProfileInfo } from '../../../Redux/user/types'
 import {
   getDisplayProfileName,
+  getEntityEmojisCountFromState,
   getProfileAvatar,
   num_per_page,
 } from '../../../Utils/helpers'
-import React from 'react'
-import { asyncGetTopic } from '../../../Redux/forum/currentTopicState'
-import { TProfileInfo } from '../../../Redux/user/types'
 
+import { asyncGetCommentEmojis } from '../../../Redux/emoji/commentEmojiState'
+import { EmojiState } from '../../../Redux/emoji/types'
 import {
   asyncDeleteComment,
   asyncUpdateComment,
 } from '../../../Redux/forum/currentCommentState'
 import { RouteUrls } from '../../../Routes/Router'
+import { EMOJI } from '../../../Utils/constants'
 import ForumCommentAddEdit, {
   UpdateCommentValues,
 } from '../ForumCommentAddEdit/ForumCommentAddEdit'
@@ -38,6 +46,10 @@ export const ForumTopic: FC<TTopicProps> = (props: TTopicProps) => {
     (rootState: RootState) => rootState.currentTopic
   ) as TTopicInfo
 
+  const topicsEmojis = useSelector(
+    (rootState: RootState) => rootState.commentEmojiState
+  ) as EmojiState
+
   const profile = useSelector(
     (rootState: RootState) => rootState.user
   ) as TProfileInfo
@@ -49,6 +61,17 @@ export const ForumTopic: FC<TTopicProps> = (props: TTopicProps) => {
       dispatch(asyncGetTopic({ page, topic_id: props.topic_id }))
     }
   }, [page])
+
+  useEffect(() => {
+    if (
+      currentTopic?.comments?.list.length &&
+      currentTopic?.comments?.list.length > 0
+    ) {
+      currentTopic.comments.list.forEach(topic => {
+        dispatch(asyncGetCommentEmojis(topic?.id as number))
+      })
+    }
+  }, [currentTopic])
 
   const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
     <Space>
@@ -159,11 +182,24 @@ export const ForumTopic: FC<TTopicProps> = (props: TTopicProps) => {
             />
             <Flex gap="small">
               {item?.created_date_time}
-              <IconText
-                icon={LikeOutlined}
-                text=""
-                key="list-vertical-like-o"
-              />
+              <Button
+                icon={<LikeOutlined />}
+                key={`list_item_like_${item?.id}`}>
+                {getEntityEmojisCountFromState(
+                  topicsEmojis,
+                  item?.id ?? 0,
+                  EMOJI.LIKE
+                )}
+              </Button>
+              <Button
+                icon={<DislikeOutlined />}
+                key={`list_item_dislike_${item?.id}`}>
+                {getEntityEmojisCountFromState(
+                  topicsEmojis,
+                  item?.id ?? 0,
+                  EMOJI.LIKE
+                )}
+              </Button>
             </Flex>
           </List.Item>
         )}
