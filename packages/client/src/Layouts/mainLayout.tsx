@@ -5,9 +5,10 @@ import { Outlet, useNavigate } from 'react-router-dom'
 import { RouteUrls } from '../Routes/Router'
 import './mainLayouts.less'
 import UserInfo from '../Components/userInfo/userInfo'
-import { TProfileInfo } from '../types'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../Redux/store'
+import ThemeSwitcher from '../Modules/ThemeSwitcher/ThemeSwitcher'
+import { TProfileInfo } from '../Redux/user/types'
 
 const MainLayout: FC = () => {
   const currentProfile = useSelector(
@@ -34,6 +35,12 @@ const MainLayout: FC = () => {
       label: `${url}`,
     })
   })
+  useEffect(() => {
+    const code = new URLSearchParams(window.location.search).get('code')
+    if (code != null) {
+      navigate(RouteUrls.landing)
+    }
+  }, [])
 
   return (
     <Layout className="main">
@@ -46,6 +53,7 @@ const MainLayout: FC = () => {
           selectedKeys={[current]}
         />
         {currentProfile && <UserInfo profile={currentProfile} />}
+        <ThemeSwitcher />
       </Header>
       <Content className="main-content">
         <Outlet />

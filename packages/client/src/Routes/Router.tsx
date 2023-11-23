@@ -8,10 +8,11 @@ import SignIn from '../Pages/SignIn/signIn'
 import SignUp from '../Pages/SignUp/signUp'
 import Profile from '../Pages/Profile/profile'
 import CreateTopic from '../Pages/Forum/CreateTopic/createTopic'
-import Topic from '../Pages/Forum/Topic/topic'
+
 import Forum from '../Pages/Forum/forum'
 import Error from '../Pages/Error/error'
 import CheckAuthorized from '../Containers/CheckAuthorized/CheckAuthorized'
+import { Topic } from '../Pages/Forum/Topic/topic'
 
 export enum RouteUrls {
   landing = '/',
@@ -27,6 +28,8 @@ export enum RouteUrls {
   error404 = '/*',
   error500 = '/error',
 }
+
+export const redirect_uri = 'http://localhost:3000'
 
 const Router = () => {
   const navigateToSignIn = <Navigate to={RouteUrls.signIn} replace />

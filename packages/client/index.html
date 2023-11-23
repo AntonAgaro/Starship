@@ -5,9 +5,16 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Starship</title>
+    <script>
+      try {
+        window.__PRELOADED_STATE__ = JSON.parse(`<!--store-data-->`)
+      } catch (exp) {
+        console.error('without __PRELOADED_STATE__')
+      }
+    </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"><!-- ssr content ---></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

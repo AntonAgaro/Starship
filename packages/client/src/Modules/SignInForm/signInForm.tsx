@@ -1,19 +1,21 @@
 import { Alert, Button, Card, Form, Input } from 'antd'
+import './signInForm.less'
 import { FC, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { store } from '../../Redux/store'
-import { TLoginData } from '../../Redux/user/types'
 import { asyncLogin } from '../../Redux/user/userState'
-import './signInForm.less'
+import { TLoginData } from '../../Redux/user/types'
+import { OAuthComponent } from '../OAuth/OAuth'
+import { useAppDispatch } from '../../Hooks/reduxHooks'
 
 export const SignInForm: FC = () => {
   const [errorMessage, setErrorMessage] = useState('')
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
   const onFinish = async (values: TLoginData) => {
     console.log('Success:', values)
 
     try {
-      store.dispatch(asyncLogin(values))
+      dispatch(asyncLogin(values))
 
       setTimeout(() => navigate('/'), 800)
     } catch (e) {
@@ -59,6 +61,9 @@ export const SignInForm: FC = () => {
           <Button type="link" onClick={() => navigate('/signup')}>
             Ещё нет аккаунта? Зарегистрируйтесь!
           </Button>
+        </Form.Item>
+        <Form.Item wrapperCol={{ offset: 1, span: 30 }}>
+          <OAuthComponent showButton />
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 9, span: 20 }}>

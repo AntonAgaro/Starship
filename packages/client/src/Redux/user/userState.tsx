@@ -1,10 +1,24 @@
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { TLoginData, TSignUpData, TUserState } from './types'
+import {
+  TLoginData,
+  TSignUpData,
+  TUserState,
+  TChangeProfile,
+  TChangePassword,
+  TOAuthRequest,
+} from './types'
 import ApiAuth from '../../Api/auth'
+import UserApi from '../../Api/user'
+import ApiOAuth from '../../Api/oauth.'
+import { useNavigate } from 'react-router-dom'
 
 const userInitialState = null as TUserState
 
 const authAPI = new ApiAuth()
+
+const OAuthAPI = new ApiOAuth()
+
+const userApi = new UserApi()
 
 export const asyncGetProfile = createAsyncThunk<TUserState>(
   'user/getProfile',
@@ -22,6 +36,17 @@ export const asyncLogin = createAsyncThunk<TUserState, TLoginData>(
     return response as TUserState
   }
 )
+
+export const asyncOAuthLogin = createAsyncThunk<TUserState, TOAuthRequest>(
+  'user/OAuthlogin',
+  async (values: TOAuthRequest) => {
+    await OAuthAPI.login(values)
+
+    const response = await authAPI.getProfile()
+    return response as TUserState
+  }
+)
+
 export const asyncLogout = createAsyncThunk<TUserState>(
   'user/logout',
   async () => {
@@ -39,6 +64,14 @@ export const asyncSignUp = createAsyncThunk<TUserState, TSignUpData>(
   }
 )
 
+export const asyncChangeProfile = createAsyncThunk<TUserState, TChangeProfile>(
+  'user/changeProfile',
+  async (values: TChangeProfile) => {
+    const response = await userApi.changeInfo(values)
+    return response as TUserState
+  }
+)
+
 const slice = createSlice({
   name: 'user',
   initialState: userInitialState,
@@ -49,6 +82,22 @@ const slice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(
+        asyncLogin.fulfilled,
+        (state, action: PayloadAction<TUserState>) => {
+          return action.payload
+        }
+      )
+      .addCase(
+        asyncOAuthLogin.fulfilled,
+        (state, action: PayloadAction<TUserState>) => {
+          return action.payload
+        }
+      )
+      .addCase(asyncOAuthLogin.rejected, state => {
+        return null
+      })
+
+      .addCase(
         asyncGetProfile.fulfilled,
         (state, action: PayloadAction<TUserState>) => {
           return action.payload
@@ -57,12 +106,16 @@ const slice = createSlice({
       .addCase(asyncGetProfile.rejected, state => {
         return null
       })
+
       .addCase(
-        asyncLogin.fulfilled,
+        asyncChangeProfile.fulfilled,
         (state, action: PayloadAction<TUserState>) => {
           return action.payload
         }
       )
+      .addCase(asyncChangeProfile.rejected, state => {
+        return null
+      })
       .addCase(
         asyncLogout.fulfilled,
         (state, action: PayloadAction<TUserState>) => {

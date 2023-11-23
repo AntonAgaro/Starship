@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build --config vite.config.ts && yarn build:ssr",
+    "build:ssr": "tsc && vite build --config viteSsr.config.ts",
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",
@@ -12,10 +13,11 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
-    "antd": "^5.9.0",
+    "antd": "^5.11.1",
     "axios": "^1.5.0",
     "dotenv": "^16.0.2",
     "eslint-config-prettier": "^8.5.0",
+    "nanoid": "3.3.7",
     "prettier": "^2.7.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

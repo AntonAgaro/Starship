@@ -4,13 +4,18 @@ import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom/jest-globals'
 import { beforeEach, describe, expect, test } from '@jest/globals'
 import { BrowserRouter } from 'react-router-dom'
+import { Provider } from 'react-redux'
+import { createStore } from '../../Redux/store'
 
 describe('Test GamePage', () => {
   beforeEach(() => {
+    const store = createStore()
     render(
-      <BrowserRouter>
-        <GamePage />
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <GamePage />
+        </BrowserRouter>
+      </Provider>
     )
   })
 
