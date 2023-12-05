@@ -29,7 +29,10 @@ export enum RouteUrls {
   error500 = '/error',
 }
 
-export const redirect_uri = 'http://localhost:3000'
+export const redirect_uri =
+  window.location.href.indexOf('localhost') === -1
+    ? 'https://starship-starship-30.ya-praktikum.tech'
+    : 'http://localhost:3000'
 
 const Router = () => {
   const navigateToSignIn = <Navigate to={RouteUrls.signIn} replace />
